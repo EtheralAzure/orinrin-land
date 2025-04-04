@@ -1,0 +1,1079 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;eraTheWorld 4.954 画蛇又添足 火焰猫燐别人版口上
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;自定义判定系
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;主要的陷落状态指示
+;RETURN 0：不熟
+;RETURN 1：相识
+;RETURN 2：思慕
+;RETURN 3：恋慕
+;RETURN 4：恋人
+;==================================================
+@AME36_FALL_STATE
+#FUNCTION
+IF TALENT:LOVER_AMER
+	RETURNF 4
+ELSEIF TALENT:AFFECTION_AMER
+	RETURNF 3
+ELSEIF TALENT:YEARNING_AMER
+	RETURNF 2
+ELSEIF CFLAG:AME36_BREAKTHROUGH
+	RETURNF 1
+ENDIF
+RETURNF 0
+
+;==================================================
+;额外的一些小东西
+;==================================================
+@AME36_FALL_EX
+#FUNCTION
+RETURNF 0
+
+;==================================================
+;回忆值的计算
+;获得思慕、恋慕与恋人的必需条件之一
+;==================================================
+@AME36_RECOLLECTION
+#FUNCTION
+#DIM RECOLLECTION
+;--------------------------------------------------
+;相守值的贡献
+;--------------------------------------------------
+LOCAL = CFLAG:AME36_PERSISTENCE
+SELECTCASE AME36_FALL_STATE()
+	CASE 4
+		LOCAL = MIN(LOCAL, 0)
+	CASE 3
+		LOCAL = MIN(LOCAL, 0)
+	CASE 2
+		LOCAL = MIN(LOCAL, 0)
+	CASEELSE
+		LOCAL = MIN(LOCAL, 0)
+ENDSELECT
+RECOLLECTION += LOCAL
+;--------------------------------------------------
+;COM经验的贡献
+;--------------------------------------------------
+;刚认识就可以做的：300会话、301泡茶、410扫除、414吃饭/招待吃饭、416演奏、483斗虫、484打西瓜
+;最大回忆值：会话4000点、泡茶2000点、扫除1000点、吃饭/招待吃饭1200点、演奏800点、斗虫200点、打西瓜200点
+;期望频率：会话1天3次、泡茶1天2次、扫除1天1次、吃饭/招待吃饭1天1次、演奏3天1次、斗虫共5次、打西瓜共5次
+;--------------------------------------------------
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_300, 35, 100, 340, 890, 2000, 1000)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_301, 21, 60, 210, 560, 1200, 720)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_410, 14, 40, 130, 330, 700, 490)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_414, 14, 40, 130, 330, 720, 432)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_416, 4, 13, 43, 109, 240, 72)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_483, 1, 1, 2, 3, 5, -8)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_484, 1, 1, 2, 3, 5, -8)
+;--------------------------------------------------
+;相识后可以做的：304帮忙干活、332劝酒、333听牢骚、334碰杯/照料、403休憩、411战斗训练、412学习、413制作料理、
+;445采集、446进行调合、448设下陷阱、449捕虫、480弹幕胜负、626土产屋
+;最大回忆值：帮忙干活2000点、劝酒600点（因为尝过酒的总种数也有贡献）、听牢骚200点、碰杯/照料800点、休憩500点、战斗训练3000点、学习3000点、制作料理2000点
+;采集2000点、进行调合2000点、设下陷阱400点、捕虫400点、弹幕胜负600点、土产屋2500点
+;期望频率：帮忙干活1天1次、劝酒2天1次、听牢骚共5次、碰杯/照料3天1次、休憩共50次、战斗训练1天2次、学习1天2次、制作料理1天2次
+;采集1天1次、进行调合2天1次、设下陷阱共10次、捕虫共20次、弹幕胜负共10次、土产屋共50次
+;--------------------------------------------------
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_304, 0, 26, 116, 316, 700, 245)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_332, 0, 13, 58, 158, 360, 216)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_333, 0, 1, 2, 3, 5, -8)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_334, 0, 8, 38, 104, 240, 72)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_403, 0, 5, 10, 20, 50, 5)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_411, 0, 52, 232, 632, 1500, 750)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_412, 0, 52, 232, 632, 1500, 750)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_413, 0, 52, 232, 632, 1500, 1125)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_445, 0, 26, 216, 316, 700, 245)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_446, 0, 13, 58, 158, 400, 80)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_448, 0, 1, 2, 5, 10, -4)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_449, 0, 2, 5, 10, 20, 1)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_480, 0, 1, 2, 5, 10, -6)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_626, 0, 5, 10, 20, 50, 1)
+;--------------------------------------------------
+;思慕后可以做的：302身体接触、305膝枕/索求膝枕、307捏脸蛋、309摸头、311拥抱、431在浴室里放松、432钱汤、436读书、
+;440等待、442伐采、447路边摆摊、603牵手/拉手、605绕道、610请吃饭、614采购食材、617邀请去甜品店、621钓鱼
+;最大回忆值：身体接触3000点、膝枕/索求膝枕1200点、捏脸蛋800点、摸头1200点、拥抱1200点、在浴室里放松1000点、钱汤400点、读书1500点
+;等待200点、伐采500点、路边摆摊800点、牵手/拉手800点、绕道400点、请吃饭400点、采购食材200点、邀请去甜品店400点、钓鱼2000点
+;期望频率：身体接触1天2次、膝枕/索求膝枕1天1次、捏脸蛋1天1次、摸头1天1次、拥抱1天1次、在浴室里放松1天1次、钱汤1周1次、读书1天1次
+;等待共10次、伐采1周1次、路边摆摊共10次、牵手/拉手1天1次、绕道共10次、请吃饭共10次、采购食材共5次、邀请去甜品店共5次、钓鱼1天2次
+;--------------------------------------------------
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_302, 0, 0, 180, 580, 1200, 480)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_305, 0, 0, 90, 290, 600, 300)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_307, 0, 0, 90, 290, 600, 450)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_309, 0, 0, 90, 290, 600, 300)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_311, 0, 0, 90, 290, 600, 300)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_431, 0, 0, 90, 290, 600, 360)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_432, 0, 0, 12, 40, 100, 25)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_436, 0, 0, 90, 290, 600, 240)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_440, 0, 0, 2, 5, 10, -2)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_442, 0, 0, 12, 40, 100, 20)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_447, 0, 0, 2, 5, 10, -8)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_603, 0, 0, 90, 290, 600, 450)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_605, 0, 0, 2, 5, 10, -4)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_610, 0, 0, 2, 5, 10, -4)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_614, 0, 0, 1, 2, 5, -8)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_617, 0, 0, 1, 2, 5, -16)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_621, 0, 0, 180, 580, 1300, 845)
+;--------------------------------------------------
+;恋慕后可以做的：306抚摸小腹、308戳脸颊、310摸屁股、330掀起裙子、354陪睡、417午睡、615吃便当
+;最大回忆值：抚摸小腹600点、戳脸颊600点、摸屁股600点、掀起裙子400点、陪睡600点、午睡400点、吃便当500点
+;期望频率：抚摸小腹2天1次、戳脸颊2天1次、摸屁股1天1次、掀起裙子2天1次、陪睡2天1次、午睡共10次、吃便当3天1次
+;--------------------------------------------------
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_306, 0, 0, 0, 100, 300, 150)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_308, 0, 0, 0, 100, 300, 150)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_310, 0, 0, 0, 200, 600, 600)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_330, 0, 0, 0, 100, 300, 225)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_354, 0, 0, 0, 100, 300, 150)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_417, 0, 0, 0, 4, 10, -4)
+RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_615, 0, 0, 0, 66, 200, 80)
+;--------------------------------------------------
+;如果惹生气却不道歉，给200点惩罚
+;--------------------------------------------------
+SIF CFLAG:AME36_RECOLLECTION_303 == -1
+	RECOLLECTION -= 200
+
+RETURNF RECOLLECTION
+
+;==================================================
+;对回忆值COM部分计算的包装
+;ARG为记录CFLAG的值
+;ARG:1 - ARG:5 为五个陷落状态的最大值
+;ARG:6 为计算参数
+;==================================================
+@AME36_COM_RECOLLECTION(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARG:5, ARG:6)
+#FUNCTION
+SELECTCASE AME36_FALL_STATE()
+	CASE 4
+		ARG = MIN(ARG, ARG:5)
+	CASE 3
+		ARG = MIN(ARG, ARG:4)
+	CASE 2
+		ARG = MIN(ARG, ARG:3)
+	CASE 1
+		ARG = MIN(ARG, ARG:2)
+	CASE 0
+		ARG = MIN(ARG, ARG:1)
+ENDSELECT
+IF ARG:6 > 0
+	RETURNF ARG * (2 * ARG:5 - ARG) / ARG:6
+ELSE
+	RETURNF ARG * (2 * ARG:5 - ARG) * (- ARG:6)
+ENDIF
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;对原版判定的改动
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;优化的@YOUBI_MATCH
+;原版的执行效率实在低到没法看
+;==================================================
+@AME36_WEEKDAY_MATCH(ARG:0, ARG:1 = -1, ARG:2 = -1, ARG:3 = -1, ARG:4 = -1, ARG:5 = -1)
+#FUNCTION
+FOR LOCAL, 0, 6
+	SIF ARG:LOCAL == -1
+		BREAK
+	SIF DAY % 7 == ARG:LOCAL
+		RETURNF 1
+NEXT
+RETURNF 0
+
+;==================================================
+;处于危险境地的判定
+;角色处于强行状态，或非恋慕时角色处于衰弱、烂醉状态，受催情药、媚药影响，或恋慕时角色处于衰弱、烂醉状态，MASTER不在身边时
+;==================================================
+@AME36_DANGEROUS(ARG)
+#FUNCTION
+SIF TCVAR:ARG:FORCED_AMER
+	RETURNF 1
+IF TALENT:ARG:AFFECTION_AMER
+	SIF (CFLAG:ARG:DOWN_AMER || TCVAR:ARG:DRUNK_AMER) && CFLAG:ARG:LOCATION_AMER != CFLAG:MASTER:LOCATION_AMER
+		RETURNF 1
+ELSE
+	SIF CFLAG:ARG:DOWN_AMER || TCVAR:ARG:DRUNK_AMER || TCVAR:ARG:APHRODISIAC_AMER || TCVAR:ARG:MDMA_AMER
+		RETURNF 1
+ENDIF
+RETURNF 0
+
+;==================================================
+;可以跟随的判定
+;要求非情事中、非睡眠或陪睡中
+;==================================================
+@AME36_FOLLOWABLE(ARG)
+#FUNCTION
+SIF !CFLAG:ARG:SEX_AMER && !CFLAG:ARG:ASLEEP_AMER && !CFLAG:ARG:SNUGGLE_AMER
+	RETURNF 1
+RETURNF 0
+
+;==================================================
+;去除催眠条件之后的 @風呂逐出条件
+;==================================================
+@AME36_CLEAN_BATHCHECK()
+#FUNCTION
+SIF FLAG:TIMESTOP_AMER
+	RETURNF 0
+SIF !GETBIT(TALENT:MASTER:GENDER_AMER, 1) && HETEROSEX(MASTER, 36)
+	RETURNF 0
+SIF TALENT:SHAME_AMER < 0 && ABL:INTIMACY_AMER >= 5
+	RETURNF 0
+SIF CFLAG:SEX_AMER
+	RETURNF 0
+SIF CFLAG:ATTITUDE_AMER < 2
+	RETURNF 1
+SIF CFLAG:FAIT_ACCOMPLI_AMER < 1
+	RETURNF 1
+SIF !TALENT:AFFECTION_AMER
+	RETURNF 1
+RETURNF 0
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;魔改系
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;自定义好感改变
+;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:97使最终好感改变为指定的值
+;==================================================
+@AME36_FAVOR_OVERRIDE(DESIRED_VALUE)
+#DIM DESIRED_VALUE
+VARSET LOCAL
+
+;--------------------------------------------------
+;暂且先清零好感度BONUS
+;--------------------------------------------------
+TFLAG:95 = 0
+
+;--------------------------------------------------
+;都不省猫事了还能怎么办
+;--------------------------------------------------
+SIF !SHIRAHU(36)
+	RETURN -1
+
+;--------------------------------------------------
+;如果需要好感不变那就简单啦
+;--------------------------------------------------
+IF DESIRED_VALUE == 0
+	TFLAG:97 = 9999
+	TFLAG:13 = 1
+	RETURN 1
+ENDIF
+
+;--------------------------------------------------
+;绕过会话失败强制好感不变机制
+;--------------------------------------------------
+SIF TFLAG:3 == 300 && TFLAG:193 == -1
+	TFLAG:193 = 0
+
+;--------------------------------------------------
+;处理路人补正（但为什么会存在这个东西）
+;--------------------------------------------------
+SIF DESIRED_VALUE < 4 && WITH_MOB() && MAP_住人(MAIN_MAP, 36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;如果希望好感减少，设置TFLAG:好感度减少为1，翻转DESIRED_VALUE
+;--------------------------------------------------
+IF DESIRED_VALUE < 0
+	TFLAG:96 = 1
+	DESIRED_VALUE *= -1
+ENDIF
+
+;--------------------------------------------------
+;同时绝顶(1.5×)与被逆推时(1.2×)BONUS会正常计算
+;因为其实没有什么管的必要
+;--------------------------------------------------
+
+;--------------------------------------------------
+;正确处理强行模式下的好感减少
+;--------------------------------------------------
+IF TCVAR:200 && TFLAG:96 == 1
+	TFLAG:96 = 0
+	DESIRED_VALUE /= 3
+ENDIF
+
+;--------------------------------------------------
+;处理风骚补正（写这个有什么用，不应该事调全员风骚的玩家的错嘛）
+;--------------------------------------------------
+IF TALENT:142
+	SIF ABL:9 >= 5
+		DESIRED_VALUE *= 2
+	DESIRED_VALUE -= 2
+ENDIF
+
+;--------------------------------------------------
+;处理非恋慕冷漠补正（写这个真的没什么用罢）
+;--------------------------------------------------
+IF TALENT:21 && !TALENT:3
+	SIF ABL:16 >= 4
+		DESIRED_VALUE --
+	SIF DESIRED_VALUE > 0
+		DESIRED_VALUE *= 2
+ENDIF
+
+;--------------------------------------------------
+;处理反发刻印补正
+;依据反发刻印等级的减好感下限已经被绕过
+;--------------------------------------------------
+DESIRED_VALUE += (FLAG:4 + 1) * MARK:3
+
+;--------------------------------------------------
+;处理SOURCE带来的影响
+;--------------------------------------------------
+VARSET LOCAL
+LOCAL += (100 - 30000 / (SOURCE:0 + SOURCE:1 + SOURCE:2 + SOURCE:3 + 300)) * (1 + TALENT:70)
+LOCAL += (100 - 100000 / (SOURCE:10 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:15 + 1000))
+LOCAL += (30 - 30000 / (SOURCE:12 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:16 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:18 + 1000))
+LOCAL += (30 - 30000 / (SOURCE:17 + 1000)) * (ABL:14 - 3) / 3
+LOCAL += (50 - 20000 / (SOURCE:13 + 400)) * (ABL:15 - 3) / 3
+LOCAL += (50 - 10000 / (SOURCE:20 + 2000))
+LOCAL += (30 - 90000 / (SOURCE:21 + 3000))
+LOCAL += (30 - 90000 / (SOURCE:22 + 3000))
+LOCAL -= (50 - 20000 / (SOURCE:14 + 400)) * (ABL:10 - 3) / 3
+LOCAL -= (50 - 25000 / (SOURCE:30 + 500)) * (2 - TALENT:61) / 2
+LOCAL -= (50 - 15000 / (SOURCE:31 + 300))
+LOCAL -= (50 - 25000 / (SOURCE:32 + 500))
+LOCAL -= (50 - 10000 / (SOURCE:33 + 200))
+DESIRED_VALUE -= LOCAL / 10
+
+;--------------------------------------------------
+;处理继承补正
+;--------------------------------------------------
+IF GETBIT (CFLAG:31, 1)
+	DESIRED_VALUE -= 2
+ELSEIF GETBIT (CFLAG:31, 0)
+	DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理魅惑属性补正
+;--------------------------------------------------
+SIF TALENT:MASTER:145
+	DESIRED_VALUE --
+SIF TALENT:MASTER:94
+	DESIRED_VALUE --
+SIF TALENT:MASTER:93
+	DESIRED_VALUE --
+SIF TALENT:MASTER:92
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理思慕补正（为什么不和恋慕放一起？）
+;--------------------------------------------------
+SIF TALENT:8
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理耳补正
+;--------------------------------------------------
+SIF TALENT:143 && TALENT:143 == TFLAG:123
+	DESIRED_VALUE -= 3
+
+;--------------------------------------------------
+;处理仙香玉兔和毒气花园补正
+;--------------------------------------------------
+IF IsInsenceValid(36)
+	DESIRED_VALUE --
+	SIF CFLAG:2 < 1000
+		DESIRED_VALUE --
+ENDIF
+SIF IsGardenValid(36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理恋慕和催情药补正（为什么不和思慕放一起？）
+;--------------------------------------------------
+IF TALENT:3
+	DESIRED_VALUE -= 2
+ELSEIF TCVAR:139
+	DESIRED_VALUE --
+	SIF CFLAG:2 < 1000
+		DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理性别歧视补正
+;--------------------------------------------------
+IF OTOKOGIRAI(36)
+	DESIRED_VALUE += 3
+	IF GETBIT (CFLAG:31, 1)
+		DESIRED_VALUE -= 2
+	ELSEIF GETBIT (CFLAG:31, 0)
+		DESIRED_VALUE --
+	ENDIF
+ENDIF
+
+;--------------------------------------------------
+;处理心情补正
+;--------------------------------------------------
+DESIRED_VALUE -= TALENT:15
+
+;--------------------------------------------------
+;处理一堆素质补正
+;--------------------------------------------------
+DESIRED_VALUE -= TALENT:70
+
+SIF TALENT:24 * TALENT:MASTER:24 > 0
+	DESIRED_VALUE --
+
+SIF TALENT:62 && DESIRED_VALUE > 1
+	DESIRED_VALUE --
+
+SIF TALENT:32
+	DESIRED_VALUE ++
+
+SIF TALENT:22
+	DESIRED_VALUE ++
+
+SIF TALENT:20
+	DESIRED_VALUE ++
+
+SIF TALENT:11 < 0 && DESIRED_VALUE > 1
+	DESIRED_VALUE --
+
+SIF TALENT:13 > 0
+	DESIRED_VALUE ++
+
+SIF TALENT:11 > 0
+	DESIRED_VALUE += 2
+
+;--------------------------------------------------
+;处理百合属性与百合中毒补正
+;--------------------------------------------------
+IF GETBIT(TALENT:MASTER:2, 0)
+	IF ABL:17 == 0
+		DESIRED_VALUE ++
+	ELSEIF ABL:17 < 5
+	ELSEIF ABL:17 < 9
+		DESIRED_VALUE --
+	ELSE
+		DESIRED_VALUE -= 2
+	ENDIF
+	IF ABL:32 > 9
+		DESIRED_VALUE -= 2
+	ELSEIF ABL:32 > 4
+		DESIRED_VALUE --
+	ENDIF
+	SIF TALENT:81 == -1
+		DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理亲密和从顺补正
+;--------------------------------------------------
+DESIRED_VALUE -= (ABL:10 + ABL:11) / 2
+
+;--------------------------------------------------
+;最后，修改TFLAG:97为计算结果
+;--------------------------------------------------
+TFLAG:97 = DESIRED_VALUE
+RETURN 1
+
+;==================================================
+;自定义信赖改变
+;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:98使最终信赖改变为指定的值
+;由于代码中的硬伤，设置过低的信赖上升(如+1)会导致好感无法上升，此时会将期望+1并再次尝试直到合适为止
+;==================================================
+@AME36_TRUST_OVERRIDE(DESIRED_VALUE)
+#DIM DESIRED_VALUE
+#DIM ORIGINAL_DESIRE
+ORIGINAL_DESIRE = DESIRED_VALUE
+
+;--------------------------------------------------
+;暂且先清零好感度BONUS
+;--------------------------------------------------
+TFLAG:95 = 0
+
+;--------------------------------------------------
+;都不省猫事了还能怎么办
+;--------------------------------------------------
+SIF CFLAG:313 || TCVAR:145
+	RETURN -1
+
+;--------------------------------------------------
+;某些指令中信赖不能上升，强制设置为不变
+;--------------------------------------------------
+SIF (SELECTCOM == 21 || (SELECTCOM >= 313 && SELECTCOM <= 330)) && DESIRED_VALUE > 0
+	DESIRED_VALUE = 0
+
+;--------------------------------------------------
+;满情绪时信赖不能下降，强制设置为不变
+;--------------------------------------------------
+SIF BASE:10 == MAXBASE:10 && DESIRED_VALUE < 0
+	DESIRED_VALUE = 0
+
+;--------------------------------------------------
+;很可惜，信赖减少有无法绕开的下限，只能强制减少了
+;--------------------------------------------------
+IF DESIRED_VALUE < MAX(MARK:3 - TALENT:15 , 0) * -5
+	CFLAG:4 = MAX(CFLAG:4 + DESIRED_VALUE, 0)
+	DESIRED_VALUE = 0
+ENDIF
+
+;--------------------------------------------------
+;如果需要信赖不变那就简单啦
+;--------------------------------------------------
+IF DESIRED_VALUE == 0
+	TFLAG:98 = 9999
+	TFLAG:99 = 1
+	RETURN 1
+ENDIF
+
+$VALID_CHECK
+;--------------------------------------------------
+;处理路人补正（但为什么会存在这个东西）
+;--------------------------------------------------
+SIF DESIRED_VALUE < 4 && WITH_MOB() && MAP_住人(MAIN_MAP, 36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理情绪补正
+;--------------------------------------------------
+IF BASE:10 == MAXBASE:10
+	DESIRED_VALUE -= 2
+ELSEIF BASE:10 >= (MAXBASE:10 / 5 * 4) || BASE:11 <= (MAXBASE:11 / 2)
+	DESIRED_VALUE --
+	SIF DESIRED_VALUE < 0
+		DESIRED_VALUE *= 2
+ENDIF
+
+;--------------------------------------------------
+;处理奇迹之石补正
+;--------------------------------------------------
+SIF CFLAG:339 && DESIRED_VALUE > 0
+	DESIRED_VALUE *= 2
+
+;--------------------------------------------------
+;处理非恋慕冷漠/难以越过的底线补正
+;--------------------------------------------------
+SIF (TALENT:21 || TALENT:25) && !TALENT:3 && DESIRED_VALUE > 0
+	DESIRED_VALUE *= 2
+
+;--------------------------------------------------
+;处理百合补正
+;--------------------------------------------------
+SIF GETBIT(TALENT:MASTER:2, 0) && !OTOKOGIRAI(36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理反发刻印补正
+;--------------------------------------------------
+DESIRED_VALUE += (FLAG:4 + 1) * MARK:3
+
+;--------------------------------------------------
+;处理继承补正
+;--------------------------------------------------
+IF GETBIT(CFLAG:31, 1)
+	DESIRED_VALUE -= 2
+ELSEIF GETBIT(CFLAG:31, 0)
+	DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理技能差补正
+;--------------------------------------------------
+IF (TALENT:23 == -1 || TALENT:13 > 0) && DESIRED_VALUE > -1
+	SIF ABL:43 > ABL:MASTER:43 || ABL:42 > ABL:MASTER:42
+		DESIRED_VALUE ++
+ELSE
+	SIF (ABL:43 > ABL:MASTER:43 + 2 || ABL:42 > ABL:MASTER:42 + 2) && DESIRED_VALUE > -1
+		DESIRED_VALUE ++
+ENDIF
+
+;--------------------------------------------------
+;处理SOURCE带来的影响
+;--------------------------------------------------
+VARSET LOCAL
+LOCAL += (50 - 250000 / (SOURCE:10 + 5000))
+LOCAL += (30 - 30000 / (SOURCE:12 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:16 + 1000))
+LOCAL += (15 - 15000 / (SOURCE:18 + 1000))
+LOCAL += (30 - 150000 / (SOURCE:20 + 5000))
+LOCAL += (30 - 90000 / (SOURCE:21 + 3000))
+LOCAL += (30 - 90000 / (SOURCE:22 + 3000))
+IF LOCAL == 0
+	TFLAG:98 = 9999
+	TFLAG:99 = 1
+	RETURN 1
+ENDIF
+LOCAL -= (50 - 20000 / (SOURCE:14 + 400)) * (ABL:10 - 3) / 3
+LOCAL -= (50 - 20000 / (SOURCE:13 + 400)) * (ABL:15 - 3) / 3
+LOCAL -= (50 - 25000 / (SOURCE:30 + 500)) * (2 - TALENT:61) / 2
+LOCAL -= (50 - 15000 / (SOURCE:31 + 300))
+LOCAL -= (50 - 25000 / (SOURCE:32 + 500))
+LOCAL -= (30 - 10000 / (SOURCE:33 + 500))
+DESIRED_VALUE -= LOCAL / 10
+
+;--------------------------------------------------
+;处理一堆素质补正
+;--------------------------------------------------
+SIF TALENT:143 && TALENT:143 == TFLAG:123
+	DESIRED_VALUE -= 3
+
+SIF TALENT:8
+	DESIRED_VALUE --
+
+SIF TALENT:3
+	DESIRED_VALUE -= 2
+
+SIF TALENT:MASTER:94
+	DESIRED_VALUE --
+
+SIF OTOKOGIRAI(36)
+	DESIRED_VALUE ++
+
+SIF TALENT:32
+	DESIRED_VALUE += 2
+
+SIF TALENT:22
+	DESIRED_VALUE ++
+
+SIF TALENT:24 * TALENT:MASTER:24 > 0
+	DESIRED_VALUE --
+
+DESIRED_VALUE -= TALENT:15
+
+SIF TALENT:11 > 0 && !TALENT:3
+	DESIRED_VALUE ++
+
+DESIRED_VALUE -= ABL:9 / 5
+
+;--------------------------------------------------
+;处理三个需要最终值的补正
+;--------------------------------------------------
+SIF BASE:12 > 0 && DESIRED_VALUE < - BASE:12 / 100
+	DESIRED_VALUE += BASE:12 / 100
+
+IF TALENT:11 < 0 && TALENT:62 && DESIRED_VALUE > 2
+	DESIRED_VALUE -= 2
+ELSEIF (TALENT:11 < 0 || TALENT:62) && DESIRED_VALUE > 1
+	DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;当前后需要结果不一致时，修改TFLAG:99防止被覆盖
+;--------------------------------------------------
+SIF ORIGINAL_DESIRE < 0 && DESIRED_VALUE > 0
+	TFLAG:99 = 1
+
+;--------------------------------------------------
+;在修改TFLAG:98为计算结果前，若会导致无法获得好感则返回重试
+;--------------------------------------------------
+IF DESIRED_VALUE < 0 && ORIGINAL_DESIRE > 0
+	ORIGINAL_DESIRE ++
+	DESIRED_VALUE = ORIGINAL_DESIRE
+	GOTO VALID_CHECK
+ENDIF
+TFLAG:98 = DESIRED_VALUE
+RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;仅仅只是工具系
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;经过改良的FIRSTTIME
+;MODE = 0：检查模式，不会写入
+;MODE = 1：写入模式，和原版FIRSTTIME运作机制一致
+;暂且分配10个CFLAG记录，容量为640
+;==================================================
+@AME36_FIRSTTIME(EVENT_NO, MODE = 1)
+#FUNCTION
+#DIM EVENT_NO
+#DIM MODE
+
+SIF EVENT_NO >= 640
+	RETURNF -1
+LOCAL = EVENT_NO / 64
+LOCAL:1 = EVENT_NO % 64
+IF MODE
+	LOCAL:2 = GETBIT(CFLAG:(1101 + LOCAL), LOCAL:1)
+	SETBIT CFLAG:(1101 + LOCAL), LOCAL:1
+	RETURNF !LOCAL:2
+ELSE
+	RETURNF !GETBIT(CFLAG:(1101 + LOCAL), LOCAL:1)
+ENDIF
+RETURNF 0
+
+;==================================================
+;按比例乘算有关的SOURCE
+;被排除的：快感、液体、性行动、不洁、郁屈、逸脱、反感
+;==================================================
+@AME36_TIMES_RELAVENT_SOURCE(PERCENTAGE)
+#DIM PERCENTAGE
+SIF PERCENTAGE == 100
+	RETURN 1
+SOURCE:10 = SOURCE:10 * PERCENTAGE / 100
+SOURCE:12 = SOURCE:12 * PERCENTAGE / 100
+SOURCE:13 = SOURCE:13 * PERCENTAGE / 100
+SOURCE:14 = SOURCE:14 * PERCENTAGE / 100
+SOURCE:15 = SOURCE:15 * PERCENTAGE / 100
+SOURCE:16 = SOURCE:16 * PERCENTAGE / 100
+SOURCE:17 = SOURCE:17 * PERCENTAGE / 100
+SOURCE:18 = SOURCE:18 * PERCENTAGE / 100
+SOURCE:20 = SOURCE:20 * PERCENTAGE / 100
+SOURCE:21 = SOURCE:21 * PERCENTAGE / 100
+SOURCE:22 = SOURCE:22 * PERCENTAGE / 100
+SOURCE:50 = SOURCE:50 * PERCENTAGE / 100
+SOURCE:51 = SOURCE:51 * PERCENTAGE / 100
+SOURCE:52 = SOURCE:52 * PERCENTAGE / 100
+SOURCE:53 = SOURCE:53 * PERCENTAGE / 100
+SOURCE:54 = SOURCE:54 * PERCENTAGE / 100
+SOURCE:55 = SOURCE:55 * PERCENTAGE / 100
+RETURN 1
+
+;==================================================
+;增加相应COM的经历值
+;==================================================
+@AME36_ADD_COM_RECOLLECTION(COM, AMOUNT)
+#DIM COM
+#DIM AMOUNT
+SELECTCASE COM
+	CASE 300
+		CFLAG:AME36_RECOLLECTION_300 += AMOUNT
+	CASE 301
+		CFLAG:AME36_RECOLLECTION_301 += AMOUNT
+	CASE 302
+		CFLAG:AME36_RECOLLECTION_302 += AMOUNT
+	CASE 303
+		CFLAG:AME36_RECOLLECTION_303 += AMOUNT
+	CASE 304
+		CFLAG:AME36_RECOLLECTION_304 += AMOUNT
+	CASE 305
+		CFLAG:AME36_RECOLLECTION_305 += AMOUNT
+	CASE 306
+		CFLAG:AME36_RECOLLECTION_306 += AMOUNT
+	CASE 307
+		CFLAG:AME36_RECOLLECTION_307 += AMOUNT
+	CASE 308
+		CFLAG:AME36_RECOLLECTION_308 += AMOUNT
+	CASE 309
+		CFLAG:AME36_RECOLLECTION_309 += AMOUNT
+	CASE 310
+		CFLAG:AME36_RECOLLECTION_310 += AMOUNT
+	CASE 311
+		CFLAG:AME36_RECOLLECTION_311 += AMOUNT
+	CASE 330
+		CFLAG:AME36_RECOLLECTION_330 += AMOUNT
+	CASE 332
+		CFLAG:AME36_RECOLLECTION_332 += AMOUNT
+	CASE 334
+		CFLAG:AME36_RECOLLECTION_334 += AMOUNT
+	CASE 354
+		CFLAG:AME36_RECOLLECTION_354 += AMOUNT
+	CASE 403
+		CFLAG:AME36_RECOLLECTION_403 += AMOUNT
+	CASE 410
+		CFLAG:AME36_RECOLLECTION_410 += AMOUNT
+	CASE 411
+		CFLAG:AME36_RECOLLECTION_411 += AMOUNT
+	CASE 412
+		CFLAG:AME36_RECOLLECTION_412 += AMOUNT
+	CASE 413
+		CFLAG:AME36_RECOLLECTION_413 += AMOUNT
+	CASE 414
+		CFLAG:AME36_RECOLLECTION_414 += AMOUNT
+	CASE 416
+		CFLAG:AME36_RECOLLECTION_416 += AMOUNT
+	CASE 417
+		CFLAG:AME36_RECOLLECTION_417 += AMOUNT
+	CASE 431
+		CFLAG:AME36_RECOLLECTION_431 += AMOUNT
+	CASE 432
+		CFLAG:AME36_RECOLLECTION_432 += AMOUNT
+	CASE 436
+		CFLAG:AME36_RECOLLECTION_436 += AMOUNT
+	CASE 440
+		CFLAG:AME36_RECOLLECTION_440 += AMOUNT
+	CASE 442
+		CFLAG:AME36_RECOLLECTION_442 += AMOUNT
+	CASE 445
+		CFLAG:AME36_RECOLLECTION_445 += AMOUNT
+	CASE 446
+		CFLAG:AME36_RECOLLECTION_446 += AMOUNT
+	CASE 447
+		CFLAG:AME36_RECOLLECTION_447 += AMOUNT
+	CASE 448
+		CFLAG:AME36_RECOLLECTION_448 += AMOUNT
+	CASE 449
+		CFLAG:AME36_RECOLLECTION_449 += AMOUNT
+	CASE 480
+		CFLAG:AME36_RECOLLECTION_480 += AMOUNT
+	CASE 483
+		CFLAG:AME36_RECOLLECTION_483 += AMOUNT
+	CASE 484
+		CFLAG:AME36_RECOLLECTION_484 += AMOUNT
+	CASE 603
+		CFLAG:AME36_RECOLLECTION_603 += AMOUNT
+	CASE 605
+		CFLAG:AME36_RECOLLECTION_605 += AMOUNT
+	CASE 610
+		CFLAG:AME36_RECOLLECTION_610 += AMOUNT
+	CASE 614
+		CFLAG:AME36_RECOLLECTION_614 += AMOUNT
+	CASE 615
+		CFLAG:AME36_RECOLLECTION_615 += AMOUNT
+	CASE 617
+		CFLAG:AME36_RECOLLECTION_617 += AMOUNT
+	CASE 621
+		CFLAG:AME36_RECOLLECTION_621 += AMOUNT
+	CASE 626
+		CFLAG:AME36_RECOLLECTION_626 += AMOUNT
+	CASEELSE
+		RETURN -1
+ENDSELECT
+RETURN 1
+
+;==================================================
+;增加相应SCOM的经历值
+;==================================================
+@AME36_ADD_SCOM_RECOLLECTION(SCOM)
+#DIM SCOM
+SELECTCASE SCOM 
+	CASE 60
+		CFLAG:AME36_RECOLLECTION_S60 ++
+	CASE 61
+		CFLAG:AME36_RECOLLECTION_S61 ++
+	CASE 62
+		CFLAG:AME36_RECOLLECTION_S62 ++
+ENDSELECT 
+RETURN 1
+
+;==================================================
+;清屏，做着好玩的
+;==================================================
+@AME36_WIPE
+#DIM CONST INTERVALS = 1000, 800, 650, 500, 400, 300, 250, 200, 160, 130, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20
+#DIM ORG_LINECOUNT
+ORG_LINECOUNT = LINECOUNT
+FOR LOCAL, 0, 20
+	CLEARLINE 1
+	TWAIT INTERVALS:LOCAL, 1
+NEXT
+FOR LOCAL, 1, 10
+	FOR LOCAL:1, 1, LOCAL
+		CLEARLINE LOCAL
+		TWAIT 10, 1
+	NEXT
+NEXT
+WHILE LINECOUNT > 270
+	CLEARLINE 10
+WEND
+CLEARLINE LINECOUNT - 260
+FOR LOCAL, 1, 10
+	FOR LOCAL:1, 1, 10 - LOCAL
+		CLEARLINE 10 - LOCAL
+		TWAIT 10, 1
+	NEXT
+NEXT
+FOR LOCAL, 0, 20
+	CLEARLINE 1
+	TWAIT INTERVALS:(19 - LOCAL), 1
+NEXT
+CLEARLINE 1
+RETURN 0
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;DQ系：想要一字一顿地说话！
+;依赖ERH中定义的AME36_DQ_ARRAY和AME36_DQ_SARRAY这两个数组运行
+;最大支持文本长度198字符（不管全角半角都算一个）
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;初始化函数，将文本打碎成单字储存
+;默认颜色为系统默认值，无特殊格式，每40ms输出一个字
+;==================================================
+@AME36_DQ_INITIALIZE(TEXT, COLOR = -1, STYLE = 0, INTERVAL = 40)
+#DIMS TEXT
+#DIM COLOR
+#DIM STYLE
+#DIM INTERVAL
+#DIM LENGTH
+
+FOR LOCAL, 1, 200
+	IF TEXT == ""
+		AME36_DQ_SARRAY:LOCAL '= ""
+		LENGTH = LOCAL - 1
+		BREAK
+	ENDIF
+	SUBSTRING TEXT, 0, 1
+	AME36_DQ_SARRAY:LOCAL '= RESULTS
+	SUBSTRING TEXT, 1, 400
+	TEXT '= RESULTS
+NEXT
+FOR LOCAL, 1, LENGTH + 1
+	AME36_DQ_ARRAY:LOCAL:0 = COLOR
+	AME36_DQ_ARRAY:LOCAL:1 = STYLE
+	AME36_DQ_ARRAY:LOCAL:2 = INTERVAL
+NEXT
+
+RETURN 1
+
+;==================================================
+;改变文本其中一段的颜色，START默认为文本开头，FINISH默认为文本结尾
+;==================================================
+@AME36_DQ_SETCOLOR(COLOR, START = 1, FINISH = 0)
+#DIM COLOR
+#DIM START
+#DIM FINISH
+IF FINISH == 0
+	FOR LOCAL, START, 200
+		SIF AME36_DQ_SARRAY:LOCAL == ""
+			BREAK
+		AME36_DQ_ARRAY:LOCAL:0 = COLOR
+	NEXT
+	RETURN 1
+ENDIF
+FOR LOCAL, START, FINISH + 1
+	AME36_DQ_ARRAY:LOCAL:0 = COLOR
+NEXT
+
+RETURN 1
+
+;==================================================
+;改变文本其中一段为渐变色，START默认为文本开头，FINISH默认为文本结尾
+;==================================================
+@AME36_DQ_GRADIENT(COLOR1, COLOR2, START = 1, FINISH = 0)
+#DIM COLOR1
+#DIM COLOR2
+#DIM START
+#DIM FINISH
+#DIM RED0
+#DIM RED1
+#DIM RED2
+#DIM GREEN0
+#DIM GREEN1
+#DIM GREEN2
+#DIM BLUE0
+#DIM BLUE1
+#DIM BLUE2
+RED1 = COLOR1 / 0x10000
+RED2 = COLOR2 / 0x10000
+GREEN1 = (COLOR1 / 0x100) % 0x100
+GREEN2 = (COLOR2 / 0x100) % 0x100
+BLUE1 = COLOR1 % 0x100
+BLUE2 = COLOR2 % 0x100
+IF FINISH == 0
+	FOR LOCAL, 1, 200
+		IF AME36_DQ_SARRAY:LOCAL == ""
+			FINISH = LOCAL - 1
+			BREAK
+		ENDIF
+	NEXT
+ENDIF
+
+FOR LOCAL, START, FINISH + 1
+	RED0 = RED1 + (RED2 - RED1) * (LOCAL - START) / (FINISH - START)
+	GREEN0 = GREEN1 + (GREEN2 - GREEN1) * (LOCAL - START) / (FINISH - START)
+	BLUE0 = BLUE1 + (BLUE2 - BLUE1) * (LOCAL - START) / (FINISH - START)
+	AME36_DQ_ARRAY:LOCAL:0 = RED0 * 0x10000 + GREEN0 * 0x100 + BLUE0
+NEXT
+
+RETURN 1
+
+;==================================================
+;改变文本其中一段为特殊格式，START默认为文本开头，FINISH默认为文本结尾
+;==================================================
+@AME36_DQ_SETSTYLE(STYLE, START = 1, FINISH = 0)
+#DIM STYLE
+#DIM START
+#DIM FINISH
+IF FINISH == 0
+	FOR LOCAL, START, 200
+		SIF AME36_DQ_SARRAY:LOCAL == ""
+			BREAK
+		AME36_DQ_ARRAY:LOCAL:1 = STYLE
+	NEXT
+	RETURN 1
+ENDIF
+FOR LOCAL, START, FINISH + 1
+	AME36_DQ_ARRAY:LOCAL:1 = STYLE
+NEXT
+
+RETURN 1
+
+;==================================================
+;改变文本其中一段的显示速度，START默认为文本开头，FINISH默认为文本结尾
+;==================================================
+@AME36_DQ_SETINTERVAL(INTERVAL, START = 1, FINISH = 0)
+#DIM INTERVAL
+#DIM START
+#DIM FINISH
+IF FINISH == 0
+	FOR LOCAL, START, 200
+		SIF AME36_DQ_SARRAY:LOCAL == ""
+			BREAK
+		AME36_DQ_ARRAY:LOCAL:2 = INTERVAL
+	NEXT
+	RETURN 1
+ENDIF
+FOR LOCAL, START, FINISH + 1
+	AME36_DQ_ARRAY:LOCAL:2 = INTERVAL
+NEXT
+
+RETURN 1
+
+;==================================================
+;改变文本其中一段为变速显示，START默认为文本开头，FINISH默认为文本结尾
+;==================================================
+@AME36_DQ_ACCELERATE(INTERVAL1, INTERVAL2, START = 1, FINISH = 0)
+#DIM INTERVAL1
+#DIM INTERVAL2
+#DIM START
+#DIM FINISH
+IF FINISH == 0
+	FOR LOCAL, 1, 200
+		IF AME36_DQ_SARRAY:LOCAL == ""
+			FINISH = LOCAL - 1
+			BREAK
+		ENDIF
+	NEXT
+ENDIF
+
+FOR LOCAL, START, FINISH + 1
+	AME36_DQ_ARRAY:LOCAL:2 = INTERVAL1 + (INTERVAL2 - INTERVAL1) * (LOCAL - START) / (FINISH - START)
+NEXT
+
+RETURN 1
+
+;==================================================
+;打印经过各种处理的文本，一字一顿说话
+;==================================================
+@AME36_DQ_PRINT(IF_WAIT = 1)
+#DIM IF_WAIT
+#DIM CURRENT_COLOR
+#DIM CURRENT_STYLE
+CURRENT_COLOR = GETCOLOR()
+CURRENT_STYLE = GETSTYLE()
+
+FOR LOCAL, 1, 200
+	IF AME36_DQ_SARRAY:LOCAL == ""
+		SETCOLOR CURRENT_COLOR
+		FONTSTYLE CURRENT_STYLE
+		IF IF_WAIT
+			PRINTFORMW
+		ELSE
+			PRINTFORML
+		ENDIF
+		BREAK
+	ENDIF
+	SIF LOCAL != 1
+		TWAIT AME36_DQ_ARRAY:(LOCAL - 1):2, AME36_DQ_UNSKIPPABLE
+		CLEARLINE 1
+	FOR LOCAL:1, 1, LOCAL + 1
+		IF AME36_DQ_ARRAY:(LOCAL:1):0 == -1
+			RESETCOLOR
+		ELSE
+			SETCOLOR AME36_DQ_ARRAY:(LOCAL:1):0
+		ENDIF
+		FONTSTYLE AME36_DQ_ARRAY:(LOCAL:1):1
+		PRINTFORM %AME36_DQ_SARRAY:(LOCAL:1)%
+	NEXT
+NEXT
+
+RETURN 1

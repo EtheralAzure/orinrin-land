@@ -1,0 +1,224 @@
+﻿;待施工
+
+;一日終了時的流程
+;@DIARY_TEXT_K36（日記本文）→@DIARY_AFTER_CHECK_K36（日记之后的处理）
+
+
+;◆日記の仕様◆
+;※１@DIARY_BEFORE_CHECK_K36で日記のフラグが立つ。
+;未读标志表示为(2)的话，在一天结束的时候，日记作为每日事件被读(然后变成已读)。
+;→※未读标志表示为(3)的话可以用[读日记]来读。读完会变成已读。数值变为(1)。
+;※1各处活动口和指令口上也可以立标志。
+;※2基本未读(2)推荐。它可以在当日终了时出现，已读(1)和未读(3)需要自己读。
+;
+;[阅读日记]，如果主人[爱慕]的话可以自由阅读，
+;如果不是，就可以通过非爱慕的人物不在场或时间停止的方式偷读。
+;不是主地图居民的角色如果是恋慕的话可以在自己家(邀请的房间)读。
+
+;MAX_DIARY_PAGE:36:0　角色号36的日记的最大页数　最大是101（1～100）
+;DIARY:36:YY　　　　　角色号码36，日记编号YY的日记阅读情况
+;　　 3=未読　　　　　在晚上不会被广播。用[读日记]读后才会显示已读。
+;　　 2=未読　　　　　在晚上会被广播。在被读之前，[读日记]是不能读的。读了就会变成已读。
+;　　 1=既読　　　　　在晚上不会被广播，为已读状态。通过[读日记]来阅读。
+;　　 0=未解锁	　　　未解禁。
+;PAGESET:36:YY　　　　角色号36的实际在YY页写了编号为什么值的日记。
+;==================================================
+;日记的存在判定
+;==================================================
+@DIARY_AME_K36_EXIST
+;--------------------------------------------------
+;把存储的积攒度赋回去，放在这么奇怪的地方只是因为位置比较好
+;--------------------------------------------------
+IF CFLAG:AME36_HORNINESS_TEMP
+	CFLAG:积攒度 = CFLAG:AME36_HORNINESS_TEMP
+	CFLAG:AME36_HORNINESS_TEMP = 0
+ENDIF
+
+RETURN 1
+
+;=============================
+@DIARY_AME_AFTER_CHECK_K36
+;在每日活动中阅读日记时的后处理。
+;可以自由地处理标志的管理等。
+
+;条件标志的重置和判定添加也在这里
+;例如:今日構ったフラグ
+;今天写的日记显示出来之后，把写好的标记重置。
+;CFLAG:36:今日構ったフラグ= 0
+;或者某种状态的持续是标志，
+;好感度几乎不变的日子持续的话。
+;写让人觉得“你”的态度很冷淡的日记
+; SIF CFLAG:36:好感度 <= LAST_LP+3
+;   NOTOUCH_DAY ++
+;=============================
+
+;==================================================
+;经常被检查的日记状态信息
+;==================================================
+@DIARY_AME_BEFORE_CHECK_K36
+;--------------------------------------------------
+;阻止未经授权的PALAM变化
+;--------------------------------------------------
+;检测阿燐是否为执行对象，是否有PALAM的变化
+;若非执行对象却有PALAM的变化，则重置之
+;--------------------------------------------------
+IF !CFLAG:AME36_IS_TARGET
+	SIF CFLAG:AME36_PALAM_TEMP_10 != PALAM:10
+		PALAM:10 = CFLAG:AME36_PALAM_TEMP_10
+	SIF CFLAG:AME36_PALAM_TEMP_11 != PALAM:11
+		PALAM:11 = CFLAG:AME36_PALAM_TEMP_11
+	SIF CFLAG:AME36_PALAM_TEMP_12 != PALAM:12
+		PALAM:12 = CFLAG:AME36_PALAM_TEMP_12
+	SIF CFLAG:AME36_PALAM_TEMP_13 != PALAM:13
+		PALAM:13 = CFLAG:AME36_PALAM_TEMP_13
+	SIF CFLAG:AME36_PALAM_TEMP_14 != PALAM:14
+		PALAM:14 = CFLAG:AME36_PALAM_TEMP_14
+	SIF CFLAG:AME36_PALAM_TEMP_15 != PALAM:15
+		PALAM:15 = CFLAG:AME36_PALAM_TEMP_15
+	SIF CFLAG:AME36_PALAM_TEMP_16 != PALAM:16
+		PALAM:16 = CFLAG:AME36_PALAM_TEMP_16
+	SIF CFLAG:AME36_PALAM_TEMP_20 != PALAM:20
+		PALAM:20 = CFLAG:AME36_PALAM_TEMP_20
+	SIF CFLAG:AME36_PALAM_TEMP_21 != PALAM:21
+		PALAM:21 = CFLAG:AME36_PALAM_TEMP_21
+	SIF CFLAG:AME36_PALAM_TEMP_30 != PALAM:30
+		PALAM:30 = CFLAG:AME36_PALAM_TEMP_30
+	SIF CFLAG:AME36_PALAM_TEMP_31 != PALAM:31
+		PALAM:31 = CFLAG:AME36_PALAM_TEMP_31
+	SIF CFLAG:AME36_PALAM_TEMP_32 != PALAM:32
+		PALAM:32 = CFLAG:AME36_PALAM_TEMP_32
+	SIF CFLAG:AME36_PALAM_TEMP_33 != PALAM:33
+		PALAM:33 = CFLAG:AME36_PALAM_TEMP_33
+ENDIF
+
+
+;这里进行DIARY:36:YY的更新。
+;※DIARY:36:0号不要使用。
+;
+;在这里填写通用发生条件
+;各指令的发生条件请在m_kojo的各文件中追加
+;
+;基本上发生条件要加入"DIARY:36:YY == 0"。
+;否则就会写同样的日记。
+;
+;〇未读(2)时(基本)
+;未读(2)则作为每日事件发生，一天结束时只读一个。
+;在多个页未读(2)的情况下，读取序号小的页，除该页以外的页被复位到(0)。
+;因此，如果多个同时发生，则存在虽然发生了但不被读取而被复位的情况。
+;要变成未读(2)，只要给变量赋值2就可以了。
+
+;例１)初対面
+;SIF DIARY:36:YY == 0 && CFLAG:36:面識
+;	DIARY:36:YY = 2
+
+;〇变为未读(3)时(应用)
+;未读(3)的话就不会作为每日事件来读，而是在写的时候通过[读日记]来读。
+;只要MASTER不读日记就不会被读，一天也有被设置多页的情况。
+;要变成未读(3)，必须在标志中加入3的基础上，进行CALL CHARA_DIARY_PAGESETTING(36, YY)
+
+;例２）好感度100以上
+;IF DIARY:36:YY == 0 && CFLAG:36:好感度 >= 100
+;	DIARY:36:YY = 3
+;	CALL CHARA_DIARY_PAGESETTING(36, YY)
+;ENDIF
+
+;例3)例2的日记被阅读后，好感度超过1000
+;如果这样做的话，还会发生在读YY之后马上写入ZZ的事情。
+;IF DIARY:36:ZZ == 0 && DIARY:36:YY == 1 && CFLAG:36:好感度 >= 1000
+;	DIARY:36:ZZ = 3
+;	CALL CHARA_DIARY_PAGESETTING(36, ZZ)
+;ENDIF
+
+;多管闲事的注释
+;因为初吻基本上全员都有[无接吻经验]，"!TALENT:36:没有接吻经验”可以判定。
+;约会回来的接吻想显示日记的话，也可以在约会回来的接吻口上中设置变量。
+;这种情况下，要注意不要和一般的丧失初吻的情况重复。
+;因为处女丧失在初期设定中也有处女丧失的情况，所以在处女丧失时设置变量比较好。
+;其他告白·陷落等的活动在各种活动口上设置变量。初次见面在哪里也没关系。
+;为了正确测量日期，需要另外的标记。比如第一次见面的日子
+;=============================
+;MAXPAGE 最大页数的计入
+MAX_DIARY_PAGE:36:0 = 1
+
+;=============================
+@DIARY_AME_TEXT_K36, PAGENUM, MODE, PAGECOUNT
+;日記の内容
+;PAGENUM   = 日記番号（日记的编号）
+;MODE      = "デイリー":一天结束时在每日活动上的朗读
+;          = "指令":[读日记]使用时会输出
+;PAGECOUNT = 写在了第几页
+;=============================
+#DIM PAGENUM
+#DIMS MODE
+#DIM PAGECOUNT
+
+;如果有口上颜色指定，就取消注释
+;CALL M_KOJO_COLOR_K36
+
+;在分组中加入日记的ID，可以显示想要显示的头像。
+;表情·服装·特殊图像以选项指定显示(可省略)
+;格式是\resources\脸。参照CSV和下面的例子
+
+;以下是例子
+IF MODE == "デイリー"
+	IF GROUPMATCH(PAGENUM, 1) 
+		CALL PRINT_FACE, 36, "発情", "裸", "_1"
+	ELSEIF GROUPMATCH(PAGENUM, 2)
+		CALL PRINT_FACE, 36, "笑顔", "服1"
+	ELSEIF GROUPMATCH(PAGENUM, 3)
+		CALL PRINT_FACE, 36, "怒り"
+	ELSE
+		CALL PRINT_FACE, 36
+	ENDIF
+ENDIF
+
+PRINTFORMDL - %CALLNAME:36%の日記　PAGE.{PAGECOUNT} --------------------------------------------------------------------------------------
+PRINTL
+
+;※PAGENUM:0は使えません
+SELECTCASE PAGENUM
+	CASE 1
+		PRINTFORML ○月×日
+		PRINTFORML 我决定从今天开始写日记。
+ENDSELECT
+
+RESETCOLOR
+
+;=============================
+;==================================================
+
+@M_KOJO_AME_MESSAGE_MESSAGECHECK_COM_K36_406
+RETURN 0
+
+@M_KOJO_AME_MESSAGE_COM_K36_406
+;=============================
+CALL M_KOJO_AME_MESSAGE_COM_K36_406_1
+RETURN RESULT
+
+;=============================
+@M_KOJO_AME_MESSAGE_COM_K36_406_1
+;指令口上
+;TFLAG:194(看谁的日记)
+;TFLAG:194不是36的时候，是当着TARGET的面看别人的日记，要注意。
+;PAGE是指所写的页数。
+;SHIRAHU(36)是角色36的状态是否正常。
+;=============================
+#DIM PAGE
+
+;以下是样本
+PAGE = 0
+FOR LOCAL, 0, MAX_DIARY_PAGE:(TFLAG:194):0
+	IF GROUPMATCH(DIARY:(TFLAG:194):LOCAL, 1, 3)
+		PAGE ++
+	ENDIF
+NEXT
+
+IF SHIRAHU(36) && TFLAG:194 == 36
+;读完日记后的反应
+	IF PAGE > 2
+		CALL SPTALK, 36,"通常",0,@"「把日记给她看……总觉得有点不好意思……」//%CALLNAME:36%目不转睛地盯着这边"
+		;带图像的对讲最多6行。
+	ELSE
+		PRINTFORML 
+	ENDIF
+ENDIF

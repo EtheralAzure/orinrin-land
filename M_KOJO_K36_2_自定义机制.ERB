@@ -1,0 +1,846 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;eraTheWorld 4.954 画蛇又添足 火焰猫燐别人版口上
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;SUCCESS系
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;统一SUCCESS函数
+;==================================================
+@M_KOJO_AME_SUCCESS_K36_GENERAL
+
+;==================================================
+;300.会话
+;==================================================
+@M_KOJO_AME_SUCCESS_COM_K36_300
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;杂项
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;自定义陷落条件检测
+;==================================================
+@M_KOJO_AME_CHECK_K36_FALL_STATE_OVERRIDE(ARGS, ARG, ARG:1)
+RETURN 1
+
+;==================================================
+;自定义陷落条件判定与显示
+;==================================================
+@M_KOJO_AME_CHECK_K36_FALL_STATE(ARGS, ARG, ARG:1)
+SELECTCASE ARGS
+    ;--------------------------------------------------
+    ;思慕
+    ;--------------------------------------------------
+    CASE "YEARNING"
+        RESULTS:1 = 思慕未达成的条件
+        RESULT:1 = 0
+        RESULTS:2 = 思慕已达成的条件
+        RESULT:2 = 1
+        RETURN 2
+    ;--------------------------------------------------
+    ;恋慕
+    ;--------------------------------------------------
+    CASE "LOVE"
+        RESULTS:1 = 恋慕未达成的条件
+        RESULT:1 = 0
+        RESULTS:2 = 恋慕已达成的条件
+        RESULT:2 = 1
+        RETURN 2
+    ;--------------------------------------------------
+    ;炮友
+    ;--------------------------------------------------
+    CASE "FUCK BUDDY"
+        RESULTS:1 = 取得不可
+        RESULT:1 = 0
+        RETURN 1
+    ;--------------------------------------------------
+    ;爱欲
+    ;--------------------------------------------------
+    CASE "LUST"
+        RESULTS:1 = 取得不可
+        RESULT:1 = 0
+        RETURN 1
+ENDSELECT
+RETURN 0
+
+;==================================================
+;刻印取得的MESSAGECHECK
+;因为调用比较靠后拿来当作EXTRASOURCE的补充了
+;==================================================
+@M_KOJO_AME_MESSAGE_MARKCNG_MESSAGECHECK_K36
+SELECTCASE SELECTCOM
+    CASE 299
+        CALL AME36_FAVOR_OVERRIDE(0)
+        CALL AME36_TRUST_OVERRIDE(0)
+    CASE 300
+        ;
+    CASE 301
+        ;
+ENDSELECT
+RETURN 0
+
+;==================================================
+;COM的统一EXTRASOURCE函数
+;==================================================
+@M_KOJO_AME_EXTRASOURCE_COM_K36_GENERAL
+#DIM COM_EQUIVALENT
+#DIM PERCENTAGE_DUPE
+#DIM EXP_ADD
+#DIM MONO
+;--------------------------------------------------
+;标记本回合确实被选中为TARGET
+;用于清除非TARGET的PALAM上升
+;--------------------------------------------------
+CFLAG:AME36_IS_TARGET = 1
+;--------------------------------------------------
+;随当天执行次数效应递减
+;--------------------------------------------------
+COM_EQUIVALENT = SELECTCOM
+SIF SELECTCOM == 336
+    COM_EQUIVALENT = 305
+SIF SELECTCOM == 415
+    COM_EQUIVALENT = 414
+IF COM_EQUIVALENT >= 300 && COM_EQUIVALENT < 800
+    ;--------------------------------------------------
+    ;当阿燐很讨厌你做的事情时，什么都不获得，并清空正面SOURCE
+    ;--------------------------------------------------
+    IF CFLAG:AME36_NO_RECOLLECTION_THIS_TIME
+        CALL AME36_TIMES_RELAVENT_SOURCE(0)
+        RETURN -1
+    ENDIF
+    AME36_COM_COUNTER:(COM_EQUIVALENT - 300) += 1
+    SELECTCASE COM_EQUIVALENT
+        ;--------------------------------------------------
+        ;衰减最快：330掀起裙子、333听牢骚、354陪睡、417午睡、480弹幕胜负、483斗虫、484打西瓜、610请吃饭、614采购食材、
+        ;615吃便当、617邀请去甜品店
+        ;--------------------------------------------------
+        CASE 330, 333, 354, 417, 480, 483, 484, 610, 614, 615, 617
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 1
+                CASE 2
+                    PERCENTAGE_DUPE = 10
+                    EXP_ADD = -2
+                CASE IS >= 3
+                    PERCENTAGE_DUPE = 5
+                    EXP_ADD = -3
+            ENDSELECT
+            MONO = 1
+        ;--------------------------------------------------
+        ;衰减快：301泡茶、305膝枕/索求膝枕、306抚摸小腹、307捏脸蛋、308戳脸颊、309摸头、310摸屁股、311拥抱、332劝酒、
+        ;403休憩、410扫除、414吃饭/招待吃饭、416演奏、431在浴室里放松、432钱汤、440等待、447路边摆摊、605绕道
+        ;--------------------------------------------------
+        CASE 301, 305, 306, 307, 308, 309, 310, 311, 332, 403, 410, 414, 416, 431, 432, 440, 447, 605
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 2
+                    PERCENTAGE_DUPE = 60
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 1
+                CASE 3
+                    PERCENTAGE_DUPE = 30
+                    CFLAG:AME36_ATTENTION ++
+                    EXP_ADD = 1
+                CASE 4 TO 5
+                    PERCENTAGE_DUPE = 10
+                CASE 6 TO 9
+                    PERCENTAGE_DUPE = 7
+                    EXP_ADD = -1
+                CASE IS >= 10
+                    PERCENTAGE_DUPE = 5
+                    EXP_ADD = -2
+            ENDSELECT
+        ;--------------------------------------------------
+        ;衰减慢：300会话、302身体接触、334碰杯、413制作料理、436读书、442伐采、445采集、446进行调合、448设下陷阱、
+        ;449捕虫、621钓鱼
+        ;--------------------------------------------------
+        CASE 300, 302, 334, 413, 436, 442, 445, 446, 448, 449, 621
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 2
+                    PERCENTAGE_DUPE = 80
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 3
+                    PERCENTAGE_DUPE = 65
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 1
+                CASE 4
+                    PERCENTAGE_DUPE = 55
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 1
+                CASE 5
+                    PERCENTAGE_DUPE = 45
+                    CFLAG:AME36_ATTENTION ++
+                    EXP_ADD = 1
+                CASE 6
+                    PERCENTAGE_DUPE = 35
+                    CFLAG:AME36_ATTENTION ++
+                CASE 7
+                    PERCENTAGE_DUPE = 30
+                    CFLAG:AME36_ATTENTION ++
+                CASE 8
+                    PERCENTAGE_DUPE = 25
+                    CFLAG:AME36_ATTENTION ++
+                CASE 9 TO 15
+                    PERCENTAGE_DUPE = 20
+                    EXP_ADD = -1
+                CASE IS >= 16
+                    PERCENTAGE_DUPE = 15
+                    EXP_ADD = -2
+            ENDSELECT
+        ;--------------------------------------------------
+        ;衰减最慢：304帮忙干活、411战斗训练、412学习、603牵手
+        ;理论上牵手不应该加那么多陪伴值但不管了，谁知道这里有逃课办法
+        ;--------------------------------------------------
+        CASE 304, 411, 412, 603
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 2 TO 4
+                    PERCENTAGE_DUPE = 80
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 5 TO 8
+                    PERCENTAGE_DUPE = 65
+                    CFLAG:AME36_ATTENTION ++
+                    EXP_ADD = 1
+                CASE IS >= 9
+                    PERCENTAGE_DUPE = 50
+                    CFLAG:AME36_ATTENTION ++
+            ENDSELECT
+        ;--------------------------------------------------
+        ;特殊：303道歉，SOURCE同衰竭最快，只有惹生气过才会记录经验，且仅记录一次
+        ;--------------------------------------------------
+        CASE 303
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                CASE 2
+                    PERCENTAGE_DUPE = 10
+                CASE IS >= 3
+                    PERCENTAGE_DUPE = 5
+            ENDSELECT
+            EXP_ADD = -10
+            SIF CFLAG:AME36_RECOLLECTION_303 == -1
+                CFLAG:AME36_RECOLLECTION_303 = 1
+        ;--------------------------------------------------
+        ;特殊：335照料，SOURCE同衰减快，用的是自己的COUNTER但加碰杯的经验
+        ;--------------------------------------------------
+        CASE 335
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 2
+                    PERCENTAGE_DUPE = 60
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 1
+                CASE 3
+                    PERCENTAGE_DUPE = 30
+                    CFLAG:AME36_ATTENTION ++
+                    EXP_ADD = 1
+                CASE 4 TO 5
+                    PERCENTAGE_DUPE = 10
+                CASE 6 TO 9
+                    PERCENTAGE_DUPE = 7
+                    EXP_ADD = -1
+                CASE IS >= 10
+                    PERCENTAGE_DUPE = 5
+                    EXP_ADD = -2
+            ENDSELECT
+            COM_EQUIVALENT = 334
+        ;--------------------------------------------------
+        ;特殊：626土产屋，SOURCE同衰减最快，但只有在购买礼物时才会增加经验（写在别的地方）
+        ;--------------------------------------------------
+        CASE 626
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                CASE 2
+                    PERCENTAGE_DUPE = 10
+                CASE IS >= 3
+                    PERCENTAGE_DUPE = 5
+            ENDSELECT
+            EXP_ADD = -10
+        ;--------------------------------------------------
+        ;其他情况，按照衰减最快处理
+        ;--------------------------------------------------
+        CASEELSE
+            SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                CASE 2
+                    PERCENTAGE_DUPE = 10
+                CASE IS >= 3
+                    PERCENTAGE_DUPE = 5
+            ENDSELECT
+            EXP_ADD = -10
+    ENDSELECT
+    SIF GROUPMATCH(COM_EQUIVALENT, 403, 447, 448, 449, 605)
+        MONO = 1
+    ;--------------------------------------------------
+    ;根据陷落状态追加经验、减少SOURCE惩罚
+    ;--------------------------------------------------
+    SELECTCASE AME36_FALL_STATE()
+        CASE 1
+            EXP_ADD ++
+        CASE 2
+            EXP_ADD += 2
+        CASE 3
+            EXP_ADD += 3
+    ENDSELECT
+    SIF MONO
+        EXP_ADD = MIN(EXP_ADD, 1)
+    ;--------------------------------------------------
+    ;经验与SOURCE惩罚的结算
+    ;--------------------------------------------------
+    SIF EXP_ADD > 0
+        CALL AME36_ADD_COM_RECOLLECTION(COM_EQUIVALENT, EXP_ADD)
+    CALL AME36_TIMES_RELAVENT_SOURCE(PERCENTAGE_DUPE)
+ENDIF
+
+RETURN 0
+
+;==================================================
+;SCOM的统一EXTRASOURCE函数
+;==================================================
+@M_KOJO_AME_EXTRASOURCE_SCOM_K36_GENERAL
+#DIM COM_EQUIVALENT
+#DIM PERCENTAGE_DUPE
+#DIM EXP_ADD
+;--------------------------------------------------
+;标记本回合确实被选中为TARGET
+;用于清除非TARGET的PALAM上升
+;--------------------------------------------------
+CFLAG:AME36_IS_TARGET = 1
+;--------------------------------------------------
+;随当天执行次数效应递减
+;--------------------------------------------------
+IF TFLAG:50 >= 60 && TFLAG:50 < 100 && TFLAG:50 != 63
+    ;--------------------------------------------------
+    ;当阿燐很讨厌你做的事情时，什么都不获得，并清空正面SOURCE
+    ;--------------------------------------------------
+    IF CFLAG:AME36_NO_RECOLLECTION_THIS_TIME
+        CALL AME36_TIMES_RELAVENT_SOURCE(0)
+        RETURN -1
+    ENDIF
+    AME36_SCOM_COUNTER:(TFLAG:50 - 60) += 1
+    SELECTCASE TFLAG:50
+        ;--------------------------------------------------
+        ;MONO：掏耳朵、抱枕、亲额头
+        ;--------------------------------------------------
+        CASE 60, 61, 62
+            SELECTCASE AME36_SCOM_COUNTER:(TFLAG:50 - 60)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 1
+                CASE 2
+                    PERCENTAGE_DUPE = 10
+                    EXP_ADD = -2
+                CASE IS >= 3
+                    PERCENTAGE_DUPE = 5
+                    EXP_ADD = -3
+            ENDSELECT
+        ;--------------------------------------------------
+        ;拉手：按照牵手计算
+        ;--------------------------------------------------
+        CASE 80
+            SELECTCASE AME36_COM_COUNTER:(603 - 300)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 2 TO 4
+                    PERCENTAGE_DUPE = 80
+                    CFLAG:AME36_ATTENTION += 2
+                    EXP_ADD = 2
+                CASE 5 TO 8
+                    PERCENTAGE_DUPE = 65
+                    CFLAG:AME36_ATTENTION ++
+                    EXP_ADD = 1
+                CASE IS >= 9
+                    PERCENTAGE_DUPE = 50
+                    CFLAG:AME36_ATTENTION ++
+            ENDSELECT
+        ;--------------------------------------------------
+        ;其他情况，按照衰减最快处理
+        ;--------------------------------------------------
+        CASEELSE
+            SELECTCASE AME36_SCOM_COUNTER:(TFLAG:50 - 60)
+                CASE 1
+                    PERCENTAGE_DUPE = 100
+                CASE 2
+                    PERCENTAGE_DUPE = 10
+                CASE IS >= 3
+                    PERCENTAGE_DUPE = 5
+            ENDSELECT
+            EXP_ADD = -10
+    ENDSELECT
+    ;--------------------------------------------------
+    ;根据陷落状态追加经验、减少SOURCE惩罚
+    ;--------------------------------------------------
+    SELECTCASE AME36_FALL_STATE()
+        CASE 2
+            EXP_ADD ++
+        CASE 3
+            EXP_ADD += 2
+        CASE 4
+            EXP_ADD += 3
+    ENDSELECT
+    ;--------------------------------------------------
+    ;经验与SOURCE惩罚的结算
+    ;--------------------------------------------------
+    IF EXP_ADD > 0
+        SELECTCASE TFLAG:50
+            CASE 60, 61, 62
+                CALL AME36_ADD_SCOM_RECOLLECTION(TFLAG:50)
+            CASE 80
+                CALL AME36_ADD_COM_RECOLLECTION(603, EXP_ADD)
+        ENDSELECT
+    ENDIF
+    CALL AME36_TIMES_RELAVENT_SOURCE(PERCENTAGE_DUPE)
+ENDIF
+RETURN 0
+
+;================================
+;自定义商店按钮
+;Y 是按钮的编号，范围是0-9
+;使用的时候请删除SKIPSTART~SKIPEND。
+;================================
+[SKIPSTART]
+;判断按钮是否可以显示，如果返回1，则显示
+@KOJO_AME_CUSTOM_BUTTON_CONDITION_K36_Y
+;custom_button_name:XX:Y = ボタンY
+RETURN 1
+
+;按钮被按下后，触发以下函数
+@KOJO_AME_CUSTOM_BUTTON_K36_Y
+
+RETURN 1
+[SKIPEND]
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;自定义指令
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;COM299 - 回忆值的显示
+;==================================================
+;指令名
+;--------------------------------------------------
+@KOJO_AME_COM_NAME_K36_29
+RESULTS = 回忆值
+RETURN 0
+
+;--------------------------------------------------
+;指令的执行条件，与会话基本相同
+;--------------------------------------------------
+@KOJO_AME_COM_ABLE_K36_29
+;SIF AME36_FALL_STATE() < 3
+;    RETURN 0
+SIF !TFLAG:100
+	RETURN 0
+SIF GLOBAL_COMABLE(300)
+	RETURN RESULT
+SIF CFLAG:ASLEEP_AMER && !CFLAG:SNUGGLE_AMER
+	RETURN 0
+SIF FLAG:TIMESTOP_AMER
+	RETURN 0
+RETURN 1
+
+;--------------------------------------------------
+;指令的成功判定
+;--------------------------------------------------
+@KOJO_AME_COM_K36_29
+RETURN 1
+
+;--------------------------------------------------
+;指令的主内容
+;--------------------------------------------------
+@M_KOJO_AME_MESSAGE_COM_K36_299
+#DIM CURRENT_PAGE = 1
+#DIM MAX_PAGE = 3
+#DIMS CURRENT_MODE = "444"
+#DIM START_LINECOUNT
+RESETCOLOR
+
+PRINTFORMW 与阿燐忆起相识以来的种种过往……
+CLEARLINE 1
+START_LINECOUNT = LINECOUNT
+$RECOLLECTION_LOOP
+;--------------------------------------------------
+;这里是表头
+;--------------------------------------------------
+PRINTFORML 总回忆值：{AME36_RECOLLECTION()}
+DRAWLINE
+;--------------------------------------------------
+;这里是表格的主内容
+;--------------------------------------------------
+IF CURRENT_MODE == "444"
+    IF CURRENT_PAGE == 1
+        PRINTPLAINFORM [300]会话　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_300, 35, 100, 340, 890, 2000, 1000), 4000, 1)
+        PRINTPLAINFORM [301]泡茶　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_301, 21, 60, 210, 560, 1200, 720), 2000, 1)
+        PRINTPLAINFORM [302]身体接触　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_302, 0, 0, 180, 580, 1200, 480), 3000, 1)
+        PRINTPLAINFORM [303]道歉　　　　　　
+        SELECTCASE CFLAG:AME36_RECOLLECTION_303
+            CASE -1
+                CALL COLORMESSAGE("惹阿燐生气却不道歉的家伙(-200)", C_RED, 1)
+            CASE 0
+                CALL COLORMESSAGE("没有惹阿燐生气过哦", C_AQUA, 1)
+            CASE 1
+                CALL COLORMESSAGE("有好好道歉过、所以没有惩罚", C_GREEN, 1)
+        ENDSELECT
+        PRINTPLAINFORM [304]帮忙干活　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_304, 0, 26, 116, 316, 700, 245), 2000, 1)
+        PRINTPLAINFORM [305]膝枕／索求膝枕　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_305, 0, 0, 90, 290, 600, 300), 1200, 1)
+        PRINTPLAINFORM [306]抚摸小腹　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_306, 0, 0, 0, 100, 300, 150), 600, 1)
+        PRINTPLAINFORM [307]捏脸蛋　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_307, 0, 0, 90, 290, 600, 450), 800, 1)
+        PRINTPLAINFORM [308]戳脸颊　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_308, 0, 0, 0, 100, 300, 150), 600, 1)
+        PRINTPLAINFORM [309]摸头　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_309, 0, 0, 90, 290, 600, 300), 1200, 1)
+        PRINTPLAINFORM [310]摸屁股　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_310, 0, 0, 0, 200, 600, 600), 600, 1)
+        PRINTPLAINFORM [311]拥抱　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_311, 0, 0, 90, 290, 600, 300), 1200, 1)
+        PRINTPLAINFORM [330]掀起裙子　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_330, 0, 0, 0, 100, 300, 225), 400, 1)
+        PRINTPLAINFORM [332]劝酒　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_332, 0, 13, 58, 158, 360, 216), 600, 1)
+        PRINTPLAINFORM [333]听牢骚　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_333, 0, 1, 2, 3, 5, -8), 200, 1)
+        PRINTPLAINFORM [334]碰杯／照料　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_334, 0, 8, 38, 104, 240, 72), 800, 1)
+        PRINTPLAINFORM [354]陪睡　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_354, 0, 0, 0, 100, 300, 150), 600, 1)
+        PRINTPLAINFORM [403]休憩　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_403, 0, 5, 10, 20, 50, 5), 500, 1)
+        PRINTPLAINFORM [410]扫除　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_410, 14, 40, 130, 330, 700, 490), 1000, 1)
+        PRINTPLAINFORM [411]战斗训练　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_411, 0, 52, 232, 632, 1500, 750), 3000, 1)
+    ELSEIF CURRENT_PAGE == 2
+        PRINTPLAINFORM [412]学习　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_412, 0, 52, 232, 632, 1500, 750), 3000, 1)
+        PRINTPLAINFORM [413]制作料理　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_413, 0, 52, 232, 632, 1500, 1125), 2000, 1)
+        PRINTPLAINFORM [414]吃饭／招待吃饭　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_414, 14, 40, 130, 330, 720, 432), 1200, 1)
+        PRINTPLAINFORM [416]演奏　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_416, 4, 13, 43, 109, 240, 72), 800, 1)
+        PRINTPLAINFORM [417]午睡　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_417, 0, 0, 0, 4, 10, -4), 400, 1)
+        PRINTPLAINFORM [431]在浴室里放松　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_431, 0, 0, 90, 290, 600, 360), 1000, 1)
+        PRINTPLAINFORM [432]钱汤　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_432, 0, 0, 12, 40, 100, 25), 400, 1)
+        PRINTPLAINFORM [436]读书　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_436, 0, 0, 90, 290, 600, 240), 1500, 1)
+        PRINTPLAINFORM [440]等待　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_440, 0, 0, 2, 5, 10, -2), 200, 1)
+        PRINTPLAINFORM [442]伐采　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_442, 0, 0, 12, 40, 100, 20), 500, 1)
+        PRINTPLAINFORM [445]采集　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_445, 0, 26, 216, 316, 700, 245), 2000, 1)
+        PRINTPLAINFORM [446]进行调合　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_446, 0, 13, 58, 158, 400, 80), 2000, 1)
+        PRINTPLAINFORM [447]路边摆摊　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_447, 0, 0, 2, 5, 10, -8), 800, 1)
+        PRINTPLAINFORM [448]设下陷阱　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_448, 0, 1, 2, 5, 10, -4), 400, 1)
+        PRINTPLAINFORM [449]捕虫　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_449, 0, 2, 5, 10, 20, 1), 400, 1)
+        PRINTPLAINFORM [480]弹幕胜负　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_480, 0, 1, 2, 5, 10, -6), 600, 1)
+        PRINTPLAINFORM [483]斗虫　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_483, 1, 1, 2, 3, 5, -8), 200, 1)
+        PRINTPLAINFORM [484]打西瓜　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_484, 1, 1, 2, 3, 5, -8), 200, 1)
+        PRINTPLAINFORM [603]牵手／拉手　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_603, 0, 0, 90, 290, 600, 450), 800, 1)
+        PRINTPLAINFORM [605]绕道　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_605, 0, 0, 2, 5, 10, -4), 400, 1)
+    ELSEIF CURRENT_PAGE == 3
+        PRINTPLAINFORM [610]请吃饭　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_610, 0, 0, 2, 5, 10, -4), 400, 1)
+        PRINTPLAINFORM [614]采购食材　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_614, 0, 0, 1, 2, 5, -8), 200, 1)
+        PRINTPLAINFORM [615]吃便当　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_615, 0, 0, 0, 66, 200, 80), 500, 1)
+        PRINTPLAINFORM [617]邀请去甜品店　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_617, 0, 0, 1, 2, 5, -16), 400, 1)
+        PRINTPLAINFORM [621]钓鱼　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_621, 0, 0, 180, 580, 1300, 845), 2000, 1)
+        PRINTPLAINFORM [626]送礼　　　　　　
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_626, 0, 5, 10, 20, 50, 1), 2500, 1)
+    ENDIF
+ELSEIF CURRENT_MODE == "555"
+    
+ELSEIF CURRENT_MODE == "666"
+    
+ENDIF
+DRAWLINE
+;--------------------------------------------------
+;这里是表尾的选项部分
+;--------------------------------------------------
+IF CURRENT_PAGE == 1
+    SETCOLOR C_L_GRAY
+    PRINTPLAIN [111]　上一页
+    RESETCOLOR
+ELSE
+    PRINTBUTTON "[111]　上一页", "111"
+ENDIF
+PRINT 　　　　
+PRINTBUTTON "[222]　结束回忆", "222"
+PRINT 　　　
+IF CURRENT_PAGE == MAX_PAGE
+    SETCOLOR C_L_GRAY
+    PRINTPLAIN [333]　下一页
+    RESETCOLOR
+ELSE
+    PRINTBUTTON "[333]　下一页", "333"
+ENDIF
+PRINTL
+IF CURRENT_MODE == "444"
+    SETCOLOR C_L_GRAY
+    PRINTPLAIN [444]　ＣＯＭ相关
+    RESETCOLOR
+ELSE
+    PRINTBUTTON "[444]　ＣＯＭ相关", "444"
+ENDIF
+PRINT 　　
+IF CURRENT_MODE == "555"
+    SETCOLOR C_L_GRAY
+    PRINTPLAIN [555]　特殊事件
+    RESETCOLOR
+ELSE
+    PRINTBUTTON "[555]　特殊事件", "555"
+ENDIF
+PRINT 　　　
+IF CURRENT_MODE == "666"
+    SETCOLOR C_L_GRAY
+    PRINTPLAIN [666]　杂项
+    RESETCOLOR
+ELSE
+    PRINTBUTTON "[666]　杂项", "666"
+ENDIF
+INPUTS
+SIF RESULTS == "222"
+    RETURN 1
+SIF RESULTS == "111"
+    CURRENT_PAGE = MAX(CURRENT_PAGE - 1, 1)
+SIF RESULTS == "333"
+    CURRENT_PAGE = MIN(CURRENT_PAGE + 1, MAX_PAGE)
+IF GROUPMATCH(RESULTS, "444", "555", "666")
+    CURRENT_MODE '= RESULTS
+    CURRENT_PAGE = 1
+    SELECTCASE RESULTS
+        CASE "444"
+            MAX_PAGE = 3
+        CASE "555"
+            MAX_PAGE = 1
+        CASE "666"
+            MAX_PAGE = 1
+    ENDSELECT
+ENDIF
+CLEARLINE LINECOUNT - START_LINECOUNT
+GOTO RECOLLECTION_LOOP
+
+CALL M_KOJO_AME_COLOR_K36
+RETURN 1
+
+;--------------------------------------------------
+;为了简化代码的一个工具函数
+;--------------------------------------------------
+@AME36_COMPLETION_PRINT(PROGRESS, MAX_VALUE, IS_L)
+#DIM PROGRESS
+#DIM MAX_VALUE
+#DIM IS_L
+IF PROGRESS == MAX_VALUE
+    LOCALS = ({PROGRESS}/{MAX_VALUE})
+    CALL COLORMESSAGE(LOCALS, C_GREEN, IS_L)
+ELSE
+    IF IS_L
+        PRINTFORML ({PROGRESS}/{MAX_VALUE})
+    ELSE
+        PRINTFORM ({PROGRESS}/{MAX_VALUE})
+    ENDIF
+ENDIF
+RETURN 1
+
+;指令实行的可能判定
+;可以在实行指令前显示一个条件实行可否的权重比较，并且
+;可以参考 @CAN_COM9(ARG)，不能实行时请RETURN 0 ，允许实行时RETURN 1 
+;或者可以不用写这部分
+;@KOJO_AME_CAN_COM_K36_29(skipFlag)
+;	#DIM skipFlag
+;	SKIPDISP skipFlag
+;	SKIPDISP 0
+
+;==================================================
+;自定义移动倾向以及特殊食谱
+;==================================================
+@M_KOJO_AME_CHECK_K36_CHARADATA(ARGS, ARG, ARG:2)
+;--------------------------------------------------
+;覆盖原版的@CHARAMOVE_DATA_36
+;--------------------------------------------------
+IF ARGS == "MOVE"
+    SELECTCASE ARG
+        ;--------------------------------------------------
+        ;控制外出时一同遭遇
+        ;跟在阿空或觉大人身边各1/4概率
+        ;--------------------------------------------------
+        CASE 1
+       		IF BETWEENTIME(660, 1080) || (AME36_WEEKDAY_MATCH(0, 6) && BETWEENTIME(420, 1080))
+                IF !RAND:4
+                    RETURN 37
+                ELSEIF !RAND:3
+                    RETURN 49
+                ENDIF
+            ENDIF
+            RETURN 36
+       	;--------------------------------------------------
+        ;生活时间补正的修改（暂时用不到）
+        ;--------------------------------------------------
+       	;CASE 3
+       	;--------------------------------------------------
+        ;移动倾向
+        ;大于0表示偏好，小于0表示少去，-100表示不去
+        ;--------------------------------------------------
+       	CASE 4
+       		SELECTCASE ARG:2
+                ;--------------------------------------------------
+                ;如果阿空在房间就一起玩
+                ;--------------------------------------------------
+                CASE 911
+                    SIF CFLAG:37:LOCATION_AMER == 911
+                        RETURN 10
+       			;--------------------------------------------------
+                ;偏爱地点：书斋、蔷薇园、酒场、温泉
+                ;真的有不喜欢看书赏花喝酒泡温泉的猫嘛
+                ;--------------------------------------------------
+       			CASE 920, 925, 933, 934
+       				RETURN 5
+       			;--------------------------------------------------
+                ;偏好地点：厨房、露台、风吕、川岸、桥
+                ;给觉大人做完饭看看风景
+                ;--------------------------------------------------
+       			CASE 909, 915, 921, 945, 946
+       				RETURN 3
+                ;--------------------------------------------------
+                ;少去地点：大会堂、觉大人的房间、地狱的人工太阳、旧血池地狱
+                ;主要是确实没什么理由去的地方
+                ;--------------------------------------------------
+                CASE 904, 919, 929, 930
+                    RETURN -3
+                ;--------------------------------------------------
+                ;更少去地点：恋大人的房间、鬼的聚集场所、血枪的房间
+                ;--------------------------------------------------
+                CASE 918, 938, 947
+                    RETURN -5
+                ;--------------------------------------------------
+                ;不去地点：两个MASTER可选的初期房间，情人旅馆，勇仪、帕露、山女、小桶的房间，某个空房间，托卡马克装置核心（反正也进不去）
+                ;--------------------------------------------------
+       			CASE 916, 935, 936, 937, 940, 941, 942, 943, 949
+       				RETURN -100
+       		ENDSELECT
+            ;--------------------------------------------------
+            ;因为原版代码的bug，如果 RETURN 0 就会被原版覆盖，所以只能全部都 RETURN 1 了
+            ;--------------------------------------------------
+            RETURN 1
+       	;--------------------------------------------------
+        ;在主地图外的出现场所
+        ;--------------------------------------------------
+       	CASE 7
+       		SELECTCASE ARG:2
+                ;--------------------------------------------------
+                ;博丽神社：樱花道的鸟居、神社境内、神社本堂、神社走廊
+                ;--------------------------------------------------
+       			CASE 10, 20, 30, 40
+       				RETURN 1
+                ;--------------------------------------------------
+                ;命莲寺：墓地
+                ;--------------------------------------------------
+       			CASE 150
+       				RETURN 1
+                ;--------------------------------------------------
+                ;人里：商家町
+                ;--------------------------------------------------
+                CASE 220
+                    RETURN 1
+                ;--------------------------------------------------
+                ;魔法森林：无缘塚
+                ;--------------------------------------------------
+                CASE 570
+                    RETURN 1
+                ;--------------------------------------------------
+                ;三途之川冥界：迷途之家
+                ;--------------------------------------------------
+                CASE 630
+                    RETURN 1
+                ;--------------------------------------------------
+                ;妖怪之山山麓：间歇泉地下中枢
+                ;--------------------------------------------------
+       			CASE 760
+       				RETURN 1
+                ;--------------------------------------------------
+                ;地底：幻想风穴、地狱的深道、旧地狱街道、旧地狱温泉、地灵殿、灼热地狱迹
+                ;--------------------------------------------------
+       			CASE 910, 920, 930, 940, 960, 970
+       				RETURN 1
+       		ENDSELECT
+        ;--------------------------------------------------
+        ;引力点的设定
+        ;用了这个就不需要用GRAVITY函数了
+        ;--------------------------------------------------
+       	CASE 8
+            ;--------------------------------------------------
+            ;当觉大人或阿空处于危险状态时，立马赶过去
+            ;--------------------------------------------------
+       		IF AME36_DANGEROUS(49)
+                CFLAG:GRAVITY_AMER = CFLAG:49:LOCATION_AMER
+                RETURN 0
+            ENDIF
+            IF AME36_DANGEROUS(37)
+                CFLAG:GRAVITY_AMER = CFLAG:37:LOCATION_AMER
+                RETURN 0
+            ENDIF
+            ;--------------------------------------------------
+            ;平时1/10概率跟着觉大人
+            ;--------------------------------------------------
+            SIF CFLAG:AME36_RAND_TODAY % 10 == 0
+                CFLAG:GRAVITY_AMER = CFLAG:49:LOCATION_AMER
+    ENDSELECT
+ELSEIF ARGS == "SPECIAL_MENU"
+	DISH_NAME = 琥珀渔夫派
+	RESULTS = 主食
+	CALL 材料設定("魚", "好吃的魚")
+	DISH_TASTE = 魚料理/牛奶/卵/派/洋食/地底風/怪诞/简易/質素/家庭的/软绵绵/软绵绵/甜/咸/
+	DISH_COMMENT = 用红薯替代土豆泥、焦糖与蜂蜜凝成琥珀外壳。甜咸交融中、是西洋与地底怪诞风格的碰撞。
+	RETURN 1
+ENDIF
+RETURN 0

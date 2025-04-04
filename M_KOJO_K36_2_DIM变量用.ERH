@@ -1,0 +1,363 @@
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;eraTheWorld 4.954 画蛇又添足 火焰猫燐别人版口上
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;原版变量的别名，因为用繁体和日文作变量名很丑
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;ABL系
+;==================================================
+;#DIM CONST CSENSE_AMER = 0
+;#DIM CONST VSENSE_AMER = 1
+;#DIM CONST ASENSE_AMER = 2
+;#DIM CONST BSENSE_AMER = 3
+;#DIM CONST MSENSE_AMER = 4
+#DIM CONST INTIMACY_AMER = 9
+#DIM CONST OBEDIENCE_AMER = 10
+#DIM CONST LIBIDO_AMER = 11
+#DIM CONST EXPERTISE_AMER = 12
+#DIM CONST SERVITUDE_AMER = 13
+;#DIM CONST EXHIBITIONISM_AMER = 14
+;#DIM CONST MASOCHISM_AMER = 15
+;#DIM CONST SADISM_AMER = 16
+;#DIM CONST YURISM_AMER = 17
+;#DIM CONST MASTURBATION_ADDI_AMER = 30
+;#DIM CONST SEMEN_ADDI_AMER = 31
+;#DIM CONST YURI_ADDI_AMER = 32
+;#DIM CONST CREAMPIE_ADDI_AMER = 34
+;#DIM CONST ACREAMPIE_ADDI_AMER = 35
+#DIM CONST CLEANING_AMER = 40
+#DIM CONST DICTION_AMER = 41
+#DIM CONST POWER_AMER = 42
+#DIM CONST SCHOLARSHIP_AMER = 43
+#DIM CONST COOKERY_AMER = 44
+#DIM CONST VIRTUOSITY_AMER = 45
+;#DIM CONST FINGERLV_AMER = 50
+;#DIM CONST TONGUELV_AMER = 51
+;#DIM CONST BLV_AMER = 52
+;#DIM CONST WAISTLV_AMER = 53
+;#DIM CONST VLV_AMER = 54
+;#DIM CONST ALV_AMER = 55
+
+;==================================================
+;CFLAG系
+;==================================================
+#DIM CONST FAIT_ACCOMPLI_AMER = 1
+#DIM CONST FAVOR_AMER = 2
+#DIM CONST TRUST_AMER = 3
+#DIM CONST ATTITUDE_AMER = 6
+#DIM CONST HAS_MET_AMER = 18
+#DIM CONST CONSENT_AMER = 19
+#DIM CONST LOCATION_AMER = 300
+#DIM CONST RESIDENCE_AMER = 311
+#DIM CONST ASLEEP_AMER = 313
+#DIM CONST DOWN_AMER = 316
+#DIM CONST SEX_AMER = 317
+#DIM CONST ANGRY_AMER = 318
+#DIM CONST SNUGGLE_AMER = 334
+#DIM CONST HORNINESS_AMER = 340
+#DIM CONST VERSION_AMER = 495
+#DIM CONST MENSTRUATION_AMER = 900
+
+;==================================================
+;CSTR系
+;==================================================
+#DIM CONST VIRGIN_HISTORY_AMER = 46
+
+;==================================================
+;DAY系
+;==================================================
+#DIM CONST DAYS_AMER = 0
+#DIM CONST SEASON_AMER = 2
+#DIM CONST DATE_AMER = 3
+
+;==================================================
+;EXP系
+;==================================================
+;#DIM CONST CXP_AMER = 0
+#DIM CONST VXP_AMER = 1
+;#DIM CONST AXP_AMER = 2
+;#DIM CONST BXP_AMER = 3
+;#DIM CONST MXP_AMER = 4
+;#DIM CONST COXP_AMER = 5
+;#DIM CONST VOXP_AMER = 6
+;#DIM CONST AOXP_AMER = 7
+;#DIM CONST BOXP_AMER = 8
+;#DIM CONST MOXP_AMER = 9
+;#DIM CONST OXP_AMER = 10
+#DIM CONST SEMENXP_AMER = 14
+#DIM CONST MASOXP_AMER = 42
+#DIM CONST CONVERSATIONXP_AMER = 71
+#DIM CONST STUDYXP_AMER = 75
+#DIM CONST COOKINGXP_AMER = 76
+#DIM CONST FISHINGXP_AMER = 82
+#DIM CONST ALCHEMYXP_AMER = 85
+
+;==================================================
+;FLAG系
+;==================================================
+#DIM CONST TIMESTOP_AMER = 70
+
+;==================================================
+;TALENT系
+;==================================================
+#DIM CONST VIRGIN_AMER = 0
+#DIM CONST VIRGIN_PENIS_AMER = 1
+#DIM CONST GENDER_AMER = 2
+#DIM CONST AFFECTION_AMER = 3
+#DIM CONST NOT_KISSED_AMER = 6
+#DIM CONST LOVER_AMER = 7
+#DIM CONST YEARNING_AMER = 8
+#DIM CONST BRAVE_AMER = 10
+#DIM CONST ATTITUDE_TALENT_AMER = 11
+#DIM CONST SELF_CONTROL_AMER = 20
+#DIM CONST BOTTOM_LINE_AMER = 25
+#DIM CONST SHOWY_AMER = 26
+#DIM CONST CHASTE_AMER = 30
+#DIM CONST LIBERAL_AMER = 31
+#DIM CONST SHAME_AMER = 33
+#DIM CONST PAIN_TOLERANCE_AMER = 40
+#DIM CONST LOGGING_AMER = 46
+#DIM CONST FISHING_AMER = 47
+#DIM CONST GATHERING_AMER = 48
+#DIM CONST ALCHEMY_AMER = 49
+#DIM CONST FILTH_TOLERANCE_AMER = 61
+#DIM CONST CUP_SIZE_AMER = 105
+#DIM CONST ALCOHOL_TOLERANCE_AMER = 121
+#DIM CONST HYPNOTISM1_AMER = 298
+#DIM CONST HYPNOTISM2_AMER = 299
+
+;==================================================
+;TCVAR系
+;==================================================
+#DIM CONST MDMA_AMER = 139
+#DIM CONST APHRODISIAC_AMER = 140
+#DIM CONST DRUNK_AMER = 145
+#DIM CONST GRAVITY_AMER = 194
+#DIM CONST FORCED_AMER = 200
+#DIM CONST HUNGRY_TIME_AMER = 312
+#DIM CONST HUNGRY_TIME_DESSERT_AMER = 313
+
+;==================================================
+;TIME系
+;==================================================
+#DIM CONST MINUTES_AMER = 0
+#DIM CONST DAY_SECTION_AMER = 2
+#DIM CONST GETUP_TIME_AMER = 3
+#DIM CONST WEATHER_AMER = 5
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;CFLAG别名，用于增加可读性
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;1001 ~ 1010 - 设置系
+;==================================================
+;1001 - 每日刷新的一个随机数，用于某些以日为单位的随机
+;--------------------------------------------------
+#DIM CONST AME36_RAND_TODAY = 1001
+
+;==================================================
+;1011 ~ 1020 - 状态系
+;除了钱以外上限都是10000
+;==================================================
+;1011 - 阿燐的钱钱
+;谁说只有MASTER才能有钱钱的
+;--------------------------------------------------
+#DIM CONST AME36_PURSE = 1011
+;--------------------------------------------------
+;1012 - 阿燐的压力
+;和dol的压力影响差不多，应该挺顾名思义的
+;--------------------------------------------------
+#DIM CONST AME36_STRESS = 1012
+;--------------------------------------------------
+;1013 - 阿燐的创伤
+;和dol的创伤影响差不多，就像大号压力，积累难消减更难
+;--------------------------------------------------
+#DIM CONST AME36_TRAUMA = 1013
+;--------------------------------------------------
+;1014 - 阿燐的警惕
+;MASTER做出格的事被发现会增长，警惕越高越难成功做坏事，信赖也更难增长
+;--------------------------------------------------
+#DIM CONST AME36_WARINESS = 1014
+
+
+
+;==================================================
+;1021 ~ 1100 - 修改原版机制用
+;==================================================
+;1021 - 积攒度临时储存，用于禁用自慰显示
+;--------------------------------------------------
+#DIM CONST AME36_HORNINESS_TEMP = 1021
+;--------------------------------------------------
+;1022, 1023 - 空腹时刻储存，用于禁用千里来抢食
+;--------------------------------------------------
+#DIM CONST AME36_HUNGRY_TIME_TEMP = 1022
+#DIM CONST AME36_HUNGRY_TIME_DESSERT_TEMP = 1023
+
+;--------------------------------------------------
+;1030 - 检测此回合是否被选为TARGET
+;--------------------------------------------------
+#DIM CONST AME36_IS_TARGET = 1030
+;--------------------------------------------------
+;1031 ~ 1043 - 临时储存PALAM信息，阻止未经许可的上升
+;此外，许可一切快感与润滑的上升
+;--------------------------------------------------
+#DIM CONST AME36_PALAM_TEMP_10 = 1031
+#DIM CONST AME36_PALAM_TEMP_11 = 1032
+#DIM CONST AME36_PALAM_TEMP_12 = 1033
+#DIM CONST AME36_PALAM_TEMP_13 = 1034
+#DIM CONST AME36_PALAM_TEMP_14 = 1035
+#DIM CONST AME36_PALAM_TEMP_15 = 1036
+#DIM CONST AME36_PALAM_TEMP_16 = 1037
+#DIM CONST AME36_PALAM_TEMP_20 = 1038
+#DIM CONST AME36_PALAM_TEMP_21 = 1039
+#DIM CONST AME36_PALAM_TEMP_30 = 1040
+#DIM CONST AME36_PALAM_TEMP_31 = 1041
+#DIM CONST AME36_PALAM_TEMP_32 = 1042
+#DIM CONST AME36_PALAM_TEMP_33 = 1043
+
+;==================================================
+;1101 ~ 1200 - 杂七杂八的记录用变量
+;==================================================
+;1101 ~ 1110 - 自定义FIRSTTIME的记录
+;--------------------------------------------------
+;1111 - 当某些COM失败时，使用该变量防止增加COM经验
+;--------------------------------------------------
+#DIM CONST AME36_NO_RECOLLECTION_THIS_TIME = 1111
+
+;==================================================
+;1200 ~ 1300 - COM经验的记忆，用于回忆值计算等
+;相关COM编号置于变量名内，共享同一变量的以编号靠前的COM命名
+;==================================================
+;1200 - 回忆值的阶段，用于减少计算量
+;= 1：超过相识界限
+;= 2：超过思慕界限
+;= 3：超过恋慕界限
+;= 4：超过恋人界限
+;--------------------------------------------------
+#DIM CONST AME36_BREAKTHROUGH = 1200
+;--------------------------------------------------
+;1201 ~ 1250 日常系COM（非涩涩都算）
+;--------------------------------------------------
+#DIM CONST AME36_RECOLLECTION_300 = 1201
+#DIM CONST AME36_RECOLLECTION_301 = 1202
+#DIM CONST AME36_RECOLLECTION_302 = 1203
+#DIM CONST AME36_RECOLLECTION_303 = 1204
+#DIM CONST AME36_RECOLLECTION_304 = 1205
+#DIM CONST AME36_RECOLLECTION_305 = 1206
+#DIM CONST AME36_RECOLLECTION_306 = 1207
+#DIM CONST AME36_RECOLLECTION_307 = 1208
+#DIM CONST AME36_RECOLLECTION_308 = 1209
+#DIM CONST AME36_RECOLLECTION_309 = 1210
+#DIM CONST AME36_RECOLLECTION_310 = 1211
+#DIM CONST AME36_RECOLLECTION_311 = 1212
+#DIM CONST AME36_RECOLLECTION_330 = 1213
+#DIM CONST AME36_RECOLLECTION_332 = 1214
+#DIM CONST AME36_RECOLLECTION_333 = 1215
+#DIM CONST AME36_RECOLLECTION_334 = 1216
+#DIM CONST AME36_RECOLLECTION_354 = 1217
+#DIM CONST AME36_RECOLLECTION_403 = 1218
+#DIM CONST AME36_RECOLLECTION_410 = 1219
+#DIM CONST AME36_RECOLLECTION_411 = 1220
+#DIM CONST AME36_RECOLLECTION_412 = 1221
+#DIM CONST AME36_RECOLLECTION_413 = 1222
+#DIM CONST AME36_RECOLLECTION_414 = 1223
+#DIM CONST AME36_RECOLLECTION_416 = 1224
+#DIM CONST AME36_RECOLLECTION_417 = 1225
+#DIM CONST AME36_RECOLLECTION_431 = 1226
+#DIM CONST AME36_RECOLLECTION_432 = 1227
+#DIM CONST AME36_RECOLLECTION_436 = 1228
+#DIM CONST AME36_RECOLLECTION_440 = 1229
+#DIM CONST AME36_RECOLLECTION_442 = 1230
+#DIM CONST AME36_RECOLLECTION_445 = 1231
+#DIM CONST AME36_RECOLLECTION_446 = 1232
+#DIM CONST AME36_RECOLLECTION_447 = 1233
+#DIM CONST AME36_RECOLLECTION_448 = 1234
+#DIM CONST AME36_RECOLLECTION_449 = 1235
+#DIM CONST AME36_RECOLLECTION_480 = 1236
+#DIM CONST AME36_RECOLLECTION_483 = 1237
+#DIM CONST AME36_RECOLLECTION_484 = 1238
+#DIM CONST AME36_RECOLLECTION_603 = 1239
+#DIM CONST AME36_RECOLLECTION_605 = 1240
+#DIM CONST AME36_RECOLLECTION_610 = 1241
+#DIM CONST AME36_RECOLLECTION_614 = 1242
+#DIM CONST AME36_RECOLLECTION_615 = 1243
+#DIM CONST AME36_RECOLLECTION_617 = 1244
+#DIM CONST AME36_RECOLLECTION_621 = 1245
+#DIM CONST AME36_RECOLLECTION_626 = 1246
+;--------------------------------------------------
+;1251 ~ 1253 日常系SCOM
+;--------------------------------------------------
+#DIM CONST AME36_RECOLLECTION_S60 = 1251
+#DIM CONST AME36_RECOLLECTION_S61 = 1252
+#DIM CONST AME36_RECOLLECTION_S62 = 1253
+
+
+;--------------------------------------------------
+;1298 - 陪伴值，用于在一日结束后决定相守值的增加，每日开始时清零
+;--------------------------------------------------
+#DIM CONST AME36_ATTENTION = 1298
+;--------------------------------------------------
+;1299 - 相守值，在一日结束后，根据本日陪伴值分段式上升
+;构成回忆值的一部分
+;--------------------------------------------------
+#DIM CONST AME36_PERSISTENCE = 1299
+
+;==================================================
+;1301 ~ 1400 - 
+;==================================================
+
+;==================================================
+;1401 ~ 1500 - 
+;==================================================
+
+;==================================================
+;1501 ~ 1600 - 
+;==================================================
+
+;==================================================
+;1601 ~ 1700 - 
+;==================================================
+
+;==================================================
+;1701 ~ 1800 - 
+;==================================================
+
+;==================================================
+;1801 ~ 1900 - 
+;==================================================
+
+;==================================================
+;1901 ~ 1999 - 
+;==================================================
+
+;==================================================
+;DQ系相关
+;==================================================
+;AME36_DQ_SARRAY - 存储DQ系的文本
+;--------------------------------------------------
+#DIMS AME36_DQ_SARRAY, 200
+;--------------------------------------------------
+;AME36_DQ_ARRAY - 存储DQ系的文本修饰
+;--------------------------------------------------
+#DIM AME36_DQ_ARRAY, 200, 3
+;--------------------------------------------------
+;AME36_DQ_UNSKIPPABLE - 默认0代表可以右键跳过，1代表无法跳过
+;--------------------------------------------------
+#DIM AME36_DQ_UNSKIPPABLE
+
+;==================================================
+;乱七八糟的不知道分在哪里的东西
+;==================================================
+;每日执行的COM次数，用于效应递减
+;按照COM编号一一对应，因为跳过了涩涩系所以要加上300，从300到799
+;--------------------------------------------------
+#DIM AME36_COM_COUNTER, 500
+;--------------------------------------------------
+;每日执行的SCOM次数，用于效应递减
+;按照SCOM编号一一对应，因为跳过了涩涩系所以要加上60，从60到62
+;--------------------------------------------------
+#DIM AME36_SCOM_COUNTER, 3
