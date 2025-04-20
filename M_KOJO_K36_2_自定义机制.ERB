@@ -71,30 +71,998 @@ RETURN 0
 ;因为调用比较靠后拿来当作EXTRASOURCE的补充了
 ;==================================================
 @M_KOJO_AME_MESSAGE_MARKCNG_MESSAGECHECK_K36
-SELECTCASE SELECTCOM
-    CASE 299
-        CALL AME36_FAVOR_OVERRIDE(0)
-        CALL AME36_TRUST_OVERRIDE(0)
-    CASE 300
-        ;
-    CASE 301
-        ;
-ENDSELECT
+CALL AME36_FAVOR_OVERRIDE(CFLAG:AME36_COM_FAVOR)
+CALL AME36_TRUST_OVERRIDE(CFLAG:AME36_COM_TRUST)
+CFLAG:AME36_COM_FAVOR = 0
+CFLAG:AME36_COM_TRUST = 0
 RETURN 0
 
 ;==================================================
 ;COM的统一EXTRASOURCE函数
 ;==================================================
 @M_KOJO_AME_EXTRASOURCE_COM_K36_GENERAL
+#DIM IRREGULAR_TFLAG = 0
 #DIM COM_EQUIVALENT
 #DIM PERCENTAGE_DUPE
 #DIM EXP_ADD
-#DIM MONO
+#DIM MONO = 0
 ;--------------------------------------------------
 ;标记本回合确实被选中为TARGET
 ;用于清除非TARGET的PALAM上升
 ;--------------------------------------------------
 CFLAG:AME36_IS_TARGET = 1
+;--------------------------------------------------
+;时停就不管了
+;--------------------------------------------------
+IF FLAG:TIMESTOP_AMER
+    CALL AME36_TIMES_RELAVENT_SOURCE(30)
+    RETURN -1
+ENDIF
+;--------------------------------------------------
+;先清除一切非快SOURCE和情绪、理性BONUS
+;哎呀、一不小心把奇迹之石清除了、这该怎么办呢
+;--------------------------------------------------
+CALL AME36_CLEAR_SOURCE
+TFLAG:92 = 0
+TFLAG:90 = 0
+CFLAG:339 = 0
+;--------------------------------------------------
+;不该SOURCE的不要SOURCE
+;--------------------------------------------------
+SIF CFLAG:ANGRY_AMER || CFLAG:ASLEEP_AMER
+    RETURN -1
+;--------------------------------------------------
+;全面覆盖本体COM的SOURCE
+;--------------------------------------------------
+SELECTCASE SELECTCOM
+    ;--------------------------------------------------
+    ;300 - 会话 (10min)
+    ;--------------------------------------------------
+    CASE 300
+        SIF CFLAG:SNUGGLE_AMER
+	        SOURCE:SLOVE_AMER = 200
+        SOURCE:SJOY_AMER = 150
+        SOURCE:SPASSIVITY_AMER = 50
+        SOURCE:SCONQUEST_AMER = 50
+        ;--------------------------------------------------
+        ;根据MASTER的会话技能等级乘算
+        ;--------------------------------------------------
+        SELECTCASE ABL:MASTER:DICTION_AMER
+            CASE 0
+                TIMES SOURCE:SJOY_AMER , 0.80
+		        TIMES SOURCE:SPASSIVITY_AMER , 0.50
+		        TIMES SOURCE:SCONQUEST_AMER , 0.50
+            CASE 1
+                TIMES SOURCE:SJOY_AMER , 0.90
+		        TIMES SOURCE:SPASSIVITY_AMER , 0.70
+		        TIMES SOURCE:SCONQUEST_AMER , 0.70
+            CASE 2
+                TIMES SOURCE:SJOY_AMER , 0.95
+		        TIMES SOURCE:SPASSIVITY_AMER , 0.90
+		        TIMES SOURCE:SCONQUEST_AMER , 0.90
+            CASE 3
+                ;TIMES SOURCE:SJOY_AMER , 1.00
+		        ;TIMES SOURCE:SPASSIVITY_AMER , 1.00
+		        ;TIMES SOURCE:SCONQUEST_AMER , 1.00
+            CASE 4
+                TIMES SOURCE:SJOY_AMER , 1.05
+		        TIMES SOURCE:SPASSIVITY_AMER , 1.10
+		        TIMES SOURCE:SCONQUEST_AMER , 1.10
+            CASE 5
+                TIMES SOURCE:SJOY_AMER , 1.10
+		        TIMES SOURCE:SPASSIVITY_AMER , 1.20
+		        TIMES SOURCE:SCONQUEST_AMER , 1.20
+            CASE 6
+                TIMES SOURCE:SJOY_AMER , 1.25
+		        TIMES SOURCE:SPASSIVITY_AMER , 1.50
+		        TIMES SOURCE:SCONQUEST_AMER , 1.50
+        ENDSELECT
+    ;--------------------------------------------------
+    ;301 - 泡茶 (30min)
+    ;--------------------------------------------------
+    CASE 301
+        SOURCE:SJOY_AMER = 250
+        SOURCE:SPASSIVITY_AMER = 150
+        SOURCE:SCONQUEST_AMER = 150
+        ;--------------------------------------------------
+        ;使用红茶的加成
+        ;--------------------------------------------------
+        IF GETBIT(TCVAR:MASTER:143, 0)
+            TIMES SOURCE:SJOY_AMER , 1.75
+		    TIMES SOURCE:SPASSIVITY_AMER , 1.20
+		    TIMES SOURCE:SCONQUEST_AMER , 1.20
+        ENDIF
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;302 - 身体接触 (10min)
+    ;--------------------------------------------------
+    CASE 302
+        SOURCE:SJOY_AMER = 100
+        SOURCE:SLOVE_AMER = 80
+        SOURCE:SPASSIVITY_AMER = 60
+        SOURCE:SEXPOSURE_AMER = 20
+    ;--------------------------------------------------
+    ;303 - 道歉
+    ;--------------------------------------------------
+    CASE 303
+        SELECTCASE TFLAG:193
+        CASE 0, 1, 2
+            SOURCE:SJOY = 100
+            SOURCE:SCONQUEST_AMER = 300
+        CASE -1, -2
+            SOURCE:SCONQUEST_AMER = 150
+        ENDSELECT
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;304 - 帮忙干活 (60min)
+    ;--------------------------------------------------
+    CASE 304
+        SOURCE:SJOY_AMER = 400
+        SOURCE:SPASSIVITY_AMER = 250
+        SOURCE:SCONQUEST_AMER = 250
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;305, 336 - 膝枕/索求膝枕 (20min)
+    ;--------------------------------------------------
+    CASE 305, 336
+        SOURCE:SJOY_AMER = 180
+        SOURCE:SLOVE_AMER = 150
+        SOURCE:SPASSIVITY_AMER = 150
+        SOURCE:SEXPOSURE_AMER = 50
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;306 - 抚摸小腹 (10min)
+    ;--------------------------------------------------
+    CASE 306
+        SOURCE:SJOY_AMER = 120
+        SOURCE:SLOVE_AMER = 100
+        SOURCE:SLUST_AMER = 30
+        SOURCE:SPASSIVITY_AMER = 60
+        SOURCE:SEXPOSURE_AMER = 10
+        ;--------------------------------------------------
+        ;不可由SUCCESS函数控制成败
+        ;--------------------------------------------------
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;307 - 捏脸蛋 (10min)
+    ;--------------------------------------------------
+    CASE 307
+        SOURCE:SJOY_AMER = 120
+        SOURCE:SLOVE_AMER = 80
+        SOURCE:SPASSIVITY_AMER = 60
+        SOURCE:SEXPOSURE_AMER = 50
+        SOURCE:SPAIN_AMER = 50
+    ;--------------------------------------------------
+    ;308 - 捅脸颊 (10min)
+    ;--------------------------------------------------
+    CASE 308
+        SOURCE:SJOY_AMER = 50
+        IF CFLAG:SNUGGLE_AMER
+            SOURCE:SJOY_AMER += 50
+            SOURCE:SLOVE_AMER = 120
+        ENDIF
+        SOURCE:SPASSIVITY_AMER = 100
+        SOURCE:SSUBMISSION_AMER = 150
+    ;--------------------------------------------------
+    ;309 - 摸头 (10min)
+    ;--------------------------------------------------
+    CASE 309
+        SOURCE:SJOY_AMER = 100
+        SOURCE:SLOVE_AMER = 120
+        SOURCE:SPASSIVITY_AMER = 80
+        SOURCE:SEXPOSURE_AMER = 50
+        SOURCE:SSUBMISSION_AMER = 50
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;310 - 摸屁股 (10min)
+    ;--------------------------------------------------
+    CASE 310
+        SOURCE:SJOY_AMER = 50
+        SOURCE:SLOVE_AMER = 100
+        SOURCE:SLUST_AMER = 50
+        SOURCE:SPASSIVITY_AMER = 60
+        SOURCE:SEXPOSURE_AMER = 80
+        ;--------------------------------------------------
+        ;不知道为什么这里TFLAG搞特殊，直接一般化了
+        ;--------------------------------------------------
+        SELECTCASE TFLAG:193
+            CASE 1
+                TFLAG:193 = -1
+            CASE 2, 3
+                TFLAG:193 = 0
+            CASE 4
+                TFLAG:193 = 1
+        ENDSELECT
+    ;--------------------------------------------------
+    ;311 - 拥抱 (10min)
+    ;--------------------------------------------------
+    CASE 311
+        SOURCE:SJOY_AMER = 120
+        SOURCE:SLOVE_AMER = 100
+        SOURCE:SPASSIVITY_AMER = 60
+        SOURCE:SEXPOSURE_AMER = 50
+    ;--------------------------------------------------
+    ;330 - 掀起裙子 (5min)
+    ;--------------------------------------------------
+    CASE 330
+        SOURCE:SJOY_AMER = 50
+        SOURCE:SLOVE_AMER = 50
+        SOURCE:SLUST_AMER = 50
+        SOURCE:SPASSIVITY_AMER = 120
+        SOURCE:SEXPOSURE_AMER = 300
+        ;--------------------------------------------------
+        ;WIP - 此处有自定义SUCCESS的必要
+        ;--------------------------------------------------
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;332 - 劝酒 (30min)
+    ;--------------------------------------------------
+    CASE 332
+        SOURCE:SJOY_AMER = 30 * ALCOHOL_TASTE(TFLAG:194)
+        SOURCE:SPASSIVITY_AMER = 150
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;333 - 听牢骚 (20min)
+    ;--------------------------------------------------
+    CASE 333
+        SOURCE:SJOY_AMER = 300
+        SOURCE:SCONQUEST_AMER = 200
+        ;--------------------------------------------------
+        ;因为没有什么对TFLAG:193进行特殊处理的必要，所以直接一般化了
+        ;--------------------------------------------------
+        SIF TFLAG:193 == 1 && TFLAG:193 == 4
+            TFLAG:193 = -1
+        SIF TFLAG:193 == 2 && TFLAG:193 == 5
+            TFLAG:193 = 0
+        SIF TFLAG:193 == 3 && TFLAG:193 == 6
+            TFLAG:193 = 1
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;334 - 碰杯 (30min)
+    ;--------------------------------------------------
+    CASE 334
+        SOURCE:SJOY_AMER = 300
+        SOURCE:SPASSIVITY_AMER = 50
+        SOURCE:SCONQUEST_AMER = 50
+    ;--------------------------------------------------
+    ;335 - 照料 (30min)
+    ;待确认：这玩意真的能触发嘛？
+    ;--------------------------------------------------
+    CASE 335
+        SOURCE:SJOY_AMER = 100
+        SOURCE:SPASSIVITY_AMER = 300
+        SOURCE:SCONQUEST_AMER = 100
+        SOURCE:SEXPOSURE_AMER = 50
+        SOURCE:SSUBMISSION_AMER = 300
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;403 - 休憩 (60min)
+    ;--------------------------------------------------
+    CASE 403
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF CFLAG:ATTITUDE_AMER == 0
+            RETURN -1
+        SOURCE:SJOY_AMER = 50
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;410 - 扫除 (5min)
+    ;--------------------------------------------------
+    CASE 410
+        SOURCE:SJOY_AMER = 100
+        SOURCE:SPASSIVITY_AMER = 50
+        SOURCE:SACHIEVEMENT_AMER = 30
+        ;--------------------------------------------------
+        ;根据MASTER的清扫技能等级乘算
+        ;--------------------------------------------------
+        SELECTCASE ABL:MASTER:CLEANING_AMER
+            CASE 0
+                TIMES SOURCE:SJOY_AMER, 0.80
+                TIMES SOURCE:SPASSIVITY_AMER, 0.50
+            CASE 1
+                TIMES SOURCE:SJOY_AMER, 0.90
+                TIMES SOURCE:SPASSIVITY_AMER, 0.75
+            CASE 2
+                TIMES SOURCE:SJOY_AMER, 0.95
+                TIMES SOURCE:SPASSIVITY_AMER, 0.90
+            CASE 3
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                ;TIMES SOURCE:SPASSIVITY_AMER, 1.00
+            CASE 4
+                TIMES SOURCE:SJOY_AMER, 1.05
+                TIMES SOURCE:SPASSIVITY_AMER, 1.10
+            CASE 5
+                TIMES SOURCE:SJOY_AMER, 1.15
+                TIMES SOURCE:SPASSIVITY_AMER, 1.20
+            CASE 6
+                TIMES SOURCE:SJOY_AMER, 1.25
+                TIMES SOURCE:SPASSIVITY_AMER, 1.30
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;411 - 战斗训练 (60min)
+    ;--------------------------------------------------
+    CASE 411
+        SOURCE:SJOY_AMER = 550
+        SOURCE:SPASSIVITY_AMER = 150
+        SOURCE:SCONQUEST_AMER = 100
+        SOURCE:SSUBMISSION_AMER = 50
+        ;--------------------------------------------------
+        ;根据MASTER与阿燐的战斗能力之差乘算
+        ;--------------------------------------------------
+        SELECTCASE ABL:MASTER:POWER_AMER - ABL:POWER_AMER
+            CASE IS < -1
+                TIMES SOURCE:SJOY_AMER, 0.80
+                TIMES SOURCE:SPASSIVITY_AMER, 0.10
+                TIMES SOURCE:SCONQUEST_AMER, 3.00
+                TIMES SOURCE:SSUBMISSION_AMER, 0.20
+            CASE -1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 0.50
+                TIMES SOURCE:SCONQUEST_AMER, 1.50
+                TIMES SOURCE:SSUBMISSION_AMER, 0.50
+            CASE 0
+                TIMES SOURCE:SJOY_AMER, 1.25
+                ;TIMES SOURCE:SPASSIVITY_AMER, 1.00
+                ;TIMES SOURCE:SCONQUEST_AMER, 1.00
+                ;TIMES SOURCE:SSUBMISSION_AMER, 1.00
+            CASE 1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 1.50
+                TIMES SOURCE:SCONQUEST_AMER, 0.50
+                TIMES SOURCE:SSUBMISSION_AMER, 1.50
+            CASE IS > 1
+                TIMES SOURCE:SJOY_AMER, 0.80
+                TIMES SOURCE:SPASSIVITY_AMER, 2.00
+                TIMES SOURCE:SCONQUEST_AMER, 0.10
+                TIMES SOURCE:SSUBMISSION_AMER, 3.00
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;412 - 学习 (60min)
+    ;--------------------------------------------------
+    CASE 412
+        SOURCE:SJOY_AMER = 500
+        SOURCE:SPASSIVITY_AMER = 120
+        SOURCE:SCONQUEST_AMER = 80
+        ;--------------------------------------------------
+        ;根据MASTER与阿燐的教养之差乘算
+        ;--------------------------------------------------
+        SELECTCASE ABL:MASTER:SCHOLARSHIP_AMER - ABL:SCHOLARSHIP_AMER
+            CASE IS < -1
+                TIMES SOURCE:SJOY_AMER, 0.80
+                TIMES SOURCE:SPASSIVITY_AMER, 0.40
+                TIMES SOURCE:SCONQUEST_AMER, 1.50
+            CASE -1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 0.75
+                TIMES SOURCE:SCONQUEST_AMER, 1.25
+            CASE 0
+                TIMES SOURCE:SJOY_AMER, 1.25
+                ;TIMES SOURCE:SPASSIVITY_AMER, 1.00
+                ;TIMES SOURCE:SCONQUEST_AMER, 1.00
+            CASE 1
+                TIMES SOURCE:SJOY_AMER, 1.25
+                TIMES SOURCE:SPASSIVITY_AMER, 1.25
+                TIMES SOURCE:SCONQUEST_AMER, 0.50
+            CASE IS > 1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 1.50
+                TIMES SOURCE:SCONQUEST_AMER, 0.20
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;413 - 制作料理 (Dynamic)
+    ;--------------------------------------------------
+    CASE 413
+        SOURCE:SJOY_AMER = 300
+        SOURCE:SPASSIVITY_AMER = 100
+        SOURCE:SCONQUEST_AMER = 60
+        SOURCE:SACHIEVEMENT_AMER = 50
+        ;--------------------------------------------------
+        ;根据MASTER与阿燐的料理技能等级之差乘算
+        ;--------------------------------------------------
+        SELECTCASE ABL:MASTER:COOKERY_AMER - ABL:COOKERY_AMER
+            CASE IS < -1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 0.40
+                TIMES SOURCE:SCONQUEST_AMER, 1.50
+            CASE -1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 0.75
+                TIMES SOURCE:SCONQUEST_AMER, 1.25
+            CASE 0
+                TIMES SOURCE:SJOY_AMER, 1.25
+                ;TIMES SOURCE:SPASSIVITY_AMER, 1.00
+                ;TIMES SOURCE:SCONQUEST_AMER, 1.00
+            CASE 1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 1.25
+                TIMES SOURCE:SCONQUEST_AMER, 0.50
+            CASE IS > 1
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                TIMES SOURCE:SPASSIVITY_AMER, 1.50
+                TIMES SOURCE:SCONQUEST_AMER, 0.20
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;414, 415 - 吃饭/招待吃饭 (Dynamic)
+    ;--------------------------------------------------
+    CASE 414, 415
+        SOURCE:SJOY_AMER = 200 * MAX(TCVAR:DISH_RATING_AMER - 300, 0) / 400
+        SOURCE:SPASSIVITY_AMER = 75 + 50 * MAX(TCVAR:DISH_RATING_AMER - 300, 0) / 400
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;416 - 演奏 (30min)
+    ;--------------------------------------------------
+    CASE 416
+        SOURCE:SJOY_AMER = 300
+        SOURCE:SPASSIVITY_AMER = 100
+        SOURCE:SCONQUEST_AMER = 100
+        ;--------------------------------------------------
+        ;根据MASTER的演奏技能等级乘算
+        ;--------------------------------------------------
+        SELECTCASE ABL:MASTER:VIRTUOSITY_AMER
+            CASE 0
+                TIMES SOURCE:SJOY_AMER, 0.10
+                TIMES SOURCE:SPASSIVITY_AMER, 0.50
+                TIMES SOURCE:SCONQUEST_AMER, 0.50
+            CASE 1
+                TIMES SOURCE:SJOY_AMER, 0.25
+                TIMES SOURCE:SPASSIVITY_AMER, 0.75
+                TIMES SOURCE:SCONQUEST_AMER, 0.75
+            CASE 2
+                TIMES SOURCE:SJOY_AMER, 0.50
+                TIMES SOURCE:SPASSIVITY_AMER, 0.90
+                TIMES SOURCE:SCONQUEST_AMER, 0.90
+            CASE 3
+                ;TIMES SOURCE:SJOY_AMER, 1.00
+                ;TIMES SOURCE:SPASSIVITY_AMER, 1.00
+                ;TIMES SOURCE:SCONQUEST_AMER, 1.00
+            CASE 4
+                TIMES SOURCE:SJOY_AMER, 1.10
+                TIMES SOURCE:SPASSIVITY_AMER, 1.05
+                TIMES SOURCE:SCONQUEST_AMER, 1.05
+            CASE 5
+                TIMES SOURCE:SJOY_AMER, 1.20
+                TIMES SOURCE:SPASSIVITY_AMER, 1.10
+                TIMES SOURCE:SCONQUEST_AMER, 1.10
+            CASE 6
+                TIMES SOURCE:SJOY_AMER, 1.30
+                TIMES SOURCE:SPASSIVITY_AMER, 1.20
+                TIMES SOURCE:SCONQUEST_AMER, 1.20
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;417 - 午睡 (90min)
+    ;--------------------------------------------------
+    CASE 417
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF CFLAG:ATTITUDE_AMER == 0
+            RETURN -1
+        SOURCE:SJOY_AMER = 200
+        SOURCE:SLOVE_AMER = 100
+        SOURCE:SPASSIVITY_AMER = 100
+    ;--------------------------------------------------
+    ;431 - 在浴室里放松 (30min)
+    ;--------------------------------------------------
+    CASE 431
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF CFLAG:ATTITUDE_AMER == 0
+            RETURN -1
+        SOURCE:SJOY_AMER = 100
+        SOURCE:SLOVE_AMER = 150
+    ;--------------------------------------------------
+    ;432 - 钱汤 (30min)
+    ;--------------------------------------------------
+    CASE 432
+        ;--------------------------------------------------
+        ;TFLAG:209 = 1：人里浴场；= 7：人里浴场的涤身之泉
+        ;TFLAG:211 = 1：旧地狱温泉
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        IF TFLAG:209 == 1 || TFLAG:209 == 7
+            SOURCE:SJOY_AMER = 100
+        ELSEIF TFLAG:211 == 1
+            SOURCE:SJOY_AMER = 150
+            SOURCE:SLOVE_AMER = 150
+        ELSE
+            RETURN -1
+        ENDIF
+    ;--------------------------------------------------
+    ;436 - 读书 (60min)
+    ;--------------------------------------------------
+    CASE 436
+        ;--------------------------------------------------
+        ;TFLAG:193：看的书编号，2/3为文学，9为小黄书
+        ;--------------------------------------------------
+        SELECTCASE TFLAG:193
+            CASE 2, 3
+                SOURCE:SJOY_AMER = 500
+                SOURCE:SPASSIVITY_AMER = 80
+            CASE 9
+                SOURCE:SJOY_AMER = 200
+                SOURCE:SLUST_AMER = 100
+                SOURCE:SPASSIVITY_AMER = 150
+            CASEELSE
+                SOURCE:SJOY_AMER = 400
+                SOURCE:SPASSIVITY_AMER = 100
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;440 - 等待 (20min)
+    ;--------------------------------------------------
+    CASE 440
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF CFLAG:ATTITUDE_AMER == 0
+            RETURN -1
+        SOURCE:SJOY_AMER = 20
+        SOURCE:SLOVE_AMER = 30
+    ;--------------------------------------------------
+    ;442 - 伐采 (Dynamic)
+    ;WIP
+    ;--------------------------------------------------
+    CASE 442
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF ABL:INTIMACY_AMER < 10
+            RETURN -1
+        SOURCE:SJOY_AMER = 250
+        SOURCE:SPASSIVITY_AMER = 100
+        SOURCE:SCONQUEST_AMER = 150
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;445 - 采集 (60min)
+    ;--------------------------------------------------
+    CASE 445
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF ABL:INTIMACY_AMER < 5 || CFLAG:ACTION_AMER == 5
+            RETURN -1
+        SELECTCASE ITEMPRICE:(TFLAG:193)
+            CASE 1 TO 1000
+                SOURCE:SJOY_AMER = 400
+                SOURCE:SPASSIVITY_AMER = 50
+                ;SOURCE:SCONQUEST_AMER = 0
+                ;SOURCE:SACHIEVEMENT_AMER = 0
+            CASE 1001 TO 3000
+                SOURCE:SJOY_AMER = 400
+                SOURCE:SPASSIVITY_AMER = 100
+                SOURCE:SCONQUEST_AMER = 100
+                SOURCE:SACHIEVEMENT_AMER = 50
+            CASE 3000 TO 10000
+                SOURCE:SJOY_AMER = 400
+                SOURCE:SPASSIVITY_AMER = 150
+                SOURCE:SCONQUEST_AMER = 200
+                SOURCE:SACHIEVEMENT_AMER = 100
+            CASEELSE
+                SOURCE:SJOY_AMER = 400
+                SOURCE:SPASSIVITY_AMER = 200
+                SOURCE:SCONQUEST_AMER = 300
+                SOURCE:SACHIEVEMENT_AMER = 200
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;446 - 进行调合 (Dynamic)
+    ;--------------------------------------------------
+    CASE 446
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF ABL:INTIMACY_AMER < 5 || CFLAG:ACTION_AMER == 5
+            RETURN -1
+        IF TFLAG:193
+            ;--------------------------------------------------
+            ;根据所调合出物品的等阶乘算
+            ;1-5级分别需要30/40/50/65/80min
+            ;--------------------------------------------------
+            SELECTCASE PHARMACY_RANK(TFLAG:193)
+                CASE 1
+                    SOURCE:SJOY_AMER = 200
+                    SOURCE:SPASSIVITY_AMER = 100
+                    SOURCE:SCONQUEST_AMER = 20
+                    SOURCE:SACHIEVEMENT_AMER = 50
+                CASE 2
+                    SOURCE:SJOY_AMER = 300
+                    SOURCE:SPASSIVITY_AMER = 150
+                    SOURCE:SCONQUEST_AMER = 50
+                    SOURCE:SACHIEVEMENT_AMER = 100
+                CASE 3
+                    SOURCE:SJOY_AMER = 400
+                    SOURCE:SPASSIVITY_AMER = 200
+                    SOURCE:SCONQUEST_AMER = 100
+                    SOURCE:SACHIEVEMENT_AMER = 150
+                CASE 4
+                    SOURCE:SJOY_AMER = 500
+                    SOURCE:SPASSIVITY_AMER = 250
+                    SOURCE:SCONQUEST_AMER = 200
+                    SOURCE:SACHIEVEMENT_AMER = 250
+                CASE 5
+                    SOURCE:SJOY_AMER = 700
+                    SOURCE:SPASSIVITY_AMER = 350
+                    SOURCE:SCONQUEST_AMER = 350
+                    SOURCE:SACHIEVEMENT_AMER = 350
+            ENDSELECT
+            ;--------------------------------------------------
+            ;根据所调合出物品的数量乘算
+            ;--------------------------------------------------
+            SELECTCASE TFLAG:194 / RECIPE_DATA(TFLAG:193, 6)
+                CASE 1
+                    LOCAL = 10
+                CASE 2
+                    LOCAL = 13
+                CASE 3
+                    LOCAL = 15
+                CASE 4
+                    LOCAL = 17
+                CASE 5
+                    LOCAL = 19
+                CASE 6
+                    LOCAL = 20
+                CASE 7
+                    LOCAL = 22
+                CASE 8
+                    LOCAL = 23
+                CASE 9
+                    LOCAL = 24
+                CASE 10
+                    LOCAL = 25
+            ENDSELECT
+            SOURCE:SJOY_AMER = SOURCE:SJOY_AMER * LOCAL / 10
+            SOURCE:SPASSIVITY_AMER = SOURCE:SPASSIVITY_AMER * LOCAL / 10
+            SOURCE:SCONQUEST_AMER = SOURCE:SCONQUEST_AMER * LOCAL / 10
+            SOURCE:SACHIEVEMENT_AMER = SOURCE:SACHIEVEMENT_AMER * LOCAL / 10
+            VARSET LOCAL
+        ELSE
+            SOURCE:SJOY_AMER = 150
+            SOURCE:SPASSIVITY_AMER = 50
+        ENDIF
+        CFLAG:AME36_COM_TRUST = 1
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;447 - 路边摆摊 (120min)
+    ;--------------------------------------------------
+    CASE 447
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF ABL:INTIMACY_AMER < 10 || CFLAG:ACTION_AMER == 5
+            RETURN -1
+        ;--------------------------------------------------
+        ;根据销售额乘算
+        ;--------------------------------------------------
+        SELECTCASE TFLAG:194
+            CASE 0
+                SOURCE:SJOY_AMER = 400
+                SOURCE:SPASSIVITY_AMER = 75
+                ;SOURCE:SCONQUEST_AMER = 0
+                ;SOURCE:SACHIEVEMENT_AMER = 0
+            CASE 1 TO 2000
+                SOURCE:SJOY_AMER = 500
+                SOURCE:SPASSIVITY_AMER = 100
+                SOURCE:SCONQUEST_AMER = 100
+                SOURCE:SACHIEVEMENT_AMER = 100
+            CASE 2001 TO 5000
+                SOURCE:SJOY_AMER = 600
+                SOURCE:SPASSIVITY_AMER = 150
+                SOURCE:SCONQUEST_AMER = 200
+                SOURCE:SACHIEVEMENT_AMER = 150
+            CASE 5001 TO 20000
+                SOURCE:SJOY_AMER = 750
+                SOURCE:SPASSIVITY_AMER = 200
+                SOURCE:SCONQUEST_AMER = 300
+                SOURCE:SACHIEVEMENT_AMER = 200
+            CASE 20001 TO 50000
+                SOURCE:SJOY_AMER = 900
+                SOURCE:SPASSIVITY_AMER = 300
+                SOURCE:SCONQUEST_AMER = 400
+                SOURCE:SACHIEVEMENT_AMER = 300
+            CASEELSE
+                SOURCE:SJOY_AMER = 1200
+                SOURCE:SPASSIVITY_AMER = 400
+                SOURCE:SCONQUEST_AMER = 600
+                SOURCE:SACHIEVEMENT_AMER = 400
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;448 - 设下陷阱 (Dynamic)
+    ;--------------------------------------------------
+    CASE 448
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF ABL:INTIMACY_AMER < 10 || CFLAG:ACTION_AMER == 5 || TFLAG:194 == 0
+            RETURN -1
+        ;--------------------------------------------------
+        ;根据捕获猎物的种类乘算
+        ;TFLAG:194 = 23：死亡蠕虫；= 19：亚洲黑熊
+        ;--------------------------------------------------
+        IF TFLAG:194 == 23
+			SOURCE:SJOY_AMER = 300
+            SOURCE:SPASSIVITY_AMER = 100
+            SOURCE:SCONQUEST_AMER = 300
+            SOURCE:SACHIEVEMENT_AMER = 300
+		ELSEIF STRCOUNT(CritterTribe, "希少/")
+			SOURCE:SJOY_AMER = 400
+            SOURCE:SPASSIVITY_AMER = 150
+            SOURCE:SCONQUEST_AMER = 350
+            SOURCE:SACHIEVEMENT_AMER = 350
+		ELSEIF TFLAG:194 == 19
+			SOURCE:SJOY_AMER = 350
+            SOURCE:SPASSIVITY_AMER = 150
+            SOURCE:SCONQUEST_AMER = 350
+            SOURCE:SACHIEVEMENT_AMER = 350
+		ELSEIF STRCOUNT(CritterTribe, "謎/")
+			SOURCE:SJOY_AMER = 150
+            SOURCE:SPASSIVITY_AMER = 50
+            SOURCE:SCONQUEST_AMER = 50
+            SOURCE:SACHIEVEMENT_AMER = 50
+		ELSEIF STRCOUNT(CritterTribe, "小型/")
+			SOURCE:SJOY_AMER = 200
+            SOURCE:SPASSIVITY_AMER = 75
+            SOURCE:SCONQUEST_AMER = 100
+            SOURCE:SACHIEVEMENT_AMER = 100
+		ELSEIF STRCOUNT(CritterTribe, "中型/")
+			SOURCE:SJOY_AMER = 250
+            SOURCE:SPASSIVITY_AMER = 100
+            SOURCE:SCONQUEST_AMER = 150
+            SOURCE:SACHIEVEMENT_AMER = 150
+		ELSEIF STRCOUNT(CritterTribe, "大型/")
+			SOURCE:SJOY_AMER = 300
+            SOURCE:SPASSIVITY_AMER = 150
+            SOURCE:SCONQUEST_AMER = 250
+            SOURCE:SACHIEVEMENT_AMER = 250
+		ENDIF
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;449 - 捕虫 (40min)
+    ;--------------------------------------------------
+    CASE 449
+        ;--------------------------------------------------
+        ;若不会被选为TARGET，则直接RETURN
+        ;--------------------------------------------------
+        SIF ABL:INTIMACY_AMER < 5 - TALENT:GATHERING_AMER || CFLAG:ACTION_AMER == 5
+            RETURN -1
+        ;--------------------------------------------------
+        ;根据选项差分进行赋值
+        ;TFLAG:193 =-2：阿燐捕到虫，选择「即使杀了你、也要得到它」（你还有心嘛？？？）
+        ;          =-1：阿燐捕到虫，MASTER索要未果
+        ;          = 0：什么都没有捕到
+        ;          = 1：MASTER捕到虫
+        ;          = 2：阿燐捕到虫，没有被索要
+        ;          = 3：阿燐捕到虫，MASTER索要，不乐意地给了
+        ;          = 4：阿燐捕到虫，MASTER索要，欣然给了
+        ;--------------------------------------------------
+        SELECTCASE TFLAG:193
+            CASE -2
+                SOURCE:SHATE_AMER = 100
+                RETURN -1
+            CASE -1
+                SOURCE:SJOY_AMER = 100
+                SOURCE:SPASSIVITY_AMER = 150
+            CASE 0
+                SOURCE:SJOY_AMER = 250
+                SOURCE:SPASSIVITY_AMER = 100
+            CASEELSE
+                SELECTCASE TFLAG:193
+                    CASE 1, 2
+                        SOURCE:SJOY_AMER = 300
+                        SOURCE:SPASSIVITY_AMER = 100
+                        SOURCE:SACHIEVEMENT_AMER = 50
+                    CASE 3, 4
+                        SOURCE:SJOY_AMER = 250
+                        SOURCE:SPASSIVITY_AMER = 150
+                        SOURCE:SACHIEVEMENT_AMER = 50
+                ENDSELECT
+                ;--------------------------------------------------
+                ;根据捕获虫的等阶乘算
+                ;--------------------------------------------------
+                SELECTCASE MUSHI_RARE
+                    CASE 8, 9
+                        TIMES SOURCE_SJOY_AMER, 2.00
+                        TIMES SOURCE:SACHIEVEMENT_AMER, 4.00
+                    CASE 5, 6, 7
+                        TIMES SOURCE_SJOY_AMER, 1.50
+                        TIMES SOURCE:SACHIEVEMENT_AMER, 2.00
+                ENDSELECT
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;480 - 弹幕胜负 (60min)
+    ;先这样放着罢、到时候写弹幕胜负的时候再说
+    ;--------------------------------------------------
+    CASE 480
+        SOURCE:SJOY_AMER = 800
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;483 - 斗虫 (60min)
+    ;--------------------------------------------------
+    CASE 483
+        ;--------------------------------------------------
+        ;TFLAG:193 = 1：决斗；= 2：乱斗；= 3：团队战
+        ;TCVAR:MUSHI_TRACK_AMER % 10：阿燐的名次
+        ;--------------------------------------------------
+        SELECTCASE TFLAG:193
+            CASE 1
+                IF TCVAR:MUSHI_TRACK_AMER % 10 == 1
+                    SOURCE:SJOY_AMER = 550
+                    SOURCE:SPASSIVITY_AMER = 100
+                    SOURCE:SCONQUEST_AMER = 250
+                    SOURCE:SACHIEVEMENT_AMER = 200
+                ELSE
+                    SOURCE:SJOY_AMER = 450
+                    SOURCE:SPASSIVITY_AMER = 200
+                ENDIF
+            CASE 2
+                SELECTCASE TCVAR:MUSHI_TRACK_AMER % 10
+                    CASE 1
+                        SOURCE:SJOY_AMER = 700
+                        SOURCE:SPASSIVITY_AMER = 50
+                        SOURCE:SCONQUEST_AMER = 300
+                        SOURCE:SACHIEVEMENT_AMER = 250
+                    CASE 2
+                        SOURCE:SJOY_AMER = 600
+                        SOURCE:SPASSIVITY_AMER = 100
+                        SOURCE:SCONQUEST_AMER = 100
+                        SOURCE:SACHIEVEMENT_AMER = 50
+                    CASE 3
+                        SOURCE:SJOY_AMER = 550
+                        SOURCE:SPASSIVITY_AMER = 150
+                        SOURCE:SCONQUEST_AMER = 20
+                    CASEELSE
+                        SOURCE:SJOY_AMER = 500
+                        SOURCE:SPASSIVITY_AMER = 150
+                ENDSELECT
+            CASE 3
+                IF TCVAR:MUSHI_TRACK_AMER % 10 == 1
+                    SOURCE:SJOY_AMER = 700
+                    SOURCE:SPASSIVITY_AMER = 100
+                    SOURCE:SCONQUEST_AMER = 300
+                    SOURCE:SACHIEVEMENT_AMER = 250
+                ELSE
+                    SOURCE:SJOY_AMER = 550
+                    SOURCE:SPASSIVITY_AMER = 200
+                ENDIF
+        ENDSELECT
+        CFLAG:AME36_COM_TRUST = 1
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;484 - 打西瓜 (60min)
+    ;TFLAG:193 =-1：没有打到
+    ;          = 0：勉强打到了（距离1步）
+    ;          = 1：正中西瓜
+    ;          = 2：使用木刀正中西瓜
+    ;--------------------------------------------------
+    CASE 484
+        SELECTCASE TFLAG:193
+            CASE -1, 0
+                SOURCE:SJOY_AMER = 400
+                SOURCE:SPASSIVITY_AMER = 100
+            CASE 1
+                SOURCE:SJOY_AMER = 500
+                SOURCE:SPASSIVITY_AMER = 150
+            CASE 2
+                SOURCE:SJOY_AMER = 600
+                SOURCE:SPASSIVITY_AMER = 200
+        ENDSELECT
+        IRREGULAR_TFLAG = 1
+    ;--------------------------------------------------
+    ;603 - 牵手 (10min)
+    ;--------------------------------------------------
+    CASE 603
+        SOURCE:SJOY_AMER = 80
+        SOURCE:SLOVE_AMER = 60
+        SOURCE:SPASSIVITY_AMER = 60
+    ;--------------------------------------------------
+    ;605 - 绕道 (10min)
+    ;--------------------------------------------------
+    CASE 605
+        SOURCE:SJOY_AMER = 100
+        SOURCE:SLOVE_AMER = 80
+        SOURCE:SPASSIVITY_AMER = 80
+    ;--------------------------------------------------
+    ;610 - 请吃饭 (60min)
+    ;--------------------------------------------------
+    CASE 610
+        SOURCE:SJOY_AMER = 550
+        SOURCE:SLOVE_AMER = 300
+        SOURCE:SPASSIVITY_AMER = 250
+        SOURCE:SCONQUEST_AMER = 200
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;614 - 采购食材 (30min)
+    ;--------------------------------------------------
+    CASE 614
+        SOURCE:SJOY_AMER = 250
+        SOURCE:SPASSIVITY_AMER = 100
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;615 - 吃便当 (60min)
+    ;--------------------------------------------------
+    CASE 615
+        SOURCE:SJOY_AMER = 300
+        SOURCE:SLOVE_AMER = 400
+        SOURCE:SCONQUEST_AMER = 100
+        SOURCE:SACHIEVEMENT_AMER = 300
+    ;--------------------------------------------------
+    ;617 - 邀请去甜品店 (60min)
+    ;--------------------------------------------------
+    CASE 617
+        SOURCE:SJOY_AMER = 600
+        SOURCE:SLOVE_AMER = 350
+        SOURCE:SPASSIVITY_AMER = 300
+        SOURCE:SCONQUEST_AMER = 200
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;621 - 钓鱼 (20min)
+    ;TFLAG:193：钓到物品的编号
+    ;TFLAG:194 / 1000 = 0：MASTER钓到；= 1：阿燐钓到
+    ;--------------------------------------------------
+    CASE 621
+        SIF ABL:INTIMACY_AMER < 5 - TALENT:FISHING_AMER || CFLAG:ACTION_AMER == 5
+            RETURN -1
+        IF TFLAG:194 / 1000
+            SELECTCASE TFLAG:193
+                ;--------------------------------------------------
+                ;木材和守矢神签
+                ;--------------------------------------------------
+                CASE 131, 610
+                    SOURCE:SJOY_AMER = 120
+                    SOURCE:SPASSIVITY_AMER = 120
+                ;--------------------------------------------------
+                ;好吃的鱼
+                ;--------------------------------------------------
+                CASE 11 TO 20, 24 TO 30, 32
+                    SOURCE:SJOY_AMER = 250
+                    SOURCE:SPASSIVITY_AMER = 50
+                    SOURCE:SCONQUEST_AMER = 100
+                    SOURCE:SACHIEVEMENT_AMER = 150
+                ;--------------------------------------------------
+                ;跳蛋
+                ;--------------------------------------------------
+                CASE 21
+                    SOURCE:SJOY_AMER = 150
+                    SOURCE_SLUST_AMER = 100
+                    SOURCE:SPASSIVITY_AMER = 200
+                ;--------------------------------------------------
+                ;很厉害的东西
+                ;--------------------------------------------------
+                CASE 23, 31, 606, 609, 643
+                    SOURCE:SJOY_AMER = 350
+                    SOURCE:SCONQUEST_AMER = 150
+                    SOURCE:SACHIEVEMENT_AMER = 250
+                CASEELSE
+                    SOURCE:SJOY_AMER = 200
+                    SOURCE:SPASSIVITY_AMER = 80
+                    SOURCE:SCONQUEST_AMER = 20
+                    SOURCE:SACHIEVEMENT_AMER = 100
+            ENDSELECT
+        ELSE
+            SOURCE:SJOY_AMER = 200
+            SOURCE:SPASSIVITY_AMER = 150
+        ENDIF
+        IF TFLAG:193 == 0
+            SOURCE:SJOY_AMER = 150
+            SOURCE:SPASSIVITY_AMER = 150
+        ENDIF
+        CFLAG:AME36_COM_TRUST = 1
+    ;--------------------------------------------------
+    ;626 - 土产屋 (30+nmin)
+    ;--------------------------------------------------
+    CASE 626
+        ;
+ENDSELECT
 ;--------------------------------------------------
 ;随当天执行次数效应递减
 ;--------------------------------------------------
@@ -538,7 +1506,7 @@ IF CURRENT_MODE == "444"
         PRINTPLAINFORM [354]陪睡　　　　　　
         CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_354, 0, 0, 0, 100, 300, 150), 600, 1)
         PRINTPLAINFORM [403]休憩　　　　　　
-        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_403, 0, 5, 10, 20, 50, 5), 500, 1)
+        CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_403, 0, 0, 10, 20, 50, 5), 500, 1)
         PRINTPLAINFORM [410]扫除　　　　　　
         CALL AME36_COMPLETION_PRINT(AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_410, 14, 40, 130, 330, 700, 490), 1000, 1)
         PRINTPLAINFORM [411]战斗训练　　　　

@@ -56,6 +56,7 @@
 #DIM CONST DOWN_AMER = 316
 #DIM CONST SEX_AMER = 317
 #DIM CONST ANGRY_AMER = 318
+#DIM CONST ACTION_AMER = 325
 #DIM CONST SNUGGLE_AMER = 334
 #DIM CONST HORNINESS_AMER = 340
 #DIM CONST VERSION_AMER = 495
@@ -101,6 +102,38 @@
 #DIM CONST TIMESTOP_AMER = 70
 
 ;==================================================
+;SOURCE系
+;==================================================
+#DIM CONST SC_AMER = 0
+#DIM CONST SV_AMER = 1
+#DIM CONST SA_AMER = 2
+#DIM CONST SB_AMER = 3
+#DIM CONST SM_AMER = 4
+#DIM CONST SLIQUID_AMER = 9
+#DIM CONST SLOVE_AMER = 10
+#DIM CONST SSEXACT_AMER = 11
+#DIM CONST SACHIEVEMENT_AMER = 12
+#DIM CONST SPAIN_AMER = 13
+#DIM CONST SFEAR_AMER = 14
+#DIM CONST SLUST_AMER = 15
+#DIM CONST SRESPECT_AMER = 16
+#DIM CONST SEXPOSURE_AMER = 17
+#DIM CONST SSUBMISSION_AMER = 18
+#DIM CONST SJOY_AMER = 20
+#DIM CONST SCONQUEST_AMER = 21
+#DIM CONST SPASSIVITY_AMER = 22
+#DIM CONST SFILTH_AMER = 30
+#DIM CONST SDEPRESSION_AMER = 31
+#DIM CONST SDEVIATION_AMER = 32
+#DIM CONST SHATE_AMER = 33
+#DIM CONST SALLURE_AMER = 50
+#DIM CONST SINSULT_AMER = 51
+#DIM CONST SINDUCTION_AMER = 52
+#DIM CONST SSERVE_AMER = 53
+#DIM CONST SCOMPULSION_AMER = 54
+#DIM CONST SABUSE_AMER = 55
+
+;==================================================
 ;TALENT系
 ;==================================================
 #DIM CONST VIRGIN_AMER = 0
@@ -137,8 +170,10 @@
 #DIM CONST DRUNK_AMER = 145
 #DIM CONST GRAVITY_AMER = 194
 #DIM CONST FORCED_AMER = 200
+#DIM CONST DISH_RATING_AMER = 306
 #DIM CONST HUNGRY_TIME_AMER = 312
 #DIM CONST HUNGRY_TIME_DESSERT_AMER = 313
+#DIM CONST MUSHI_TRACK_AMER = 334
 
 ;==================================================
 ;TIME系
@@ -227,7 +262,14 @@
 ;1111 - 当某些COM失败时，使用该变量防止增加COM经验
 ;--------------------------------------------------
 #DIM CONST AME36_NO_RECOLLECTION_THIS_TIME = 1111
-
+;--------------------------------------------------
+;1112 - 本次COM的好感上升
+;--------------------------------------------------
+#DIM CONST AME36_COM_FAVOR = 1112
+;--------------------------------------------------
+;1113 - 本次COM的信赖上升
+;--------------------------------------------------
+#DIM CONST AME36_COM_TRUST = 1113
 ;==================================================
 ;1200 ~ 1300 - COM经验的记忆，用于回忆值计算等
 ;相关COM编号置于变量名内，共享同一变量的以编号靠前的COM命名
