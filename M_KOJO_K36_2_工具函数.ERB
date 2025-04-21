@@ -40,7 +40,7 @@ RETURNF 0
 ;==================================================
 @AME36_RECOLLECTION
 #FUNCTION
-#DIM RECOLLECTION
+#DIM DYNAMIC RECOLLECTION
 ;--------------------------------------------------
 ;相守值的贡献
 ;--------------------------------------------------
@@ -134,8 +134,40 @@ RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_615, 0, 0, 0, 66
 ;--------------------------------------------------
 SIF CFLAG:AME36_RECOLLECTION_303 == -1
 	RECOLLECTION -= 200
-
+;--------------------------------------------------
+;更新阈值指示
+;--------------------------------------------------
+IF RECOLLECTION >= AME36_RECOLLECTION4
+	CFLAG:AME36_BREAKTHROUGH = 4
+ELSEIF RECOLLECTION >= AME36_RECOLLECTION3
+	CFLAG:AME36_BREAKTHROUGH = 3
+ELSEIF RECOLLECTION >= AME36_RECOLLECTION2
+	CFLAG:AME36_BREAKTHROUGH = 2
+ELSEIF RECOLLECTION >= AME36_RECOLLECTION1
+	CFLAG:AME36_BREAKTHROUGH = 1
+ELSE
+	CFLAG:AME36_BREAKTHROUGH = 0
+ENDIF
 RETURNF RECOLLECTION
+
+;==================================================
+;以陷落状态需要为上限的回忆值
+;==================================================
+@AME36_EFFECTIVE_RECOLLECTION
+#FUNCTION
+LOCAL = AME36_RECOLLECTION()
+SELECTCASE AME36_FALL_STATE()
+	CASE 4
+		RETURNF LOCAL
+	CASE 3
+		RETURNF MIN(LOCAL, AME36_RECOLLECTION4)
+	CASE 2
+		RETURNF MIN(LOCAL, AME36_RECOLLECTION3)
+	CASE 1
+		RETURNF MIN(LOCAL, AME36_RECOLLECTION2)
+	CASEELSE
+		RETURNF MIN(LOCAL, AME36_RECOLLECTION1)
+ENDSELECT
 
 ;==================================================
 ;对回忆值COM部分计算的包装
@@ -162,6 +194,17 @@ IF ARG:6 > 0
 ELSE
 	RETURNF ARG * (2 * ARG:5 - ARG) * (- ARG:6)
 ENDIF
+
+;==================================================
+;测试用，使所有回忆值达到最大
+;==================================================
+@AME36_MAX_RECOLLECTION
+#FUNCTION
+FOR LOCAL, 1201, 1254
+	CFLAG:LOCAL = 99999
+NEXT
+CFLAG:1204 = 0
+RETURNF 1
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;对原版判定的改动
@@ -847,24 +890,15 @@ SELECTCASE COM
 		CFLAG:AME36_RECOLLECTION_621 += AMOUNT
 	CASE 626
 		CFLAG:AME36_RECOLLECTION_626 += AMOUNT
+	CASE 1060
+		CFLAG:AME36_RECOLLECTION_S60 += AMOUNT
+	CASE 1061
+		CFLAG:AME36_RECOLLECTION_S61 += AMOUNT
+	CASE 1062
+		CFLAG:AME36_RECOLLECTION_S62 += AMOUNT
 	CASEELSE
 		RETURN -1
 ENDSELECT
-RETURN 1
-
-;==================================================
-;增加相应SCOM的经历值
-;==================================================
-@AME36_ADD_SCOM_RECOLLECTION(SCOM)
-#DIM SCOM
-SELECTCASE SCOM 
-	CASE 60
-		CFLAG:AME36_RECOLLECTION_S60 ++
-	CASE 61
-		CFLAG:AME36_RECOLLECTION_S61 ++
-	CASE 62
-		CFLAG:AME36_RECOLLECTION_S62 ++
-ENDSELECT 
 RETURN 1
 
 ;==================================================

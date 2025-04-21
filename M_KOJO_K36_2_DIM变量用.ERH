@@ -145,6 +145,7 @@
 #DIM CONST YEARNING_AMER = 8
 #DIM CONST BRAVE_AMER = 10
 #DIM CONST ATTITUDE_TALENT_AMER = 11
+#DIM CONST MOOD_AMER = 15
 #DIM CONST SELF_CONTROL_AMER = 20
 #DIM CONST BOTTOM_LINE_AMER = 25
 #DIM CONST SHOWY_AMER = 26
@@ -394,6 +395,14 @@
 ;==================================================
 ;乱七八糟的不知道分在哪里的东西
 ;==================================================
+;相识、思慕、恋慕、恋人的回忆值要求
+;做成常量是为了方便改
+;--------------------------------------------------
+#DIM CONST AME36_RECOLLECTION1 = 200
+#DIM CONST AME36_RECOLLECTION2 = 1500
+#DIM CONST AME36_RECOLLECTION3 = 10000
+#DIM CONST AME36_RECOLLECTION4 = 25000
+;--------------------------------------------------
 ;每日执行的COM次数，用于效应递减
 ;按照COM编号一一对应，因为跳过了涩涩系所以要加上300，从300到799
 ;--------------------------------------------------
