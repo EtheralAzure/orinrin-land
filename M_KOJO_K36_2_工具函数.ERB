@@ -16,13 +16,15 @@
 ;==================================================
 @AME36_FALL_STATE
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 IF TALENT:LOVER_AMER
 	RETURNF 4
 ELSEIF TALENT:AFFECTION_AMER
 	RETURNF 3
 ELSEIF TALENT:YEARNING_AMER
 	RETURNF 2
-ELSEIF CFLAG:AME36_BREAKTHROUGH
+ELSEIF CFLAG:AME36_ACQUAINTANCE
 	RETURNF 1
 ENDIF
 RETURNF 0
@@ -32,6 +34,8 @@ RETURNF 0
 ;==================================================
 @AME36_FALL_EX
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 RETURNF 0
 
 ;==================================================
@@ -40,22 +44,13 @@ RETURNF 0
 ;==================================================
 @AME36_RECOLLECTION
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM DYNAMIC RECOLLECTION
 ;--------------------------------------------------
 ;相守值的贡献
 ;--------------------------------------------------
-LOCAL = CFLAG:AME36_PERSISTENCE
-SELECTCASE AME36_FALL_STATE()
-	CASE 4
-		LOCAL = MIN(LOCAL, 0)
-	CASE 3
-		LOCAL = MIN(LOCAL, 0)
-	CASE 2
-		LOCAL = MIN(LOCAL, 0)
-	CASEELSE
-		LOCAL = MIN(LOCAL, 0)
-ENDSELECT
-RECOLLECTION += LOCAL
+RECOLLECTION += AME36_PERSISTENCE_RECOLLECTION()
 ;--------------------------------------------------
 ;COM经验的贡献
 ;--------------------------------------------------
@@ -135,6 +130,11 @@ RECOLLECTION += AME36_COM_RECOLLECTION(CFLAG:AME36_RECOLLECTION_615, 0, 0, 0, 66
 SIF CFLAG:AME36_RECOLLECTION_303 == -1
 	RECOLLECTION -= 200
 ;--------------------------------------------------
+;酒和料理的贡献
+;--------------------------------------------------
+RECOLLECTION += AME36_ALCOHOL_RECOLLECTION()
+RECOLLECTION += AME36_DISH_RECOLLECTION()
+;--------------------------------------------------
 ;更新阈值指示
 ;--------------------------------------------------
 IF RECOLLECTION >= AME36_RECOLLECTION4
@@ -155,6 +155,8 @@ RETURNF RECOLLECTION
 ;==================================================
 @AME36_EFFECTIVE_RECOLLECTION
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 LOCAL = AME36_RECOLLECTION()
 SELECTCASE AME36_FALL_STATE()
 	CASE 4
@@ -170,6 +172,104 @@ SELECTCASE AME36_FALL_STATE()
 ENDSELECT
 
 ;==================================================
+;对回忆值的相守值部分计算的包装
+;==================================================
+@AME36_PERSISTENCE_RECOLLECTION
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+LOCAL = CFLAG:AME36_PERSISTENCE
+SELECTCASE LOCAL
+	CASE IS <= 40
+		LOCAL = 10 * LOCAL
+	CASE 41 TO 100
+		LOCAL = (80 * LOCAL - 2000) / 3
+	CASE 100 TO 200
+		LOCAL = 30 * LOCAL - 1000
+	CASEELSE
+		LOCAL = (125 * LOCAL - 5000) / 4
+ENDSELECT
+SELECTCASE AME36_FALL_STATE()
+	CASE 4
+		LOCAL = MIN(LOCAL, 10000)
+	CASE 3
+		LOCAL = MIN(LOCAL, 5000)
+	CASE 2
+		LOCAL = MIN(LOCAL, 2000)
+	CASE 1
+		LOCAL = MIN(LOCAL, 400)
+	CASE 0
+		LOCAL = MIN(LOCAL, 100)
+ENDSELECT
+RETURNF LOCAL
+
+;==================================================
+;对回忆值的酒经历部分计算的包装
+;酒共31种
+;==================================================
+@AME36_ALCOHOL_RECOLLECTION
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+LOCAL = AME36_BINARY_SUM(CFLAG:AME36_ALCOHOL_TYPE)
+IF LOCAL <= 4
+	LOCAL *= 20
+ELSE
+	LOCAL = 80 + 920 * (LOCAL - 4) / 31
+ENDIF
+SELECTCASE AME36_FALL_STATE()
+	CASE 0
+		RETURNF 0
+	CASE 1
+		RETURNF MIN(LOCAL, 200)
+	CASE 2
+		RETURNF MIN(LOCAL, 500)
+	CASE 3, 4
+		RETURNF MIN(LOCAL, 1000)
+ENDSELECT
+
+;==================================================
+;对回忆值的料理经历部分计算的包装
+;常规料理共174种
+;==================================================
+@AME36_DISH_RECOLLECTION
+#FUNCTION
+#LOCALSIZE 2
+#LOCALSSIZE 1
+LOCAL = AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_1) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_2) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_3)
+LOCAL = 1700 * LOCAL / 174
+LOCAL:1 = AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C1) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C2) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C3)
+IF GETBIT(CFLAG:AME36_DISH_TYPE_C1, 35)
+	LOCAL += 100
+	LOCAL:1 -= 1
+ENDIF
+LOCAL += 50 * MIN(LOCAL:1, 4)
+SELECTCASE AME36_FALL_STATE()
+	CASE 0
+		RETURNF 0
+	CASE 1
+		RETURNF MIN(LOCAL, 400)
+	CASE 2
+		RETURNF MIN(LOCAL, 1000)
+	CASE 3, 4
+		RETURNF MIN(LOCAL, 2000)
+ENDSELECT
+
+;==================================================
+;获取一个数字所有二进制位值的和
+;==================================================
+@AME36_BINARY_SUM(ARG)
+#FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
+VARSET LOCAL
+WHILE ARG
+	LOCAL += ARG & 1
+	ARG >>= 1
+WEND
+RETURNF LOCAL
+
+;==================================================
 ;对回忆值COM部分计算的包装
 ;ARG为记录CFLAG的值
 ;ARG:1 - ARG:5 为五个陷落状态的最大值
@@ -177,6 +277,8 @@ ENDSELECT
 ;==================================================
 @AME36_COM_RECOLLECTION(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARG:5, ARG:6)
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 SELECTCASE AME36_FALL_STATE()
 	CASE 4
 		ARG = MIN(ARG, ARG:5)
@@ -200,6 +302,8 @@ ENDIF
 ;==================================================
 @AME36_MAX_RECOLLECTION
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 FOR LOCAL, 1201, 1254
 	CFLAG:LOCAL = 99999
 NEXT
@@ -216,6 +320,8 @@ RETURNF 1
 ;==================================================
 @AME36_WEEKDAY_MATCH(ARG:0, ARG:1 = -1, ARG:2 = -1, ARG:3 = -1, ARG:4 = -1, ARG:5 = -1)
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 FOR LOCAL, 0, 6
 	SIF ARG:LOCAL == -1
 		BREAK
@@ -230,6 +336,8 @@ RETURNF 0
 ;==================================================
 @AME36_DANGEROUS(ARG)
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 SIF TCVAR:ARG:FORCED_AMER
 	RETURNF 1
 IF TALENT:ARG:AFFECTION_AMER
@@ -247,6 +355,8 @@ RETURNF 0
 ;==================================================
 @AME36_FOLLOWABLE(ARG)
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 SIF !CFLAG:ARG:SEX_AMER && !CFLAG:ARG:ASLEEP_AMER && !CFLAG:ARG:SNUGGLE_AMER
 	RETURNF 1
 RETURNF 0
@@ -256,6 +366,8 @@ RETURNF 0
 ;==================================================
 @AME36_CLEAN_BATHCHECK()
 #FUNCTION
+#LOCALSIZE 1
+#LOCALSSIZE 1
 SIF FLAG:TIMESTOP_AMER
 	RETURNF 0
 SIF !GETBIT(TALENT:MASTER:GENDER_AMER, 1) && HETEROSEX(MASTER, 36)
@@ -277,10 +389,13 @@ RETURNF 0
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 
 ;==================================================
-;自定义好感改变
+;自定义好感改变（历史版本）
 ;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:97使最终好感改变为指定的值
 ;==================================================
+[SKIPSTART]
 @AME36_FAVOR_OVERRIDE(DESIRED_VALUE)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM DESIRED_VALUE
 VARSET LOCAL
 
@@ -516,13 +631,17 @@ DESIRED_VALUE -= (ABL:10 + ABL:11) / 2
 ;--------------------------------------------------
 TFLAG:97 = DESIRED_VALUE
 RETURN 1
+[SKIPEND]
 
 ;==================================================
-;自定义信赖改变
+;自定义信赖改变（历史版本）
 ;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:98使最终信赖改变为指定的值
 ;由于代码中的硬伤，设置过低的信赖上升(如+1)会导致好感无法上升，此时会将期望+1并再次尝试直到合适为止
 ;==================================================
+[SKIPSTART]
 @AME36_TRUST_OVERRIDE(DESIRED_VALUE)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM DESIRED_VALUE
 #DIM ORIGINAL_DESIRE
 ORIGINAL_DESIRE = DESIRED_VALUE
@@ -699,15 +818,21 @@ SIF ORIGINAL_DESIRE < 0 && DESIRED_VALUE > 0
 	TFLAG:99 = 1
 
 ;--------------------------------------------------
-;在修改TFLAG:98为计算结果前，若会导致无法获得好感则返回重试
+;在修改TFLAG:98为计算结果前，若会导致无法获得好感则一定几率+1返回重试，最后期望是相同的
 ;--------------------------------------------------
-IF DESIRED_VALUE < 0 && ORIGINAL_DESIRE > 0
-	ORIGINAL_DESIRE ++
-	DESIRED_VALUE = ORIGINAL_DESIRE
-	GOTO VALID_CHECK
+IF (DESIRED_VALUE < 0 && ORIGINAL_DESIRE > 0) || DESIRED_VALUE == 0
+	IF RAND:(ORIGINAL_DESIRE + 1) == 0
+		TFLAG:98 = 0
+		RETURN 1
+	ELSE
+		ORIGINAL_DESIRE ++
+		DESIRED_VALUE = ORIGINAL_DESIRE
+		GOTO VALID_CHECK
+	ENDIF
 ENDIF
 TFLAG:98 = DESIRED_VALUE
 RETURN 1
+[SKIPEND]
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;仅仅只是工具系
@@ -720,6 +845,8 @@ RETURN 1
 ;暂且分配10个CFLAG记录，容量为640
 ;==================================================
 @AME36_FIRSTTIME(EVENT_NO, MODE = 1)
+#LOCALSIZE 3
+#LOCALSSIZE 1
 #FUNCTION
 #DIM EVENT_NO
 #DIM MODE
@@ -742,6 +869,8 @@ RETURNF 0
 ;被排除的：快感、液体、性行动、不洁、郁屈、逸脱、反感
 ;==================================================
 @AME36_TIMES_RELAVENT_SOURCE(PERCENTAGE)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM PERCENTAGE
 SIF PERCENTAGE == 100
 	RETURN 1
@@ -768,6 +897,8 @@ RETURN 1
 ;清除所有除快感以外的SOURCE
 ;==================================================
 @AME36_CLEAR_SOURCE()
+#LOCALSIZE 1
+#LOCALSSIZE 1
 SOURCE:9 = 0
 SOURCE:10 = 0
 SOURCE:11 = 0
@@ -794,9 +925,24 @@ SOURCE:55 = 0
 RETURN 1
 
 ;==================================================
+;清除所有快感SOURCE
+;==================================================
+@AME36_CLEAR_PLEASURE_SOURCE()
+#LOCALSIZE 1
+#LOCALSSIZE 1
+SOURCE:0 = 0
+SOURCE:1 = 0
+SOURCE:2 = 0
+SOURCE:3 = 0
+SOURCE:4 = 0
+RETURN 1
+
+;==================================================
 ;增加相应COM的经历值
 ;==================================================
 @AME36_ADD_COM_RECOLLECTION(COM, AMOUNT)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM COM
 #DIM AMOUNT
 SELECTCASE COM
@@ -890,21 +1036,92 @@ SELECTCASE COM
 		CFLAG:AME36_RECOLLECTION_621 += AMOUNT
 	CASE 626
 		CFLAG:AME36_RECOLLECTION_626 += AMOUNT
-	CASE 1060
-		CFLAG:AME36_RECOLLECTION_S60 += AMOUNT
-	CASE 1061
-		CFLAG:AME36_RECOLLECTION_S61 += AMOUNT
-	CASE 1062
-		CFLAG:AME36_RECOLLECTION_S62 += AMOUNT
 	CASEELSE
 		RETURN -1
 ENDSELECT
 RETURN 1
 
 ;==================================================
+;根据料理名称获取料理的编号
+;一定要把写料理系统的家伙头砍下来挂在地灵殿门口
+;==================================================
+@AME36_DISH_INDEX(ARGS)
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIMS TDISH_NAME
+#DIMS TDISH_TASTE
+#DIMS TDISH_TYPE
+#DIMS TDISH_COMMENT
+#DIM TDISH_ING, 11
+#DIM TDISH_TIME
+#DIM TDISH_MAXLIMIT
+#DIM DYNAMIC RESULT_NO
+TDISH_NAME '= DISH_NAME
+TDISH_TASTE '= DISH_TASTE
+TDISH_TYPE '= DISH_TYPE
+TDISH_COMMENT '= DISH_COMMENT
+FOR LOCAL, 0, 11
+	TDISH_ING:LOCAL = DISH_ING:LOCAL
+NEXT
+TDISH_TIME = DISH_TIME
+TDISH_MAXLIMIT = DISH_MAXLIMIT
+
+FOR LOCAL, 101, 401 + CHARANUM
+	CALL DISHDATA(LOCAL)
+	IF DISH_NAME == ARGS
+		RESULT_NO = LOCAL
+		BREAK
+	ENDIF
+NEXT
+VARSET RESULT
+IF RESULT_NO > 400
+	TRYCALLFORM SPECIAL_MENU_{RESULT_NO - 400}
+	SIF DISH_NAME != ARGS
+		VARSET RESULT
+		RESULT:1 = 1
+ENDIF
+
+DISH_NAME '= TDISH_NAME
+DISH_TASTE '= TDISH_TASTE
+DISH_TYPE '= TDISH_TYPE
+DISH_COMMENT '= TDISH_COMMENT
+FOR LOCAL, 0, 11
+	DISH_ING:LOCAL = TDISH_ING:LOCAL
+NEXT
+DISH_TIME = TDISH_TIME
+DISH_MAXLIMIT = TDISH_MAXLIMIT
+
+RETURN RESULT_NO
+
+;==================================================
+;自用的报错信息，出现了不该出现的情况时调用
+;==================================================
+@AME36_ERROR(ARG, ARGS)
+DRAWLINE
+LOCAL = GETCOLOR()
+CALL M_KOJO_AME_COLOR_K36
+CALL AME36_AA(RAND:8, "CENTER")
+ALIGNMENT CENTER
+PRINTL ╭━━━━━━━━━━━━━━━━━━━━━╮
+PRINTL │　　　　　　　　　　　　　　　　　　　　　┃
+PRINTL │　　　　　　　　出错啦——　　　　　　　　┃
+PRINTL │　　到底是怎么回事呢？怎么会变成这样呢？　┃
+PRINTL │　　这种事情的话、请一定要告诉作者的说　　┃
+PRINTL │　　　　　　　　　　　　　　　　　　　　　┃
+PRINTL ╰━━━━━━━━━━━━━━━━━━━━━╯
+PRINTL
+ALIGNMENT LEFT
+SETCOLOR LOCAL
+FORCEWAIT
+FORCEWAIT
+FORCEWAIT
+
+;==================================================
 ;清屏，做着好玩的
 ;==================================================
 @AME36_WIPE
+#LOCALSIZE 2
+#LOCALSSIZE 1
 #DIM CONST INTERVALS = 1000, 800, 650, 500, 400, 300, 250, 200, 160, 130, 110, 100, 90, 80, 70, 60, 50, 40, 30, 20
 #DIM ORG_LINECOUNT
 ORG_LINECOUNT = LINECOUNT
@@ -936,6 +1153,254 @@ CLEARLINE 1
 RETURN 0
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;AA画系：大家一定为觉大人的口上都装上了Saitamaar吧……？
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;其实就只有这一个函数的说
+;ARG代表字符画编号
+;ARGS代表ALIGNMENT
+;RETURN -1：没有Saitamaar字体呢
+;RETURN -2：屏幕装不下字符画啦
+;==================================================
+@AME36_AA(ARG, ARGS = "LEFT")
+#LOCALSIZE 2
+#LOCALSSIZE 1
+#DIMS DYNAMIC AA, 50
+;--------------------------------------------------
+;没有字体的话就完蛋啦
+;--------------------------------------------------
+IF CHKFONT("Saitamaar")
+	LOCAL = CURRENTREDRAW()
+	LOCALS '= GETFONT()
+	SETFONT "Saitamaar"
+	SELECTCASE ARGS
+		CASE "LEFT"
+			ALIGNMENT LEFT
+		CASE "CENTER"
+			ALIGNMENT CENTER
+	ENDSELECT
+
+	PRINTL
+	SELECTCASE ARG
+		CASE 0
+			PRINTL 　　　　　　　　　　　　　 ｔー' ´￣ ｀ ー ､　　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　　　 冫ﾆ｀ー（｀´） 　 　ヽ　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　 　 　 　 　 　 　 /　　￣￣`√ヽ、 　 ヽ　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　 　 i ,,　ｊ､,　ヾ、　 ､　|}　ｲ　';　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　　　ハ_∠ヽ-ソ .ノ i ﾘ　ﾉ ノj　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　　　 "ﾊ 'ｔｧ｀ﾚｲ,ｨ今/ 人ン |　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　 　 　 　 　 〈　　u ´　ｲ人ノ リ人ゝ　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　 　 　 　 　 ＾､　 ノ ,ｊ┴-､ゝ　＼　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　 　 　 　 　 　 　 　 　 　 ￣ Ｙ⌒ヽ ｉハ　　 ）　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　|＼､　　　　　　 　 , - ﾒｙ'　 __ノi　 j　　|　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　|::::::＼､　 　 　 　（< o>ｊ　 （ 　 |　 i　 ﾉ　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　|::::::　 ＼､　　　　 ｀ｔ-/　　　） ﾉ　才´　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　|::::::　　　＼､　　　　Yヽ__／ /_／ ﾉ　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　 　 　 ＼r--､　　ii　 　 ／　　　／ 　　/　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　 E｀　 ｀ー{ﾄー'′　　 ノ　　 　 {　　　　　　　　　　　　 r────── ､　 　 
+			PRINTL 　　　　　　｀ー─-,}|　　　　／　　　　 _メ、　　　　　　　　　　　 |　不应该是　　　|　　 
+			PRINTL 　　　　　　　　　　 {i　　,／「　　　　　　　.,ゝ　　　　　　 　 　 　 |　　　这样的呀　|　　 
+			PRINTL 　　　　　　　　　　　｀'Y′ﾉ＿　　　　　／＼　　　　　 v､　　　　 ､　 ｒ────‐ '　 　 
+			PRINTL 　　　　　　　　　　　　　　 l l:.l l￣｀ー'´　　　`r-'二フ-）)ヽ, 　　　)ノ　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　　 　 　 |.l:.:.l:.l:.:.:i:.:.:.ヽ:ヽ:.:Ｖ:---.:.:.:.ﾉL_,__/ヽ,　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　 　 　 　 　 |.l:.:.:l:.l:.:.:.i:.:.:.:.ヽ:.:./::--:.:.:.:.ﾉ＼∧_）メ' に）　　　　　　　　　　 
+			PRINTL 　　　　　 　 　 　 　 　 　 |.l:.:.:.l:.l:.:.:.ヽ:.:.:.:.:./:--‐:::. /ﾍ::ｊ／(:y)',　　　　　　　　　　　　　 
+			PRINTL 　　 　 　 　 　 　 　 　 　 |.l:.:.:.:l:.ヽ:.:.:.:＼:./.:.::.:.　　ﾉ u ､人:（:X）　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　　　　　|.l:.:.:.:.l:.:.:.＼:.:.:.ｿヽ::.:.:.:.::ﾉu""r'::/:::（;yヽ　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　　　 　 |.l:.:.:.:.ヽ;.:.:.:.:＼:.:.:.:.:.:.:.:.:ﾉ__ノ::; イ⌒::ヽy;）　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　 　 　 　 |.ヽ:.:.:.:.:l:.:.:／ :.＼:.:.:.:.ノ_|斗 '::::::::::::::::}いｙ;）　　　　　　　　　　 
+			PRINTL 　　　　　　　　　 　 　 　 |:.:.:.ヽ:.:.:Ｖ:､:.:.:.:.:.:.:.:／`r〉:::::::::::::::::::ノ::｝>[]<{　　　　　　　　　　 
+			PRINTL 　　　 　 　 　 　 　 　 　 ヽ:.:.:.:.Ｖ:.:.:.:.:ヽ:.:.／　　 入::::::::::::／::::::::::川＼　　　　　　　　 　 
+			PRINTL 　　　 　 　 　 　 　 　 　 〈:.:.:／:ヽ .:.:.:.／　＿／　／ーｙ´::::::::;;:::::::::::::::＼　　　　　　　　 
+			PRINTL 　　　　　 　 　 　 　 　 　 ヽ;;;;;;;;;;;;;;;;'と~￣ ,＿.／　　　 `ー､'::::::::::::::::::::::;ゝ、　　　　　　 
+			PRINTL 　　　　　　　　　　　　　　 （∞　 ,ｨfー'´￣　　　　　　　　　　｀ｙ:::::::::::::::::::::::::::ヽ　　　 　 
+			PRINTL 　　　　　　　　　　　　　　　ト‐'~~| |　　　　　　　　　　　　　 　 i::::::::::::::::::::::::::ヽ:::ヽ　　　 
+			PRINTL 　　　　　　　　　　　　　　　|　 　 | |　　　　　　　　　　　　　 　ﾉ::::::::::´:::::;':::i::::::ヽ:::::）　　
+			PRINTL 　　　　　　　　　　　　　　　|　 　 } |　　　　　　　　　　　　　／::::::::::::::::::/:::::|::::::::::ハｊ　　 
+		CASE 1
+			PRINTL 　 ┏━┬─────────────┬━┓　　　　　　　　　 　 
+			PRINTL 　 ┃　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┃　　　　　　　　　 　 
+			PRINTL ┏┫　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┣┓　　　　　　　　　 
+			PRINTL ┃┃　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┃┃　　　　　　　　　 
+			PRINTL ┃┃　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┃┃　　　　　　　　　 
+			PRINTL ┃┃　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┃┃　　　　　　　　　 
+			PRINTL ┃┃　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┃┃　　　　　　　　　 
+			PRINTL ┃┃　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┃┃　　　　　　　　　 
+			PRINTL ┗┫　 │　 　 　 　 　 　 　 　 　 　 　 　 　 │　 ┣┛　　　　　　　　　 
+			PRINTL 　 ┃　 └─────────────┘　 ┃　　　　　　　　　 　 
+			PRINTL 　 ┃　 ┏━━━━━━━━━━━━━┓　 ┃　　　　　　　　　 　 
+			PRINTL 　 ┃　 ┃　 　　　　　 　 　 　 　 　 　 　 　 ┃　 ┃　　　 　 　 　 　 　 
+			PRINTL 　 ┃　 ┃　　　　　 λ、　　　　λ..　　　　　┃　 ┃　　　　　　　　　 　 
+			PRINTL 　 ┃　 ┃　　　　　 .l:l:ヽ、＿　ノ::::)　　 　　　┃　 ┃　　　　　　　　　 　 
+			PRINTL 　 ┃　 ┃　　　　　 .|:l..'"´￣｀"'r‐ゞ.,.　._,／.┃　 ┃　　　 　 　 　 　 　 
+			PRINTL 　 ┃ 　┃、　　　　 7〉'　,　 ,　　､ 〉::}]:. 〈.　　┃　 ┃　　　　　　　　　 　 
+			PRINTL 　 ┗━┛　ﾍ,　　i_ｵ_＼λﾝ_／ｦ(y) /;;:/ー ┗━┛　　　　　　　　　 　 
+			PRINTL 　　　　`ー '､ノ＼ (ﾒ) ○　　 ○ (y) ;;.:/　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　＼;;;;;;(yﾙ""r-‐￢".(ﾒ) :;/　　　　<都被猫车砸坏了啦　　
+			PRINTL 　　　　　　　　 ＼}><{;ゝ i､ __,」ﾉ}><{/　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　（ﾉr;;/;;;;;;;;;;;;;;;;;/（ﾉ;;;;)　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　 弋(;;;;;;;;;;;;;;;;;;;:)!i.-イ .,;.;'"゛';.;,.　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　　 弋;;;;;;;;;;;;;;;λ　 ／／⌒}><{　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　　 λ;;;;;;__;;;;;;;:ヽノ;;;;´,,.,.,　　し!　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　　./;;;;;;;;;;;;;;;;;;;;;;;.;ヾ´'⌒);;）　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　 ム;;;;;;;;;;;;;;;;;;;;;;;;;;;ﾄ,　 }><{　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　/;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;:｀;､　.し!　　　　　　　　　　　　　　 　 
+		CASE 2
+			PRINTL 　　　　　　　　　　　　 　　　　　　　 _,,,.. -‐,ｧ ＼　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　＿＿＿　 　　　_,,.. -―-＜´::::::::／/　＜　　喂喂！你在那里　　　　　　　　　 
+			PRINTL 　 　 　　＼::::::::::::｀＞'"´　　　　　　 「￣ヾイ-‐ｧ　｀7　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　 ヽ;::／　 　 ,/ 　 |　 　 、 ｀ヽ/｀ヽ._〈　　〈　都做着什么见不得猫的事呀　　
+			PRINTL 　　 　 　 く｀７ 　　/.／| 　./ﾄ_」_- ,ﾊ　　! 　,ﾊ　　 ＜　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　 　　 　 /|　 　.!/-_」／　'´ ,-､｀Y 　/｀Y ﾒ＼　　 ｀'ｒ-､＿　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　|/|　,!　|7´ ,-､　 　 ゝﾟ' o!／ 　| ｀ヽメヽｧ-､|　 ／∨´￣｀ヽ／｀ヽｒ─　　　　　 
+			PRINTL 　　　　　 /　∨|_,八。ゝﾟ'　 ' __ 　 xx|　 |/　 　 `ｰ-､メ)く　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　 |ソ|´　|　,ﾊxx　 l7´　｀ヽ ./　/ 　　　　く´/ ∧ ＼　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　/.ソ 　 |　! ﾍ、　　､　　ノｲ／￣｀ヽ.　　　＼|　|＿_〉　 　／）　　　　　　　　　　　 
+			PRINTL 　　　「｀X´￣7　ヽ|_／.|アこて´／/::::::::::::::::::`:ｰ､　　 　 ｀':,ﾊ　／／　　　　　　　　　　 　 
+			PRINTL 　　　レ' ﾄ--┘　　　 　 ／|/「:::／:::i:::::::::::::::::::::::::;!　　　 　 |:::|/::/　　　　　　　　　　　　　 
+			PRINTL 　　　く__」　　　　　 　 /:::､!:::Yﾑ:::::::::'､::::::::::::ｧ'"´＼ 　　　 /::/／　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　　 r':::::/::（八）:::::::::::＼__::!:::::::::::::::`:.､,__/::/　 　 ノ´）　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　 　ヽ:ｲ:::::::::l:::::::::::::::::::::::::|.｀＼::::::::::::::::::::￣｀7ｧ'´ /-r'ヽ　　　　　　　　　 
+			PRINTL 　　　　　　　　　 　 　 ｀ﾄ､::::::::､::::::::::::::::"::::'､ 　 ＼::::::::::::::::::_//　　） (ヽｿ　　　　　　　　　 
+			PRINTL 　　　　　　 　　　　　 ／::::｀7ヽ;::::::::::::::::::::::::::｀''::ｰ-＼:::::::::::::}」　　 !　ｒヽ}　　　　　　　　 　 
+			PRINTL 　　　 　　 r--(ヽｒｧ'":::::::::::/ /::::::!::::::::::::::::::＼::::::::::::::::`::ｰ-ｒ'r'へ..,,＿ン'　　　　　　　　　　
+			PRINTL 　　　　　　 ＞-' |:}:::::::::::::/r/:::::::::|::::::::::::::::::::::::':､:::::::::::::::::::∧　　　　　　　　　　　　　　　　 
+		CASE 3
+			PRINTL 　　　　　　　　　　　　　　　　　　　　　　 　 ,. ┐　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　 　　./＼　　　　　 　 　 　 　 　　／::::ハ　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　/:::::::::＼　　　　　　　　　　／:::::::/　|　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　ﾄ､:::::::::::::;＞ ''"´￣￣｀"' ＜:::::::ｲ-‐ｧ　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　 ｒ|　 ＞'"´￣　　　　　　- 、　＼{　くﾊ ,..-┐　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　＿ｒ'ア　　　　　　　　　　　　　':, 　}￣ヽｲ:::::::{　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　}::::7　　　/ /　| 　　!　i　 　 |　 ',　{::::::::ム:::::/　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　＼| ,'　　.| .| 　|| 　 |! _|_-‐　!　 .|　＼_{X} ┘　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　 　 　 く:| |　　 |-|-_.||＿」 ｧ'Tてﾊ|　 ,'　　 | {Y}　　　啊啊——　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　 | |　　 |7'T!ヾ　　 　弋_rﾉ|__/､ 　.,'　'､ﾊ、　　这样可就一点意思都没有了哟　　
+			PRINTL 　　　　　 ﾚ'､＿_|! 弋_ﾘ　 　　　　 " |rン／　　 ヽﾊ　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　 {X},ﾊ"　　　' ＿　 　　 ﾊｲ　 　　 　 }X}　　　　　　　　　i　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　 }Y{/人　　　l/　｀ヽ ／| /　　　　　/ﾒﾉ　　　 　 　 ﾄ､　,ﾊ、　　　　　　　　　　 　 
+			PRINTL 　　　　　 　　{X|/　 |＞ ､.,_ _,..イ　,rト､_,.. --..､くﾒ}-─ｧ　　　　,'　∨　 `'ｰ'|　　　　　　　　　 
+			PRINTL 　　　　　　　 '､ﾊ、　　 　　/[__ ／::::::}/::::::::::::::::∨:::::::く　　　　/　,. -‐- ､　 、　　　　　　　 　 
+			PRINTL 　　　　　　　　ヽﾒ} ,. -‐'7´{_／::::::::::/:::::i/::::::::::::::｀ヽ,r┘　　 /　/　　 　　 ヽﾊ　　　　　　　　 
+			PRINTL 　　　　 　 ｒ‐-､ﾉﾒ/:::::;|::{:::::::::::::::::／::::::::!:::::::::::::::::::::::}　　　　{　 |　 （_）　 0 }　!　　　　　　　　 
+			PRINTL 　　　　　　〉::::::ﾝ/:::::/:::::`'ｰｧ='":::::::::::::､|､::::::::::::::_;;:ｲ　　　　 ､　ヽ｀　 ・・ ｲ　 }　　　　　　　　 
+			PRINTL 　　　　　 └‐／:::::;:'::::::::::l/:::::::::::::::::::::::::Yゝ､‐''::"::::::＼　　　　ヽ. └'-'-'┘_ノ　　　　　　　 　 
+			PRINTL 　　　　　　　 {:::､_::{::::::::::::'::::::::::::::::::::::::::::::::/　'､:::::::::::::::::＼　　 　 `'ｰ---‐'　　　　　　　　　　 
+			PRINTL 　　　　　　 　/::::::::'､:::::::::::__::::::::::::::::::;::ｲ::;'　　 ヽ;::::::_;;::-‐::ヽ　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　 　 　 　 /:::::::::::::;`!::::::￣:::::::::::"´::::::::|　,,.. ‐:''"´:::::::::::::::::}　　　　　　　　　　　　　　　　　　
+		CASE 4
+			PRINTL 　　　　　　　　　 　 　 　 　 　 　 r:;ﾆ = z ､　　　　_　,　　 ／'"　　　l:::l　　　　　　　　　　　　　　　　　　　　, -、　　　　　 
+			PRINTL 　　　　　　　　　 　 　 　 　 　 　 l::l　　　　 ≫'"´　　　　　 ｀ヽ､　　 l:::l　　　　　　　　　　　　　　　　　　　 ( 　 ! , ‐、　　 
+			PRINTL 　　　　　_　, ､　　　　　　　　　　 l:ヽ 　 ／　,　, ,　i 、、　ヽ、　 ＼ .j:::l　　　　　　　　　r‐､_　　　　　　　　 ヽ、'　_ノ　　　 
+			PRINTL 　　　　(　｀ 　l　　　　　　 　 　 　 i:::ヽ/ / 〃i i l　 i i　i　i　 ヽ　　 ヾ::l 　 ,.ｨ　　　　　　ヽ ,ノ　　　　　　　　　 ｀´　　　　　
+			PRINTL 　　　　　ｰ - '　 r v‐、　　　　　　 V:/ /　l l i i i 　 i ﾊ i　ﾊ　,ﾊ　　 Y ／::/　　　　　　　 ,　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　 ヽ ノ　 　 　 　 ∧ ヾ l　 l i　iヾヾ､ i lﾊi -+-､!i',　V ﾚ:::::::フ　　　　　 　/:ヽ , ' ~´ﾆ 　 　i⌒l　　　　　　　 
+			PRINTL 　　　　　　　　　　　　　　　　　 l:::::ヽ|　!　| ,x‐ﾄ､ヾヽソ '　ﾘ　ﾘ ﾊ　i l:::::::∠、　, 、　 r‐､i:::::i′　 　ゝ.　　l　 ' ┐　　　　　 
+			PRINTL 　　　　　　　　　　 ∧　　　　 ､_)::::::::ﾔﾊ　 i､ﾄ､ヽ　　 　 　 , -‐- .i　l￣ ﾌ　 ∨　.ヽ/,, 　 ><　　 　 ヾ、　 ｀ー '　　　　　　
+			PRINTL 　　　 ｎ　　　 __　/::::ﾍ　　 　　ゞ;;;;;:::::V 　 l　, -‐ -、　　 ′〃〃l　l／、__ ,､　　　 ,、　 i:::::l　　 ､__ゝ　　　　　　　　　 　 
+			PRINTL 　　　 l l　　≦　｀l::::::::ﾑ-､/｀ヾ'　　 ＜', i　ヾ 〃〃　　 . 　 　 　 ﾊ .!　　　　 ｀ ー '　 ￣ヾ;ﾉ｀ー- '"　　　　　　　　　　 　 
+			PRINTL 　 (｀¨　! ／　　　 ヾ;:/　ヾ　　 j｀ー'.__　i!　!∧　　　 ｨ ' ￣ﾞl 　 /iﾊ ! 　 　 ,　-,　　　正好来一起喝点茶吧——　　　　　 
+			PRINTL 　　￣ ｀l　, ，　　　 i::ヽ_ ノ｀ｰ'　　/ ｎヽヾi i　iゝ　　 ヽ、_ノ , ｲz､i!/　　／／{/　　　　　　　　　 　〈　'′)　　　　　　　 　 
+			PRINTL 　　　 　 ´ (　　　 ノヾ:j　　　　　　'i i:::ヽ ｀ヾ|ヾ｀l'｀ ﾆ_tｰ-:'　,┴i:Y!__／ ┴ 7ｰ ､　　　　 　 　 　 　 `ｰ '　　　　　　　　 　 
+			PRINTL 　　　　　　 ヽ、／　　　　　　　　／｀'i^ 'ｰ　ヾ~ヾL: : ; ~:ﾄ､ /i : :l:ﾉ i´l　フゝ',i,i,i,∧　　　　　　　　　　　　　,､　　　　　　　 
+			PRINTL 　　　　 ,､_　　｀　 　 ,ｨi,i"i,~i,i,`,iﾞヽ,i,i,il　　　　ヽ ヽi`ーヽ=∨+ 'i,i,i,/ /　ﾚ-ｯi,i,i,i／｀iー-,i,"￣￣i,`iｰz, - '　 '　　　　　　　 
+			PRINTL 　　　　 '､　｀ ー‐＜L,:_: .i,i,i,i,i,i,i,i,i,i,ヽ,ヽ_∠r　 l　li,i,i,i,((i,不_ヽi,i,i,il　r-z､ノi,i,i,/i,i,i,i,i,i,i,i,i,i,i,i,i,i. :＞'´　 __ , イ　　　　　　 　 
+			PRINTL 　　　　　 ｀ー‐z､　　　　ヾ,:.i,i,i,i,i,i,i,i,i,iヽ,i,i,ir`'　) く⌒z‐i￣ ん'￣｀i人｀フi,i,i,il,i,i,i,i,i,i,i,i,i,i,i,i.::／　　　 ト､i,l　　　　　　　　　 
+			PRINTL 　　　　　　　, 'イヽ、 　 　 ヽ,:.i,i,i,i,i,i,i,i,i,l,i,i,i`ｰy'　´" ｀" ￣　￣　"　 v＼i,i_i,il,i,i,i,i,i,i,i,i,i,i,::'/　　　 _ノ:::::::: ｀　丶 、　　　　 
+			PRINTL 　　　　,　＜　_、:::::｀:::::´　 　 !,:.i,i,i,i,i,i,i,ﾞi,r､　/　　　　　　　　　　　　　 i　　　｀ヾi,i,i,i,i,i,i,i::ｲ　　　:~::::::::::::(iT丶､ ＿｀＞　　 
+			PRINTL 　 r‐'"　_,　'´ ./::::::::::::::::....　 ﾉii,: .i,i,i,i,iノ　　 {.::　　 　 　 　 　 　 　 　　|　　　 　∨i,i,i,i,i::i,i,　　　.::::::::::::　＼　　　　　　　　 
+			PRINTL 　　｀¨ ´　　 , ′x‐､::::::::::　/iiiiii: :i,i,i/ 　　　 ヽ..: 　 　 　　.:. 　 　　　 ﾉ 　　　　　∨i,i,i,: :i,i,iヽ, .:::::::　l´>､　.＼　　　　　 　 
+			PRINTL 　　　 　 　, '　 / 　 !　ｎ　 Lz､..::i,iノ 　 　 　 　|:::::　　 　 .:.:. 　　 ..::::::! 　 　　　　　＼i,i,i::i,iiiiii,:i　 ｎ　ﾞ,　 .＼ 　＼　　　 　 
+			PRINTL 　　　 　., '　 , '　 　i　.l .l　 i￣￣　　 　　　　　 l:::::::.........:.:.:.:....::::::::::::::!　 　 　　　 　 　｀'ｰ=＝' !　l .',　ヽ　　｀　、　ヽ　 　 
+			PRINTL 　　　.／　／　　　,'　,'　l ノ　 　 　 　 　　　　　,':::::::::::::::::::::::::::::: : : : : :､　　　 　　　　　　　　　ヽ l　ヽ　ヽ　　　　｀¨′　　
+			PRINTL 　 　 'ｰ '"　　　　/_ノ　 ´　　　　　　　 　　　　' ::::::::::::::::::::::::::: : : : : : : : ､　　 　　　　　　　　　　 ｀　　 ｀¨　　　　　　　　　
+			PRINTL 　　　　　　　　　　　　　　　　 　 　 　 　 　　/ヽ;:::::::::::::::::: : : : : : : : : : : : ヽ　　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　　　　　　　　　 　 　 　 _,,,,ノヾ::ー:-:::::;;;; : : :‐: ': ": ´ : : i ヽ,　　　　　　　　　　　　　　　　　　　　　　　 　 
+		CASE 5
+			PRINTL 　　　　　　　　　　　　　　　　　　　　　　　 γ7　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　 (Y) r<ヽﾍ r－－二二) r―.､ |｜　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　 　∠フ 　<､ Yノ ￣￣ 　 　 　￣)ﾉ レ　乱七八糟翻个底朝天——　　　　　　　／>- ､　　　　　 　 
+			PRINTL 　 　 　 (＼ ∠フ　 ∨　　 .r 、　　　 　 　　Ο 　 　　　　　　　　「」　　　　〃　　　　　　 Y　 彡>　　　　 　 
+			PRINTL ∧ 　 r ､＼). 　 　 　 　　 く　} 　 　 　 　 　 　 　 　　　　　　　　　　　　 〃　 ＝＝＝　　ヽ ／ヘ　　　　 　 
+			PRINTL ヽ YV /　　 　 　　 　 　　 }三{、　　　　　 　 　 　ｘzz――‐ ､　　　　　　　　　　 ＿_ 　　　　　＾ヽ＼　　 　 
+			PRINTL 　∨ｰ′　　　 　　　　　 _｜;;｜ヽﾐ　　　　　　／ﾊV　　　　　 ＼　　　　　　 　 .ﾉ―‐ﾐ 　　　　 ⊂ミｿ　　 　 
+			PRINTL 　 r_― ､　　　　　　　_ノハ;;;;｜ 　＼ 　 　／／ﾊV　　　　　　　　＿ 　 ｎ　　　{＿＿_}　　　　 。　　　　　　 
+			PRINTL 　　ｰ<彡ヽ　　　　∠彡ミミヽ;;|. 　 　 ヽ　／ ／|/| 　　　 　 　　 (.､､(ﾐｰ' ﾐヽ、　　o _r^^ﾍ　o　　　　　　　　
+			PRINTL .　　 　＼;;;;＼ r=ミ〃//ハミ(y)　　　　　／ ／|/|. 　 　 　 　　　 ￣ ﾊー′　　　　ｰ^ー^　　　　　　　　　　
+			PRINTL 　　 　 　 ＼;;;;＼ ≠// ､∠Ｖ(y)　　　　　≠－|/|　　　　　　　_　　 　ﾊ　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　_,....,_ ＼;;;;;(y)ｨ￣r┐ﾘﾘ(y)　　　／≠－Vﾊ.　　　　 　 　 ／ ＼ﾊ　　　　　　　　　　　　　　　 ＿　　 
+			PRINTL 　　　（ (O.0)　 ＼(y)ゞゝz‐ｲ{{}><{　 　／ ／ ／Vﾊ　　　　　 ／　}>≦圭(９.　　　　γﾌ＾Y　　　._／;@/　　
+			PRINTL 　　　　ゝ、(　　　 (y)ヽ:;;;;;;;;;;ミ（ﾉﾐ　　　 　 ／ ／Vﾊ.　 　 　 ＼ ／　　　ﾊ　　 o　　弋＿〃。　/",:;ン　　　 
+			PRINTL 　　　　　｀'　　　 }><{　ゝ;;;;;;;;;;;;;;;;> 　 　　　　　　　Vﾊ　　　　　　　　　　　ﾊ　　　　　　　　　 __/,／　　　 　 
+			PRINTL 　　　　　　　　　 （ﾉ　　};;;;;;;;;;;;;;;;;;;ゝ、＿_.　　　　　.Vﾊ　　　　　　　　　　　ﾊ　　　 つ　　　　 `V　　　　　　 
+			PRINTL 　　　　　　　　 　 　　 :{;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;/￣ヽ.　　　 Vﾊ　　　　　　　　　　　ﾊ 　 　　 　 ＿　　　　　　　　　 
+			PRINTL 　　　華≡≡＝＝===｢;;;;;;;;;;;;;;;;;;;;;;;;;;;/.　　　| . 　 　 Vﾊ　　　　　　　　　　　ﾊ 　 　　 くXX＼ｰ､　　　　　　 
+			PRINTL 　　　　　　　 　 　 　 ./;;;;;;;;;;;;;;;;;;;;;;Уイ７ 　｜　　　　Vﾊ 　 　 　　　　　　　　|　　　　Ｖ＼XXヽ ＼　　　 　 
+			PRINTL 　　　　　　　　 　 　 く;;;;;;;;;;;;;;;;;;;ﾌ´￣　 {.　　|　　　　　Vﾊ　　　　　　　　／　 |　　　　　○丶XXY<　　　 　 
+			PRINTL 　　　　　　　　　　 　　 ﾏ ￣ / 　 　　　 ､　 |　 　 　 　ヽ心　　　　　／ ／　 |　　　　　 。○.YXX}　　　　　
+			PRINTL 　　　　　　.γ⌒ － ._ /　　/ 　 　　　　 }　 |　　 　－≠ヽ心、　　　／ ／　/　　　　 o　　ヽ }XУ　　　 　 
+			PRINTL 　　　　　　　〉＾ヽ、 　 '　　/　　　　　　　ﾘ　ヽ、 　／－≠＼心、　 ／　　 /　　 　 　　　　　￣ ○　　　 　 
+			PRINTL 　　　　　　 く＿_> ＼.＿ノ ＿＿＿＿＿_ヽ､ 　ヽ. 　 ／ ／　 ＜≧ｚｚｚｚ／　 ／　　　　　　○　　　　　　　 
+			PRINTL 　 ／ ／≠＝≡≡≡≡≡≡≡≡≡≡＝＝ｰ┘ 　.≡≡≡≡＝＝＝－－ ／ ／　／ 　/　　　　　　　　 
+		CASE 6
+			PRINTL 　　　　　　　　　　　　　　　　 ,.. -ｧ''　　　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　　　　　　／::::/i　　　　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　　　　　　　　　　 ／:::::::/ i　　　　　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　__　　 _/:::::::::::{_ i　　　　　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　|::＼゛/:::::::::／:「 ｀ヽ､　　　　　　　　　　　　　　　　　　　　　　　　 　 
+			PRINTL 　　　　 　 　 ／ 〉::::Υ⌒Υ::::〈　　　 ＼　　　　　　　　……　　　　　　　　　　　　　 
+			PRINTL 　　　　　　, '　　|::::::::＞ｔ＜::::::::|　 ﾍ　　 ヽ　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　 /　　　￣´∧'∧ ｀￣　i　ﾊ　　! ﾊ　　　　　　　　　　　　　　　 _　　　　　　 
+			PRINTL 　 　　 　 {　 　 　 　 { Υ }　 _｣__ !　｜ i i i｜　　　　　　　　　　 　 　 /´ 〉　　　　　 
+			PRINTL 　　　　　 ｉ　　 　 　 ﾄ､' ,ｲ. ´! j　ﾉ｀ヽ|　i i i |　　　　　　　　　 　 　 ,../ 　 〉　　　　 　 
+			PRINTL 　 　 　 　 ! , 　 r―|{ Υ }. ﾉ''⌒ﾊ/ノｊノｊﾉﾉﾘ　　　　　　　　　 ,.. -‐(〈　　 〉､　　　　　
+			PRINTL 　　　　　　i i ,　{ く |ﾄ､ ',ｲ|　丶 !ｿ　 /　　　　　　　　 　 　 ／:::::::::::::::＼ .〉:::＼　　　 
+			PRINTL 　 　 　 　 ! l ｉ ｉ ヽ　{ Υ }.!　､､､ 　 （　　 　 　 　 　 　 　 /:::::::::::::::::::::::::::ﾞ:::::::::::ヽ　　 
+			PRINTL 　 　 　 　 ﾚﾚﾍﾊ｀｀ ﾄ､ ',ｲﾘ　　　_　, ′　　　　　 　 　 　 ｊ (● ）::::::::::::::::::::::::::::::::|　　
+			PRINTL 　 　 　 　 　 /　 　 { Υ }　 　 ‘／　　　　　　　　　 　 ＜>:::::::::::::::::::::::::::::::::::::::::::|　　 
+			PRINTL 　　　　 　 厂￣￣｀ﾄ､ ',ｲ｀ ‐''´　　　　　　　　　　　　 　 |::::::::::::::::::::::__::::::::::::::::::::|　　 
+			PRINTL 　　　　　 /: . .＿＿_{ Υ }＿__　　　　　　　　　　 　 　 　 |::::::::;: ‐''ﾌ´:::::＼:::::::::::::|　　 
+			PRINTL 　　　　 /: ´ﾆ= |::::::＞‐＜::::::|　　　　　　　　　　　　　　　|::::/　／::::::::::::::::';:::::::::::|　　 
+			PRINTL 　　 　 ﾉ'´: : : : :〉::人＿人:::〈　　　　　　　　　　　　 　 　 ｊ::/　 {:::::::::::::::::::ﾑ＿__::|　　 
+			PRINTL 　　　/: : : : : : : ￣　(ﾉﾊ)､￣　　　　　　　　　　　　　　ｘﾉ|ｊ　　 ＼:::::::::::/,---一'|　　 
+			PRINTL 　 　 ! : : : : : : : : : : i : : : : ＼　　　　　　　　　　　　 _/ /｀ヽ 　 　 ＼／ 二二二)　　 
+			PRINTL 　 　 |: :、: : : : : : : : : ヽ : : : : ＼.　　　　　　 　 　 / X/　　　＼ ＿＿_ ー――ｒ'|　　 
+			PRINTL 　　　|: : ＼: : : : : : : : : :＼: :{ : : ＼.　　　 　 　 ／ノ: : ｀ヽ　 ｏ/::::::::::::::｀￣￣´::::|　　 
+		CASE 7
+			PRINTL 　　　　　　　　　　　　　　 |　　　　　　　　　　　　　　　　　　　　　　　　　 
+			PRINTL 　　　　　　　　　＼　　　 /　　　_/　　　　　　　　　　／ 、　　　　　　　　 
+			PRINTL 　　　　　　　　　　 |　　　|　　 /　　　　　　　　　　 /　 ‐-､　　　　　　 　 
+			PRINTL 　　　 　 　 　 　 　 ＼　　　　　　　　_,,. -―,ｧ　　 .!　　 _ノ　　　　　　 　 
+			PRINTL 　　　　＿＿＿_　　　 ／＼／＼,／::::::::::／/　　　|　　　　 |　─ｧ　　 　 
+			PRINTL 　　　　ヾ､::::::::::::｀＞''ﾞ＼／ 　 ／　｀"''<r <ﾞ-―ｧ .|　 　 　 ﾚ　､__　　　　
+			PRINTL 　　　　　ヽヽ;::／　　 ／ 　 ／＼　　 ＜(＼＼ 〈　 '､　　　　　　　 や　　
+			PRINTL 　　　/￣｀＞ｧ　／　 ＼／ ＼／　|　　 }（＼ヽヽ!.,,_ ＼　　　　　　　　 　 
+			PRINTL 　　　〉 ／／）｀7 　 ,'　　/ 　 /ヽ,　ﾄ､　.レ｀ヽ 　 ∨ヽ　`'' ｰ----‐ '　　 
+			PRINTL 　　　V／.／) 〈　 ./　／|　 /　､|｀ﾒーヽ　 　 !　　.|､メ＼　　　　　　　 　 
+			PRINTL 　 　 ,' 　/ / ｀ｱ ./イ_,.イ! /　　 ﾚｧﾃTヽ.}　　jゝ　 ' ､ヽメヽ　　　　　　 　 
+			PRINTL 　　/!　　　!　 |　{　,|ｧ''7ﾃﾊ 　　　弋り ﾉ!　 /i　'､　　＼Ｙメ）/￣|　　　　 
+			PRINTL 　 ,{ﾒ',　 　 ',　ゝ.ヽ八 弋_り　...:::::　　‐''ﾉO' ,/　　＼　　｀''＜＿_」、　　　
+			PRINTL 　 {メﾊ　 　|ヽ.,_ ｀oゝひｰ　　　 　 　 　 /／ ＿_,,..rｧ＼　　　｀ヽ＿〉　 　 
+			PRINTL 　/ﾒﾉ |　　.|　　 ￣｀ﾞﾍ、 　 　 　_ 　 ／く￣　　 / / //＼　　 　Y ）　 　 
+			PRINTL 'ヽ Yｰ/ 　　ﾄｧ､-―― く｀"､‐r‐--‐く‐〉　}　　i　|/|　| |　　　 ＿ノ´　 　 
+			PRINTL _,.ム,'　　　.| | |ヽヽ.　Y　＼ ＼　　　 /　./　　| <l i >| |￣￣||_＿＿_　　 
+			PRINTL ,/　 !　　　/ | |　|/|.　 !　　 ＼ ＼,／ ／　　　!　lV! .| |::::::::／　　　　　　 
+			PRINTL ＿,ﾉﾄ､,___'　 ! ! <! l〉 /　　　　,>'´,r''´　　 　 ｀,　|　! .! !:::::/　　 坏掉　　  
+			PRINTL 　　 ||:::::::::￣! !　|ﾚ! .{　　　 ./　./　　 　 　 　 j　　　 ! !::::| 　　 了啦　　 
+			PRINTL 　　 ||::::::::::::::| |　|　i　ゝ、　/　./　 　 　 　 　 ,ﾊ　|＼ヾ;､:j　　　 ……　　
+			PRINTL 　　 ||:::::::::::::ﾉﾉ　　∧ /i　/r‐'―‐ｖ'´￣￣}　 i　＼　＞｀ '､　　　　　　 　 
+	ENDSELECT
+	PRINTL
+	
+	ALIGNMENT LEFT
+	SETFONT LOCALS
+	REDRAW LOCAL
+ELSE
+	RETURN -1
+ENDIF
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;DQ系：想要一字一顿地说话！
 ;依赖ERH中定义的AME36_DQ_ARRAY和AME36_DQ_SARRAY这两个数组运行
 ;最大支持文本长度198字符（不管全角半角都算一个）
@@ -946,6 +1411,8 @@ RETURN 0
 ;默认颜色为系统默认值，无特殊格式，每40ms输出一个字
 ;==================================================
 @AME36_DQ_INITIALIZE(TEXT, COLOR = -1, STYLE = 0, INTERVAL = 40)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIMS TEXT
 #DIM COLOR
 #DIM STYLE
@@ -975,6 +1442,8 @@ RETURN 1
 ;改变文本其中一段的颜色，START默认为文本开头，FINISH默认为文本结尾
 ;==================================================
 @AME36_DQ_SETCOLOR(COLOR, START = 1, FINISH = 0)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM COLOR
 #DIM START
 #DIM FINISH
@@ -996,6 +1465,8 @@ RETURN 1
 ;改变文本其中一段为渐变色，START默认为文本开头，FINISH默认为文本结尾
 ;==================================================
 @AME36_DQ_GRADIENT(COLOR1, COLOR2, START = 1, FINISH = 0)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM COLOR1
 #DIM COLOR2
 #DIM START
@@ -1037,6 +1508,8 @@ RETURN 1
 ;改变文本其中一段为特殊格式，START默认为文本开头，FINISH默认为文本结尾
 ;==================================================
 @AME36_DQ_SETSTYLE(STYLE, START = 1, FINISH = 0)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM STYLE
 #DIM START
 #DIM FINISH
@@ -1058,6 +1531,8 @@ RETURN 1
 ;改变文本其中一段的显示速度，START默认为文本开头，FINISH默认为文本结尾
 ;==================================================
 @AME36_DQ_SETINTERVAL(INTERVAL, START = 1, FINISH = 0)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM INTERVAL
 #DIM START
 #DIM FINISH
@@ -1079,6 +1554,8 @@ RETURN 1
 ;改变文本其中一段为变速显示，START默认为文本开头，FINISH默认为文本结尾
 ;==================================================
 @AME36_DQ_ACCELERATE(INTERVAL1, INTERVAL2, START = 1, FINISH = 0)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 #DIM INTERVAL1
 #DIM INTERVAL2
 #DIM START
@@ -1102,6 +1579,8 @@ RETURN 1
 ;打印经过各种处理的文本，一字一顿说话
 ;==================================================
 @AME36_DQ_PRINT(IF_WAIT = 1)
+#LOCALSIZE 2
+#LOCALSSIZE 1
 #DIM IF_WAIT
 #DIM CURRENT_COLOR
 #DIM CURRENT_STYLE

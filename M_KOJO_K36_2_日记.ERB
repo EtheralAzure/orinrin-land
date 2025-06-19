@@ -26,6 +26,8 @@
 ;日记的存在判定
 ;==================================================
 @DIARY_AME_K36_EXIST
+#LOCALSIZE 1
+#LOCALSSIZE 1
 ;--------------------------------------------------
 ;把存储的积攒度赋回去，放在这么奇怪的地方只是因为位置比较好
 ;--------------------------------------------------
@@ -38,6 +40,8 @@ RETURN 1
 
 ;=============================
 @DIARY_AME_AFTER_CHECK_K36
+#LOCALSIZE 1
+#LOCALSSIZE 1
 ;在每日活动中阅读日记时的后处理。
 ;可以自由地处理标志的管理等。
 
@@ -56,6 +60,8 @@ RETURN 1
 ;经常被检查的日记状态信息
 ;==================================================
 @DIARY_AME_BEFORE_CHECK_K36
+#LOCALSIZE 1
+#LOCALSSIZE 1
 ;--------------------------------------------------
 ;阻止未经授权的PALAM变化
 ;--------------------------------------------------
@@ -141,7 +147,9 @@ ENDIF
 MAX_DIARY_PAGE:36:0 = 1
 
 ;=============================
-@DIARY_AME_TEXT_K36, PAGENUM, MODE, PAGECOUNT
+@DIARY_AME_TEXT_K36(PAGENUM, MODE, PAGECOUNT)
+#LOCALSIZE 1
+#LOCALSSIZE 1
 ;日記の内容
 ;PAGENUM   = 日記番号（日记的编号）
 ;MODE      = "デイリー":一天结束时在每日活动上的朗读
@@ -188,15 +196,21 @@ RESETCOLOR
 ;==================================================
 
 @M_KOJO_AME_MESSAGE_MESSAGECHECK_COM_K36_406
+#LOCALSIZE 1
+#LOCALSSIZE 1
 RETURN 0
 
 @M_KOJO_AME_MESSAGE_COM_K36_406
+#LOCALSIZE 1
+#LOCALSSIZE 1
 ;=============================
 CALL M_KOJO_AME_MESSAGE_COM_K36_406_1
 RETURN RESULT
 
 ;=============================
 @M_KOJO_AME_MESSAGE_COM_K36_406_1
+#LOCALSIZE 1
+#LOCALSSIZE 1
 ;指令口上
 ;TFLAG:194(看谁的日记)
 ;TFLAG:194不是36的时候，是当着TARGET的面看别人的日记，要注意。
