@@ -48,6 +48,7 @@
 #DIM CONST SP_AMER = 1
 #DIM CONST EMOTION_AMER = 10
 #DIM CONST RATIONALITY_AMER = 11
+#DIM CONST WORK_REMAINING_AMER = 13
 #DIM CONST DRUNKENNESS_AMER = 15
 
 ;==================================================
@@ -184,6 +185,8 @@
 #DIM CONST DISH_RATING_AMER = 306
 #DIM CONST HUNGRY_TIME_AMER = 312
 #DIM CONST HUNGRY_TIME_DESSERT_AMER = 313
+#DIM CONST JOB_START_AMER = 325
+#DIM CONST JOB_END_AMER = 326
 #DIM CONST MUSHI_TRACK_AMER = 334
 
 ;==================================================
@@ -314,13 +317,14 @@
 ;--------------------------------------------------
 #DIM CONST AME36_NO_RECOLLECTION_THIS_TIME = 1111
 ;--------------------------------------------------
-;1112 - 本次COM的好感上升
+;1112 ~ 1113 - 本次COM的好感、信赖上升
 ;--------------------------------------------------
 #DIM CONST AME36_COM_FAVOR = 1112
-;--------------------------------------------------
-;1113 - 本次COM的信赖上升
-;--------------------------------------------------
 #DIM CONST AME36_COM_TRUST = 1113
+;--------------------------------------------------
+;1114 - 当月请假天数
+;--------------------------------------------------
+#DIM CONST AME36_LEAVE_DAYS = 1114
 ;==================================================
 ;1200 ~ 1300 - COM经验的记忆，用于回忆值计算等
 ;相关COM编号置于变量名内，共享同一变量的以编号靠前的COM命名

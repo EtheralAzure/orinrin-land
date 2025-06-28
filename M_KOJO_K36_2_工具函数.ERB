@@ -388,451 +388,6 @@ RETURNF 0
 ;魔改系
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 
-;==================================================
-;自定义好感改变（历史版本）
-;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:97使最终好感改变为指定的值
-;==================================================
-[SKIPSTART]
-@AME36_FAVOR_OVERRIDE(DESIRED_VALUE)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-#DIM DESIRED_VALUE
-VARSET LOCAL
-
-;--------------------------------------------------
-;暂且先清零好感度BONUS
-;--------------------------------------------------
-TFLAG:95 = 0
-
-;--------------------------------------------------
-;都不省猫事了还能怎么办
-;--------------------------------------------------
-SIF !SHIRAHU(36)
-	RETURN -1
-
-;--------------------------------------------------
-;如果需要好感不变那就简单啦
-;--------------------------------------------------
-IF DESIRED_VALUE == 0
-	TFLAG:97 = 9999
-	TFLAG:13 = 1
-	RETURN 1
-ENDIF
-
-;--------------------------------------------------
-;绕过会话失败强制好感不变机制
-;--------------------------------------------------
-SIF TFLAG:3 == 300 && TFLAG:193 == -1
-	TFLAG:193 = 0
-
-;--------------------------------------------------
-;处理路人补正（但为什么会存在这个东西）
-;--------------------------------------------------
-SIF DESIRED_VALUE < 4 && WITH_MOB() && MAP_住人(MAIN_MAP, 36)
-	DESIRED_VALUE --
-
-;--------------------------------------------------
-;如果希望好感减少，设置TFLAG:好感度减少为1，翻转DESIRED_VALUE
-;--------------------------------------------------
-IF DESIRED_VALUE < 0
-	TFLAG:96 = 1
-	DESIRED_VALUE *= -1
-ENDIF
-
-;--------------------------------------------------
-;同时绝顶(1.5×)与被逆推时(1.2×)BONUS会正常计算
-;因为其实没有什么管的必要
-;--------------------------------------------------
-
-;--------------------------------------------------
-;正确处理强行模式下的好感减少
-;--------------------------------------------------
-IF TCVAR:200 && TFLAG:96 == 1
-	TFLAG:96 = 0
-	DESIRED_VALUE /= 3
-ENDIF
-
-;--------------------------------------------------
-;处理风骚补正（写这个有什么用，不应该事调全员风骚的玩家的错嘛）
-;--------------------------------------------------
-IF TALENT:142
-	SIF ABL:9 >= 5
-		DESIRED_VALUE *= 2
-	DESIRED_VALUE -= 2
-ENDIF
-
-;--------------------------------------------------
-;处理非恋慕冷漠补正（写这个真的没什么用罢）
-;--------------------------------------------------
-IF TALENT:21 && !TALENT:3
-	SIF ABL:16 >= 4
-		DESIRED_VALUE --
-	SIF DESIRED_VALUE > 0
-		DESIRED_VALUE *= 2
-ENDIF
-
-;--------------------------------------------------
-;处理反发刻印补正
-;依据反发刻印等级的减好感下限已经被绕过
-;--------------------------------------------------
-DESIRED_VALUE += (FLAG:4 + 1) * MARK:3
-
-;--------------------------------------------------
-;处理SOURCE带来的影响
-;--------------------------------------------------
-VARSET LOCAL
-LOCAL += (100 - 30000 / (SOURCE:0 + SOURCE:1 + SOURCE:2 + SOURCE:3 + 300)) * (1 + TALENT:70)
-LOCAL += (100 - 100000 / (SOURCE:10 + 1000))
-LOCAL += (20 - 20000 / (SOURCE:15 + 1000))
-LOCAL += (30 - 30000 / (SOURCE:12 + 1000))
-LOCAL += (20 - 20000 / (SOURCE:16 + 1000))
-LOCAL += (20 - 20000 / (SOURCE:18 + 1000))
-LOCAL += (30 - 30000 / (SOURCE:17 + 1000)) * (ABL:14 - 3) / 3
-LOCAL += (50 - 20000 / (SOURCE:13 + 400)) * (ABL:15 - 3) / 3
-LOCAL += (50 - 10000 / (SOURCE:20 + 2000))
-LOCAL += (30 - 90000 / (SOURCE:21 + 3000))
-LOCAL += (30 - 90000 / (SOURCE:22 + 3000))
-LOCAL -= (50 - 20000 / (SOURCE:14 + 400)) * (ABL:10 - 3) / 3
-LOCAL -= (50 - 25000 / (SOURCE:30 + 500)) * (2 - TALENT:61) / 2
-LOCAL -= (50 - 15000 / (SOURCE:31 + 300))
-LOCAL -= (50 - 25000 / (SOURCE:32 + 500))
-LOCAL -= (50 - 10000 / (SOURCE:33 + 200))
-DESIRED_VALUE -= LOCAL / 10
-
-;--------------------------------------------------
-;处理继承补正
-;--------------------------------------------------
-IF GETBIT (CFLAG:31, 1)
-	DESIRED_VALUE -= 2
-ELSEIF GETBIT (CFLAG:31, 0)
-	DESIRED_VALUE --
-ENDIF
-
-;--------------------------------------------------
-;处理魅惑属性补正
-;--------------------------------------------------
-SIF TALENT:MASTER:145
-	DESIRED_VALUE --
-SIF TALENT:MASTER:94
-	DESIRED_VALUE --
-SIF TALENT:MASTER:93
-	DESIRED_VALUE --
-SIF TALENT:MASTER:92
-	DESIRED_VALUE --
-
-;--------------------------------------------------
-;处理思慕补正（为什么不和恋慕放一起？）
-;--------------------------------------------------
-SIF TALENT:8
-	DESIRED_VALUE --
-
-;--------------------------------------------------
-;处理耳补正
-;--------------------------------------------------
-SIF TALENT:143 && TALENT:143 == TFLAG:123
-	DESIRED_VALUE -= 3
-
-;--------------------------------------------------
-;处理仙香玉兔和毒气花园补正
-;--------------------------------------------------
-IF IsInsenceValid(36)
-	DESIRED_VALUE --
-	SIF CFLAG:2 < 1000
-		DESIRED_VALUE --
-ENDIF
-SIF IsGardenValid(36)
-	DESIRED_VALUE --
-
-;--------------------------------------------------
-;处理恋慕和催情药补正（为什么不和思慕放一起？）
-;--------------------------------------------------
-IF TALENT:3
-	DESIRED_VALUE -= 2
-ELSEIF TCVAR:139
-	DESIRED_VALUE --
-	SIF CFLAG:2 < 1000
-		DESIRED_VALUE --
-ENDIF
-
-;--------------------------------------------------
-;处理性别歧视补正
-;--------------------------------------------------
-IF OTOKOGIRAI(36)
-	DESIRED_VALUE += 3
-	IF GETBIT (CFLAG:31, 1)
-		DESIRED_VALUE -= 2
-	ELSEIF GETBIT (CFLAG:31, 0)
-		DESIRED_VALUE --
-	ENDIF
-ENDIF
-
-;--------------------------------------------------
-;处理心情补正
-;--------------------------------------------------
-DESIRED_VALUE -= TALENT:15
-
-;--------------------------------------------------
-;处理一堆素质补正
-;--------------------------------------------------
-DESIRED_VALUE -= TALENT:70
-
-SIF TALENT:24 * TALENT:MASTER:24 > 0
-	DESIRED_VALUE --
-
-SIF TALENT:62 && DESIRED_VALUE > 1
-	DESIRED_VALUE --
-
-SIF TALENT:32
-	DESIRED_VALUE ++
-
-SIF TALENT:22
-	DESIRED_VALUE ++
-
-SIF TALENT:20
-	DESIRED_VALUE ++
-
-SIF TALENT:11 < 0 && DESIRED_VALUE > 1
-	DESIRED_VALUE --
-
-SIF TALENT:13 > 0
-	DESIRED_VALUE ++
-
-SIF TALENT:11 > 0
-	DESIRED_VALUE += 2
-
-;--------------------------------------------------
-;处理百合属性与百合中毒补正
-;--------------------------------------------------
-IF GETBIT(TALENT:MASTER:2, 0)
-	IF ABL:17 == 0
-		DESIRED_VALUE ++
-	ELSEIF ABL:17 < 5
-	ELSEIF ABL:17 < 9
-		DESIRED_VALUE --
-	ELSE
-		DESIRED_VALUE -= 2
-	ENDIF
-	IF ABL:32 > 9
-		DESIRED_VALUE -= 2
-	ELSEIF ABL:32 > 4
-		DESIRED_VALUE --
-	ENDIF
-	SIF TALENT:81 == -1
-		DESIRED_VALUE --
-ENDIF
-
-;--------------------------------------------------
-;处理亲密和从顺补正
-;--------------------------------------------------
-DESIRED_VALUE -= (ABL:10 + ABL:11) / 2
-
-;--------------------------------------------------
-;最后，修改TFLAG:97为计算结果
-;--------------------------------------------------
-TFLAG:97 = DESIRED_VALUE
-RETURN 1
-[SKIPEND]
-
-;==================================================
-;自定义信赖改变（历史版本）
-;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:98使最终信赖改变为指定的值
-;由于代码中的硬伤，设置过低的信赖上升(如+1)会导致好感无法上升，此时会将期望+1并再次尝试直到合适为止
-;==================================================
-[SKIPSTART]
-@AME36_TRUST_OVERRIDE(DESIRED_VALUE)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-#DIM DESIRED_VALUE
-#DIM ORIGINAL_DESIRE
-ORIGINAL_DESIRE = DESIRED_VALUE
-
-;--------------------------------------------------
-;都不省猫事了还能怎么办
-;--------------------------------------------------
-SIF CFLAG:313 || TCVAR:145
-	RETURN -1
-
-;--------------------------------------------------
-;某些指令中信赖不能上升，强制设置为不变
-;--------------------------------------------------
-SIF (SELECTCOM == 21 || (SELECTCOM >= 313 && SELECTCOM <= 330)) && DESIRED_VALUE > 0
-	DESIRED_VALUE = 0
-
-;--------------------------------------------------
-;满情绪时信赖不能下降，强制设置为不变
-;--------------------------------------------------
-SIF BASE:10 == MAXBASE:10 && DESIRED_VALUE < 0
-	DESIRED_VALUE = 0
-
-;--------------------------------------------------
-;很可惜，信赖减少有无法绕开的下限，只能强制减少了
-;--------------------------------------------------
-IF DESIRED_VALUE < MAX(MARK:3 - TALENT:15 , 0) * -5
-	CFLAG:4 = MAX(CFLAG:4 + DESIRED_VALUE, 0)
-	DESIRED_VALUE = 0
-ENDIF
-
-;--------------------------------------------------
-;如果需要信赖不变那就简单啦
-;--------------------------------------------------
-IF DESIRED_VALUE == 0
-	TFLAG:98 = 0
-	RETURN 1
-ENDIF
-
-$VALID_CHECK
-;--------------------------------------------------
-;处理路人补正（但为什么会存在这个东西）
-;--------------------------------------------------
-SIF DESIRED_VALUE < 4 && WITH_MOB() && MAP_住人(MAIN_MAP, 36)
-	DESIRED_VALUE --
-
-;--------------------------------------------------
-;处理情绪补正
-;--------------------------------------------------
-IF BASE:10 == MAXBASE:10
-	DESIRED_VALUE -= 2
-ELSEIF BASE:10 >= (MAXBASE:10 / 5 * 4) || BASE:11 <= (MAXBASE:11 / 2)
-	DESIRED_VALUE --
-	SIF DESIRED_VALUE < 0
-		DESIRED_VALUE *= 2
-ENDIF
-
-;--------------------------------------------------
-;处理奇迹之石补正
-;--------------------------------------------------
-SIF CFLAG:339 && DESIRED_VALUE > 0
-	DESIRED_VALUE *= 2
-
-;--------------------------------------------------
-;处理非恋慕冷漠/难以越过的底线补正
-;--------------------------------------------------
-SIF (TALENT:21 || TALENT:25) && !TALENT:3 && DESIRED_VALUE > 0
-	DESIRED_VALUE *= 2
-
-;--------------------------------------------------
-;处理百合补正
-;--------------------------------------------------
-SIF GETBIT(TALENT:MASTER:2, 0) && !OTOKOGIRAI(36)
-	DESIRED_VALUE --
-
-;--------------------------------------------------
-;处理反发刻印补正
-;--------------------------------------------------
-DESIRED_VALUE += (FLAG:4 + 1) * MARK:3
-
-;--------------------------------------------------
-;处理继承补正
-;--------------------------------------------------
-IF GETBIT(CFLAG:31, 1)
-	DESIRED_VALUE -= 2
-ELSEIF GETBIT(CFLAG:31, 0)
-	DESIRED_VALUE --
-ENDIF
-
-;--------------------------------------------------
-;处理技能差补正
-;--------------------------------------------------
-IF (TALENT:23 == -1 || TALENT:13 > 0) && DESIRED_VALUE > -1
-	SIF ABL:43 > ABL:MASTER:43 || ABL:42 > ABL:MASTER:42
-		DESIRED_VALUE ++
-ELSE
-	SIF (ABL:43 > ABL:MASTER:43 + 2 || ABL:42 > ABL:MASTER:42 + 2) && DESIRED_VALUE > -1
-		DESIRED_VALUE ++
-ENDIF
-
-;--------------------------------------------------
-;处理SOURCE带来的影响
-;--------------------------------------------------
-VARSET LOCAL
-LOCAL += (50 - 250000 / (SOURCE:10 + 5000))
-LOCAL += (30 - 30000 / (SOURCE:12 + 1000))
-LOCAL += (20 - 20000 / (SOURCE:16 + 1000))
-LOCAL += (15 - 15000 / (SOURCE:18 + 1000))
-LOCAL += (30 - 150000 / (SOURCE:20 + 5000))
-LOCAL += (30 - 90000 / (SOURCE:21 + 3000))
-LOCAL += (30 - 90000 / (SOURCE:22 + 3000))
-IF LOCAL == 0
-	TFLAG:98 = 9999
-	TFLAG:99 = 1
-	RETURN 1
-ENDIF
-LOCAL -= (50 - 20000 / (SOURCE:14 + 400)) * (ABL:10 - 3) / 3
-LOCAL -= (50 - 20000 / (SOURCE:13 + 400)) * (ABL:15 - 3) / 3
-LOCAL -= (50 - 25000 / (SOURCE:30 + 500)) * (2 - TALENT:61) / 2
-LOCAL -= (50 - 15000 / (SOURCE:31 + 300))
-LOCAL -= (50 - 25000 / (SOURCE:32 + 500))
-LOCAL -= (30 - 10000 / (SOURCE:33 + 500))
-DESIRED_VALUE -= LOCAL / 10
-
-;--------------------------------------------------
-;处理一堆素质补正
-;--------------------------------------------------
-SIF TALENT:143 && TALENT:143 == TFLAG:123
-	DESIRED_VALUE -= 3
-
-SIF TALENT:8
-	DESIRED_VALUE --
-
-SIF TALENT:3
-	DESIRED_VALUE -= 2
-
-SIF TALENT:MASTER:94
-	DESIRED_VALUE --
-
-SIF OTOKOGIRAI(36)
-	DESIRED_VALUE ++
-
-SIF TALENT:32
-	DESIRED_VALUE += 2
-
-SIF TALENT:22
-	DESIRED_VALUE ++
-
-SIF TALENT:24 * TALENT:MASTER:24 > 0
-	DESIRED_VALUE --
-
-DESIRED_VALUE -= TALENT:15
-
-SIF TALENT:11 > 0 && !TALENT:3
-	DESIRED_VALUE ++
-
-DESIRED_VALUE -= ABL:9 / 5
-
-;--------------------------------------------------
-;处理三个需要最终值的补正
-;--------------------------------------------------
-SIF BASE:12 > 0 && DESIRED_VALUE < - BASE:12 / 100
-	DESIRED_VALUE += BASE:12 / 100
-
-IF TALENT:11 < 0 && TALENT:62 && DESIRED_VALUE > 2
-	DESIRED_VALUE -= 2
-ELSEIF (TALENT:11 < 0 || TALENT:62) && DESIRED_VALUE > 1
-	DESIRED_VALUE --
-ENDIF
-
-;--------------------------------------------------
-;当前后需要结果不一致时，修改TFLAG:99防止被覆盖
-;--------------------------------------------------
-SIF ORIGINAL_DESIRE < 0 && DESIRED_VALUE > 0
-	TFLAG:99 = 1
-
-;--------------------------------------------------
-;在修改TFLAG:98为计算结果前，若会导致无法获得好感则一定几率+1返回重试，最后期望是相同的
-;--------------------------------------------------
-IF (DESIRED_VALUE < 0 && ORIGINAL_DESIRE > 0) || DESIRED_VALUE == 0
-	IF RAND:(ORIGINAL_DESIRE + 1) == 0
-		TFLAG:98 = 0
-		RETURN 1
-	ELSE
-		ORIGINAL_DESIRE ++
-		DESIRED_VALUE = ORIGINAL_DESIRE
-		GOTO VALID_CHECK
-	ENDIF
-ENDIF
-TFLAG:98 = DESIRED_VALUE
-RETURN 1
-[SKIPEND]
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;仅仅只是工具系
@@ -1092,6 +647,20 @@ DISH_TIME = TDISH_TIME
 DISH_MAXLIMIT = TDISH_MAXLIMIT
 
 RETURN RESULT_NO
+
+;==================================================
+;根据条件打印按钮或纯文本的函数
+;==================================================
+@AME36_CONDITIONAL_PRINT(ARGS, ARG)
+IF ARG
+	PRINTFORML %ARGS%
+ELSE
+	LOCAL = GETCOLOR()
+	SETCOLOR C_GRAY
+	PRINTPLAINFORM %ARGS%
+	PRINTL
+	SETCOLOR LOCAL
+ENDIF
 
 ;==================================================
 ;自用的报错信息，出现了不该出现的情况时调用
@@ -1613,3 +1182,453 @@ FOR LOCAL, 1, 200
 NEXT
 
 RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;已弃用留档
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;自定义好感改变（历史版本）
+;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:97使最终好感改变为指定的值
+;==================================================
+[SKIPSTART]
+@AME36_FAVOR_OVERRIDE(DESIRED_VALUE)
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIM DESIRED_VALUE
+VARSET LOCAL
+
+;--------------------------------------------------
+;暂且先清零好感度BONUS
+;--------------------------------------------------
+TFLAG:95 = 0
+
+;--------------------------------------------------
+;都不省猫事了还能怎么办
+;--------------------------------------------------
+SIF !SHIRAHU(36)
+	RETURN -1
+
+;--------------------------------------------------
+;如果需要好感不变那就简单啦
+;--------------------------------------------------
+IF DESIRED_VALUE == 0
+	TFLAG:97 = 9999
+	TFLAG:13 = 1
+	RETURN 1
+ENDIF
+
+;--------------------------------------------------
+;绕过会话失败强制好感不变机制
+;--------------------------------------------------
+SIF TFLAG:3 == 300 && TFLAG:193 == -1
+	TFLAG:193 = 0
+
+;--------------------------------------------------
+;处理路人补正（但为什么会存在这个东西）
+;--------------------------------------------------
+SIF DESIRED_VALUE < 4 && WITH_MOB() && MAP_住人(MAIN_MAP, 36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;如果希望好感减少，设置TFLAG:好感度减少为1，翻转DESIRED_VALUE
+;--------------------------------------------------
+IF DESIRED_VALUE < 0
+	TFLAG:96 = 1
+	DESIRED_VALUE *= -1
+ENDIF
+
+;--------------------------------------------------
+;同时绝顶(1.5×)与被逆推时(1.2×)BONUS会正常计算
+;因为其实没有什么管的必要
+;--------------------------------------------------
+
+;--------------------------------------------------
+;正确处理强行模式下的好感减少
+;--------------------------------------------------
+IF TCVAR:200 && TFLAG:96 == 1
+	TFLAG:96 = 0
+	DESIRED_VALUE /= 3
+ENDIF
+
+;--------------------------------------------------
+;处理风骚补正（写这个有什么用，不应该事调全员风骚的玩家的错嘛）
+;--------------------------------------------------
+IF TALENT:142
+	SIF ABL:9 >= 5
+		DESIRED_VALUE *= 2
+	DESIRED_VALUE -= 2
+ENDIF
+
+;--------------------------------------------------
+;处理非恋慕冷漠补正（写这个真的没什么用罢）
+;--------------------------------------------------
+IF TALENT:21 && !TALENT:3
+	SIF ABL:16 >= 4
+		DESIRED_VALUE --
+	SIF DESIRED_VALUE > 0
+		DESIRED_VALUE *= 2
+ENDIF
+
+;--------------------------------------------------
+;处理反发刻印补正
+;依据反发刻印等级的减好感下限已经被绕过
+;--------------------------------------------------
+DESIRED_VALUE += (FLAG:4 + 1) * MARK:3
+
+;--------------------------------------------------
+;处理SOURCE带来的影响
+;--------------------------------------------------
+VARSET LOCAL
+LOCAL += (100 - 30000 / (SOURCE:0 + SOURCE:1 + SOURCE:2 + SOURCE:3 + 300)) * (1 + TALENT:70)
+LOCAL += (100 - 100000 / (SOURCE:10 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:15 + 1000))
+LOCAL += (30 - 30000 / (SOURCE:12 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:16 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:18 + 1000))
+LOCAL += (30 - 30000 / (SOURCE:17 + 1000)) * (ABL:14 - 3) / 3
+LOCAL += (50 - 20000 / (SOURCE:13 + 400)) * (ABL:15 - 3) / 3
+LOCAL += (50 - 10000 / (SOURCE:20 + 2000))
+LOCAL += (30 - 90000 / (SOURCE:21 + 3000))
+LOCAL += (30 - 90000 / (SOURCE:22 + 3000))
+LOCAL -= (50 - 20000 / (SOURCE:14 + 400)) * (ABL:10 - 3) / 3
+LOCAL -= (50 - 25000 / (SOURCE:30 + 500)) * (2 - TALENT:61) / 2
+LOCAL -= (50 - 15000 / (SOURCE:31 + 300))
+LOCAL -= (50 - 25000 / (SOURCE:32 + 500))
+LOCAL -= (50 - 10000 / (SOURCE:33 + 200))
+DESIRED_VALUE -= LOCAL / 10
+
+;--------------------------------------------------
+;处理继承补正
+;--------------------------------------------------
+IF GETBIT (CFLAG:31, 1)
+	DESIRED_VALUE -= 2
+ELSEIF GETBIT (CFLAG:31, 0)
+	DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理魅惑属性补正
+;--------------------------------------------------
+SIF TALENT:MASTER:145
+	DESIRED_VALUE --
+SIF TALENT:MASTER:94
+	DESIRED_VALUE --
+SIF TALENT:MASTER:93
+	DESIRED_VALUE --
+SIF TALENT:MASTER:92
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理思慕补正（为什么不和恋慕放一起？）
+;--------------------------------------------------
+SIF TALENT:8
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理耳补正
+;--------------------------------------------------
+SIF TALENT:143 && TALENT:143 == TFLAG:123
+	DESIRED_VALUE -= 3
+
+;--------------------------------------------------
+;处理仙香玉兔和毒气花园补正
+;--------------------------------------------------
+IF IsInsenceValid(36)
+	DESIRED_VALUE --
+	SIF CFLAG:2 < 1000
+		DESIRED_VALUE --
+ENDIF
+SIF IsGardenValid(36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理恋慕和催情药补正（为什么不和思慕放一起？）
+;--------------------------------------------------
+IF TALENT:3
+	DESIRED_VALUE -= 2
+ELSEIF TCVAR:139
+	DESIRED_VALUE --
+	SIF CFLAG:2 < 1000
+		DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理性别歧视补正
+;--------------------------------------------------
+IF OTOKOGIRAI(36)
+	DESIRED_VALUE += 3
+	IF GETBIT (CFLAG:31, 1)
+		DESIRED_VALUE -= 2
+	ELSEIF GETBIT (CFLAG:31, 0)
+		DESIRED_VALUE --
+	ENDIF
+ENDIF
+
+;--------------------------------------------------
+;处理心情补正
+;--------------------------------------------------
+DESIRED_VALUE -= TALENT:15
+
+;--------------------------------------------------
+;处理一堆素质补正
+;--------------------------------------------------
+DESIRED_VALUE -= TALENT:70
+
+SIF TALENT:24 * TALENT:MASTER:24 > 0
+	DESIRED_VALUE --
+
+SIF TALENT:62 && DESIRED_VALUE > 1
+	DESIRED_VALUE --
+
+SIF TALENT:32
+	DESIRED_VALUE ++
+
+SIF TALENT:22
+	DESIRED_VALUE ++
+
+SIF TALENT:20
+	DESIRED_VALUE ++
+
+SIF TALENT:11 < 0 && DESIRED_VALUE > 1
+	DESIRED_VALUE --
+
+SIF TALENT:13 > 0
+	DESIRED_VALUE ++
+
+SIF TALENT:11 > 0
+	DESIRED_VALUE += 2
+
+;--------------------------------------------------
+;处理百合属性与百合中毒补正
+;--------------------------------------------------
+IF GETBIT(TALENT:MASTER:2, 0)
+	IF ABL:17 == 0
+		DESIRED_VALUE ++
+	ELSEIF ABL:17 < 5
+	ELSEIF ABL:17 < 9
+		DESIRED_VALUE --
+	ELSE
+		DESIRED_VALUE -= 2
+	ENDIF
+	IF ABL:32 > 9
+		DESIRED_VALUE -= 2
+	ELSEIF ABL:32 > 4
+		DESIRED_VALUE --
+	ENDIF
+	SIF TALENT:81 == -1
+		DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理亲密和从顺补正
+;--------------------------------------------------
+DESIRED_VALUE -= (ABL:10 + ABL:11) / 2
+
+;--------------------------------------------------
+;最后，修改TFLAG:97为计算结果
+;--------------------------------------------------
+TFLAG:97 = DESIRED_VALUE
+RETURN 1
+[SKIPEND]
+
+;==================================================
+;自定义信赖改变（历史版本）
+;在MARKCNG_MESSAGECHECK里使用，通过修改初始TFLAG:98使最终信赖改变为指定的值
+;由于代码中的硬伤，设置过低的信赖上升(如+1)会导致好感无法上升，此时会将期望+1并再次尝试直到合适为止
+;==================================================
+[SKIPSTART]
+@AME36_TRUST_OVERRIDE(DESIRED_VALUE)
+#LOCALSIZE 1
+#LOCALSSIZE 1
+#DIM DESIRED_VALUE
+#DIM ORIGINAL_DESIRE
+ORIGINAL_DESIRE = DESIRED_VALUE
+
+;--------------------------------------------------
+;都不省猫事了还能怎么办
+;--------------------------------------------------
+SIF CFLAG:313 || TCVAR:145
+	RETURN -1
+
+;--------------------------------------------------
+;某些指令中信赖不能上升，强制设置为不变
+;--------------------------------------------------
+SIF (SELECTCOM == 21 || (SELECTCOM >= 313 && SELECTCOM <= 330)) && DESIRED_VALUE > 0
+	DESIRED_VALUE = 0
+
+;--------------------------------------------------
+;满情绪时信赖不能下降，强制设置为不变
+;--------------------------------------------------
+SIF BASE:10 == MAXBASE:10 && DESIRED_VALUE < 0
+	DESIRED_VALUE = 0
+
+;--------------------------------------------------
+;很可惜，信赖减少有无法绕开的下限，只能强制减少了
+;--------------------------------------------------
+IF DESIRED_VALUE < MAX(MARK:3 - TALENT:15 , 0) * -5
+	CFLAG:4 = MAX(CFLAG:4 + DESIRED_VALUE, 0)
+	DESIRED_VALUE = 0
+ENDIF
+
+;--------------------------------------------------
+;如果需要信赖不变那就简单啦
+;--------------------------------------------------
+IF DESIRED_VALUE == 0
+	TFLAG:98 = 0
+	RETURN 1
+ENDIF
+
+$VALID_CHECK
+;--------------------------------------------------
+;处理路人补正（但为什么会存在这个东西）
+;--------------------------------------------------
+SIF DESIRED_VALUE < 4 && WITH_MOB() && MAP_住人(MAIN_MAP, 36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理情绪补正
+;--------------------------------------------------
+IF BASE:10 == MAXBASE:10
+	DESIRED_VALUE -= 2
+ELSEIF BASE:10 >= (MAXBASE:10 / 5 * 4) || BASE:11 <= (MAXBASE:11 / 2)
+	DESIRED_VALUE --
+	SIF DESIRED_VALUE < 0
+		DESIRED_VALUE *= 2
+ENDIF
+
+;--------------------------------------------------
+;处理奇迹之石补正
+;--------------------------------------------------
+SIF CFLAG:339 && DESIRED_VALUE > 0
+	DESIRED_VALUE *= 2
+
+;--------------------------------------------------
+;处理非恋慕冷漠/难以越过的底线补正
+;--------------------------------------------------
+SIF (TALENT:21 || TALENT:25) && !TALENT:3 && DESIRED_VALUE > 0
+	DESIRED_VALUE *= 2
+
+;--------------------------------------------------
+;处理百合补正
+;--------------------------------------------------
+SIF GETBIT(TALENT:MASTER:2, 0) && !OTOKOGIRAI(36)
+	DESIRED_VALUE --
+
+;--------------------------------------------------
+;处理反发刻印补正
+;--------------------------------------------------
+DESIRED_VALUE += (FLAG:4 + 1) * MARK:3
+
+;--------------------------------------------------
+;处理继承补正
+;--------------------------------------------------
+IF GETBIT(CFLAG:31, 1)
+	DESIRED_VALUE -= 2
+ELSEIF GETBIT(CFLAG:31, 0)
+	DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;处理技能差补正
+;--------------------------------------------------
+IF (TALENT:23 == -1 || TALENT:13 > 0) && DESIRED_VALUE > -1
+	SIF ABL:43 > ABL:MASTER:43 || ABL:42 > ABL:MASTER:42
+		DESIRED_VALUE ++
+ELSE
+	SIF (ABL:43 > ABL:MASTER:43 + 2 || ABL:42 > ABL:MASTER:42 + 2) && DESIRED_VALUE > -1
+		DESIRED_VALUE ++
+ENDIF
+
+;--------------------------------------------------
+;处理SOURCE带来的影响
+;--------------------------------------------------
+VARSET LOCAL
+LOCAL += (50 - 250000 / (SOURCE:10 + 5000))
+LOCAL += (30 - 30000 / (SOURCE:12 + 1000))
+LOCAL += (20 - 20000 / (SOURCE:16 + 1000))
+LOCAL += (15 - 15000 / (SOURCE:18 + 1000))
+LOCAL += (30 - 150000 / (SOURCE:20 + 5000))
+LOCAL += (30 - 90000 / (SOURCE:21 + 3000))
+LOCAL += (30 - 90000 / (SOURCE:22 + 3000))
+IF LOCAL == 0
+	TFLAG:98 = 9999
+	TFLAG:99 = 1
+	RETURN 1
+ENDIF
+LOCAL -= (50 - 20000 / (SOURCE:14 + 400)) * (ABL:10 - 3) / 3
+LOCAL -= (50 - 20000 / (SOURCE:13 + 400)) * (ABL:15 - 3) / 3
+LOCAL -= (50 - 25000 / (SOURCE:30 + 500)) * (2 - TALENT:61) / 2
+LOCAL -= (50 - 15000 / (SOURCE:31 + 300))
+LOCAL -= (50 - 25000 / (SOURCE:32 + 500))
+LOCAL -= (30 - 10000 / (SOURCE:33 + 500))
+DESIRED_VALUE -= LOCAL / 10
+
+;--------------------------------------------------
+;处理一堆素质补正
+;--------------------------------------------------
+SIF TALENT:143 && TALENT:143 == TFLAG:123
+	DESIRED_VALUE -= 3
+
+SIF TALENT:8
+	DESIRED_VALUE --
+
+SIF TALENT:3
+	DESIRED_VALUE -= 2
+
+SIF TALENT:MASTER:94
+	DESIRED_VALUE --
+
+SIF OTOKOGIRAI(36)
+	DESIRED_VALUE ++
+
+SIF TALENT:32
+	DESIRED_VALUE += 2
+
+SIF TALENT:22
+	DESIRED_VALUE ++
+
+SIF TALENT:24 * TALENT:MASTER:24 > 0
+	DESIRED_VALUE --
+
+DESIRED_VALUE -= TALENT:15
+
+SIF TALENT:11 > 0 && !TALENT:3
+	DESIRED_VALUE ++
+
+DESIRED_VALUE -= ABL:9 / 5
+
+;--------------------------------------------------
+;处理三个需要最终值的补正
+;--------------------------------------------------
+SIF BASE:12 > 0 && DESIRED_VALUE < - BASE:12 / 100
+	DESIRED_VALUE += BASE:12 / 100
+
+IF TALENT:11 < 0 && TALENT:62 && DESIRED_VALUE > 2
+	DESIRED_VALUE -= 2
+ELSEIF (TALENT:11 < 0 || TALENT:62) && DESIRED_VALUE > 1
+	DESIRED_VALUE --
+ENDIF
+
+;--------------------------------------------------
+;当前后需要结果不一致时，修改TFLAG:99防止被覆盖
+;--------------------------------------------------
+SIF ORIGINAL_DESIRE < 0 && DESIRED_VALUE > 0
+	TFLAG:99 = 1
+
+;--------------------------------------------------
+;在修改TFLAG:98为计算结果前，若会导致无法获得好感则一定几率+1返回重试，最后期望是相同的
+;--------------------------------------------------
+IF (DESIRED_VALUE < 0 && ORIGINAL_DESIRE > 0) || DESIRED_VALUE == 0
+	IF RAND:(ORIGINAL_DESIRE + 1) == 0
+		TFLAG:98 = 0
+		RETURN 1
+	ELSE
+		ORIGINAL_DESIRE ++
+		DESIRED_VALUE = ORIGINAL_DESIRE
+		GOTO VALID_CHECK
+	ENDIF
+ENDIF
+TFLAG:98 = DESIRED_VALUE
+RETURN 1
+[SKIPEND]
