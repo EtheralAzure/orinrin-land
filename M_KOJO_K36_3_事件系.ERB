@@ -16,204 +16,225 @@
 ;==================================================
 ;口上的存在判定
 ;==================================================
-@M_KOJO_K36_2(ARG)
-#LOCALSIZE 1
-#LOCALSSIZE 3
-;--------------------------------------------------
-;口上标识符
-;--------------------------------------------------
-RESULTS = _AME
-;--------------------------------------------------
-;口上名称
-;--------------------------------------------------
-RESULTS:1 = 不知道呜呜呜
-;--------------------------------------------------
-;口上描述
-;--------------------------------------------------
-RESULTS:2 = 
+@M_KOJO_K36_3(ARG)
+	#LOCALSIZE 1
+	#LOCALSSIZE 3
+	;--------------------------------------------------
+	;口上标识符
+	;--------------------------------------------------
+	RESULTS = _AME
+	;--------------------------------------------------
+	;口上名称
+	;--------------------------------------------------
+	RESULTS:1 = 不知道呜呜呜
+	;--------------------------------------------------
+	;口上描述
+	;--------------------------------------------------
+	RESULTS:2 = 
 
-RETURN 1
+	RETURN 1
 
 ;==================================================
 ;获取口上版本
 ;==================================================
 @KOJO_AME_VERSION_K36
-#LOCALSIZE 1
-#LOCALSSIZE 1
-RETURN 20250315
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 20250315
 
 ;==================================================
 ;口上版本更新
 ;==================================================
 @KOJO_AME_VERSION_UPDATE_K36
-#LOCALSIZE 1
-#LOCALSSIZE 1
-CALL KOJO_AME_VERSION_K36
-IF CFLAG:VERSION_AMER != 0
-	PRINTFORMW 更新完毕啦、现在的版本是{RESULT}
-ENDIF
-RETURN RESULT
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	CALL KOJO_AME_VERSION_K36
+	IF CFLAG:VERSION_AMER != 0
+		PRINTFORMW 更新完毕啦、现在的版本是{RESULT}
+	ENDIF
+	RETURN RESULT
 
 ;==================================================
 ;在每回合之前会调用的FLAGSETTING
 ;因为位置非常方便，用于对抗许多原版机制
 ;==================================================
 @M_KOJO_AME_FLAGSETTING_K36
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;--------------------------------------------------
-;好感与信赖增加的显示（计算已经在MARKCNG里完成）
-;--------------------------------------------------
-SIF CFLAG:AME36_COM_FAVOR || CFLAG:AME36_COM_TRUST
-	DRAWLINE
-IF CFLAG:AME36_COM_FAVOR
-	IF CFLAG:AME36_COM_TRUST
-		PRINTFORMDL 好感度\@(CFLAG:AME36_COM_FAVOR > 0) ? ＋{CFLAG:AME36_COM_FAVOR} # －{-CFLAG:AME36_COM_FAVOR}\@
-	ELSE
-		PRINTFORMDW 好感度\@(CFLAG:AME36_COM_FAVOR > 0) ? ＋{CFLAG:AME36_COM_FAVOR} # －{-CFLAG:AME36_COM_FAVOR}\@
-	ENDIF
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	;--------------------------------------------------
+	;好感与信赖增加的显示（计算已经在MARKCNG里完成）
+	;--------------------------------------------------
+	IF CFLAG:AME36_COM_FAVOR || CFLAG:AME36_COM_TRUST
+		DRAWLINE
+		IF CFLAG:AME36_COM_FAVOR
+			;IF CFLAG:AME36_COM_TRUST
+				PRINTFORMDL 好感度\@(CFLAG:AME36_COM_FAVOR > 0) ? ＋{CFLAG:AME36_COM_FAVOR} # －{-CFLAG:AME36_COM_FAVOR}\@
+			;ELSE
+				PRINTFORMDW 好感度\@(CFLAG:AME36_COM_FAVOR > 0) ? ＋{CFLAG:AME36_COM_FAVOR} # －{-CFLAG:AME36_COM_FAVOR}\@
+			;ENDIF
+			CFLAG:AME36_COM_FAVOR = 0
+		ENDIF
 	CFLAG:AME36_COM_FAVOR = 0
-ENDIF
-IF CFLAG:AME36_COM_TRUST
-	PRINTFORMDW 信赖度\@(CFLAG:AME36_COM_TRUST > 0) ? ＋{CFLAG:AME36_COM_TRUST} # －{-CFLAG:AME36_COM_TRUST}\@
-	CFLAG:AME36_COM_TRUST = 0
-ENDIF
-;--------------------------------------------------
-;371 - 眠奸口上
-;372 - 时停口上
-;373 - 扮演口上
-;374 - 破瓜终止
-;375 - 初回推倒
-;376 - 通常推倒
-;377 - 推倒禁止
-;379 - 来访不能
-;--------------------------------------------------
-;CFLAG:371 = 0
-;CFLAG:372 = 0
-;CFLAG:373 = 0
-;CFLAG:374 = 0
-;CFLAG:375 = 0
-;CFLAG:376 = 0
-;CFLAG:377 = 0
-;CFLAG:379 = 0
-;--------------------------------------------------
-;一堆乱七八糟东西的重置
-;--------------------------------------------------
-CFLAG:AME36_NO_RECOLLECTION_THIS_TIME = 0
-;--------------------------------------------------
-;抑制千里来抢食
-;--------------------------------------------------
-IF CFLAG:LOCATION_AMER == CFLAG:MASTER:LOCATION_AMER
-	SIF TCVAR:HUNGRY_TIME_AMER == 99999999
-		TCVAR:HUNGRY_TIME_AMER = CFLAG:AME36_HUNGRY_TIME_TEMP
-	SIF TCVAR:HUNGRY_TIME_DESSERT_AMER == 99999999
-		TCVAR:HUNGRY_TIME_DESSERT_AMER = CFLAG:AME36_HUNGRY_TIME_DESSERT_TEMP
-ELSE
-	IF TCVAR:HUNGRY_TIME_AMER != 99999999
-		CFLAG:AME36_HUNGRY_TIME_TEMP = TCVAR:HUNGRY_TIME_AMER
-		TCVAR:HUNGRY_TIME_AMER = 99999999
 	ENDIF
-	IF TCVAR:HUNGRY_TIME_DESSERT_AMER != 99999999
-		CFLAG:AME36_HUNGRY_TIME_DESSERT_TEMP = TCVAR:HUNGRY_TIME_DESSERT_AMER
-		TCVAR:HUNGRY_TIME_DESSERT_AMER = 99999999
+	IF CFLAG:AME36_COM_TRUST
+		PRINTFORMDW 信赖度\@(CFLAG:AME36_COM_TRUST > 0) ? ＋{CFLAG:AME36_COM_TRUST} # －{-CFLAG:AME36_COM_TRUST}\@
+		CFLAG:AME36_COM_TRUST = 0
 	ENDIF
-ENDIF
-;--------------------------------------------------
-;被时停搬动的检测
-;--------------------------------------------------
-IF FLAG:TIMESTOP_AMER
-	IF CFLAG:AME36_TP_INDEX == 0
-		CFLAG:AME36_TP_INDEX = CFLAG:LOCATION_AMER
-	ELSEIF CFLAG:AME36_TP_INDEX != -1 && CFLAG:AME36_TP_INDEX != CFLAG:LOCATION_AMER
-		CFLAG:AME36_TP_INDEX = -1
+	;--------------------------------------------------
+	;371 - 眠奸口上
+	;372 - 时停口上
+	;373 - 扮演口上
+	;374 - 破瓜终止
+	;375 - 初回推倒
+	;376 - 通常推倒
+	;377 - 推倒禁止
+	;379 - 来访不能
+	;--------------------------------------------------
+	;CFLAG:371 = 0
+	;CFLAG:372 = 0
+	;CFLAG:373 = 0
+	;CFLAG:374 = 0
+	;CFLAG:375 = 0
+	;CFLAG:376 = 0
+	;CFLAG:377 = 0
+	;--------------------------------------------------
+	;才不会因为MASTER住在那里就去平时不会去的地方
+	;--------------------------------------------------
+	IF GROUPMATCH(MAIN_MAP, 0, 1, 2, 5, 6, 7, 9)
+		CFLAG:379 = 0
+	ELSE
+		CFLAG:379 = 1
 	ENDIF
-ENDIF
-;--------------------------------------------------
-;如果不认识的话就别发情了罢
-;--------------------------------------------------
-SIF !CFLAG:HAS_MET_AMER
-	CFLAG:HORNINESS_AMER = 0
-;--------------------------------------------------
-;储存PALAM、情绪、理性当前的值，用于检测未经许可的变化
-;--------------------------------------------------
-CFLAG:AME36_IS_TARGET = 0
-CFLAG:AME36_PALAM_TEMP_10 = PALAM:10
-CFLAG:AME36_PALAM_TEMP_11 = PALAM:11
-CFLAG:AME36_PALAM_TEMP_12 = PALAM:12
-CFLAG:AME36_PALAM_TEMP_13 = PALAM:13
-CFLAG:AME36_PALAM_TEMP_14 = PALAM:14
-CFLAG:AME36_PALAM_TEMP_15 = PALAM:15
-CFLAG:AME36_PALAM_TEMP_16 = PALAM:16
-CFLAG:AME36_PALAM_TEMP_20 = PALAM:20
-CFLAG:AME36_PALAM_TEMP_21 = PALAM:21
-CFLAG:AME36_PALAM_TEMP_30 = PALAM:30
-CFLAG:AME36_PALAM_TEMP_31 = PALAM:31
-CFLAG:AME36_PALAM_TEMP_32 = PALAM:32
-CFLAG:AME36_PALAM_TEMP_33 = PALAM:33
-IF CFLAG:AME36_SUPPRESSION_TRIGGER
-	BASE:EMOTION_AMER = CFLAG:AME36_EMOTION_TEMP
-	BASE:RATIONALITY_AMER = CFLAG:AME36_RATIONALITY_TEMP
-	CFLAG:AME36_SUPPRESSION_TRIGGER = 0
-ELSE
-	CFLAG:AME36_EMOTION_TEMP = BASE:EMOTION_AMER
-	CFLAG:AME36_RATIONALITY_TEMP = BASE:RATIONALITY_AMER
-ENDIF
-;--------------------------------------------------
-;根据陷落状态情绪和理性有限制
-;--------------------------------------------------
-SELECTCASE AME36_FALL_STATE()
-	CASE 0
-		BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 100)
-		BASE:RATIONALITY_AMER = 1000
-	CASE 1
-		BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 300)
-		BASE:RATIONALITY_AMER = MAX(BASE:RATIONALITY_AMER, 900)
-	CASE 2
-		BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 800)
-		BASE:RATIONALITY_AMER = MAX(BASE:RATIONALITY_AMER, 800)
-	CASE 3
-		BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 1200)
-		BASE:RATIONALITY_AMER = MAX(BASE:RATIONALITY_AMER, 400)
-ENDSELECT
-;--------------------------------------------------
-;合意判定值与态度的覆盖(WIP)
-;--------------------------------------------------
-CFLAG:CONSENT_AMER = 0
-SELECTCASE AME36_FALL_STATE()
-	CASE 0, 1
+	;--------------------------------------------------
+	;修复时停导致初见口上不触发
+	;--------------------------------------------------
+	IF !CFLAG:HAS_MET_AMER && CFLAG:AME36_TIMESTOP_PREV && CFLAG:LOCATION_AMER == CFLAG:MASTER:LOCATION_AMER && !CFLAG:ASLEEP_AMER && !CFLAG:MASTER:ASLEEP_AMER && !FLAG:TIMESTOP_AMER && !GETBIT(FLAG:SNEAKING_AMER, 0)
+		PRINTFORML WTF
+		PRINTFORML {CFLAG:LOCATION_AMER}, {CFLAG:MASTER:LOCATION_AMER}
+		CALL SYOTAIMEN(36)
+	ENDIF
+	;--------------------------------------------------
+	;一堆乱七八糟东西的重置
+	;--------------------------------------------------
+	CFLAG:AME36_NO_RECOLLECTION_THIS_TIME = 0
+	;--------------------------------------------------
+	;抑制千里来抢食
+	;--------------------------------------------------
+	IF CFLAG:LOCATION_AMER == CFLAG:MASTER:LOCATION_AMER
+		SIF TCVAR:HUNGRY_TIME_AMER == 99999999
+			TCVAR:HUNGRY_TIME_AMER = CFLAG:AME36_HUNGRY_TIME_TEMP
+		SIF TCVAR:HUNGRY_TIME_DESSERT_AMER == 99999999
+			TCVAR:HUNGRY_TIME_DESSERT_AMER = CFLAG:AME36_HUNGRY_TIME_DESSERT_TEMP
+	ELSE
+		IF TCVAR:HUNGRY_TIME_AMER != 99999999
+			CFLAG:AME36_HUNGRY_TIME_TEMP = TCVAR:HUNGRY_TIME_AMER
+			TCVAR:HUNGRY_TIME_AMER = 99999999
+		ENDIF
+		IF TCVAR:HUNGRY_TIME_DESSERT_AMER != 99999999
+			CFLAG:AME36_HUNGRY_TIME_DESSERT_TEMP = TCVAR:HUNGRY_TIME_DESSERT_AMER
+			TCVAR:HUNGRY_TIME_DESSERT_AMER = 99999999
+		ENDIF
+	ENDIF
+	;--------------------------------------------------
+	;被时停搬动的检测
+	;--------------------------------------------------
+	IF FLAG:TIMESTOP_AMER
+		IF CFLAG:AME36_TP_INDEX == 0
+			CFLAG:AME36_TP_INDEX = CFLAG:LOCATION_AMER
+		ELSEIF CFLAG:AME36_TP_INDEX != -1 && CFLAG:AME36_TP_INDEX != CFLAG:LOCATION_AMER
+			CFLAG:AME36_TP_INDEX = -1
+		ENDIF
+	ENDIF
+	;--------------------------------------------------
+	;如果不认识的话就别发情了罢
+	;--------------------------------------------------
+	SIF !CFLAG:HAS_MET_AMER
+		CFLAG:HORNINESS_AMER = 0
+	;--------------------------------------------------
+	;储存PALAM、情绪、理性当前的值，用于检测未经许可的变化
+	;--------------------------------------------------
+	CFLAG:AME36_IS_TARGET = 0
+	CFLAG:AME36_PALAM_TEMP_10 = PALAM:10
+	CFLAG:AME36_PALAM_TEMP_11 = PALAM:11
+	CFLAG:AME36_PALAM_TEMP_12 = PALAM:12
+	CFLAG:AME36_PALAM_TEMP_13 = PALAM:13
+	CFLAG:AME36_PALAM_TEMP_14 = PALAM:14
+	CFLAG:AME36_PALAM_TEMP_15 = PALAM:15
+	CFLAG:AME36_PALAM_TEMP_16 = PALAM:16
+	CFLAG:AME36_PALAM_TEMP_20 = PALAM:20
+	CFLAG:AME36_PALAM_TEMP_21 = PALAM:21
+	CFLAG:AME36_PALAM_TEMP_30 = PALAM:30
+	CFLAG:AME36_PALAM_TEMP_31 = PALAM:31
+	CFLAG:AME36_PALAM_TEMP_32 = PALAM:32
+	CFLAG:AME36_PALAM_TEMP_33 = PALAM:33
+	IF CFLAG:AME36_SUPPRESSION_TRIGGER
+		BASE:EMOTION_AMER = CFLAG:AME36_EMOTION_TEMP
+		BASE:RATIONALITY_AMER = CFLAG:AME36_RATIONALITY_TEMP
+		CFLAG:AME36_SUPPRESSION_TRIGGER = 0
+	ELSE
+		CFLAG:AME36_EMOTION_TEMP = BASE:EMOTION_AMER
+		CFLAG:AME36_RATIONALITY_TEMP = BASE:RATIONALITY_AMER
+	ENDIF
+	;--------------------------------------------------
+	;根据陷落状态情绪和理性有限制
+	;--------------------------------------------------
+	SELECTCASE AME36_FALL_STATE()
+		CASE 0
+			BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 100)
+			BASE:RATIONALITY_AMER = 1000
+		CASE 1
+			BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 300)
+			BASE:RATIONALITY_AMER = MAX(BASE:RATIONALITY_AMER, 900)
+		CASE 2
+			BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 800)
+			BASE:RATIONALITY_AMER = MAX(BASE:RATIONALITY_AMER, 800)
+		CASE 3
+			BASE:EMOTION_AMER = MIN(BASE:EMOTION_AMER, 1200)
+			BASE:RATIONALITY_AMER = MAX(BASE:RATIONALITY_AMER, 400)
+	ENDSELECT
+	;--------------------------------------------------
+	;合意判定值与态度的覆盖(WIP)
+	;--------------------------------------------------
+	CFLAG:CONSENT_AMER = 0
+	SELECTCASE AME36_FALL_STATE()
+		CASE 0, 1
+			CFLAG:ATTITUDE_AMER = 0
+		CASE 2
+			CFLAG:ATTITUDE_AMER = 1
+		CASE 3
+			CFLAG:ATTITUDE_AMER = 2
+		CASE 4
+			CFLAG:ATTITUDE_AMER = 3
+	ENDSELECT
+	SIF (CFLAG:ANGRY_AMER && !FLAG:TIMESTOP_AMER) || CFLAG:ASLEEP_AMER
 		CFLAG:ATTITUDE_AMER = 0
-	CASE 2
-		CFLAG:ATTITUDE_AMER = 1
-	CASE 3
-		CFLAG:ATTITUDE_AMER = 2
-	CASE 4
-		CFLAG:ATTITUDE_AMER = 3
-ENDSELECT
-SIF (CFLAG:ANGRY_AMER && !FLAG:TIMESTOP_AMER) || CFLAG:ASLEEP_AMER
-	CFLAG:ATTITUDE_AMER = 0
-RETURN 0
+	;--------------------------------------------------
+	;记录本回合是否为时停状态
+	;--------------------------------------------------
+	IF FLAG:TIMESTOP_AMER
+		CFLAG:AME36_TIMESTOP_PREV = 1
+	ELSE
+		CFLAG:AME36_TIMESTOP_PREV = 0
+	ENDIF
+	RETURN 0
 
 ;==================================================
 ;口上色的设置
 ;==================================================
 @M_KOJO_AME_COLOR_K36
-#LOCALSIZE 1
-#LOCALSSIZE 1
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 
-SETCOLOR 0xFF7070
+	SETCOLOR 0xFF7070
 
-RETURN 0
+	RETURN 0
 
 ;==================================================
 ;口上的自定义UPDATE
 ;==================================================
 @M_KOJO_AME_UPDATE_K36
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	PRINTL
 	IF AME36_FIRSTTIME(0)
 		;-------------------------------------------------
@@ -377,170 +398,309 @@ IF LOCAL
 		SIF CFLAG:GENDER_AMER == 3
 			CFLAG:AME36_INNATE_FUTA = 1
 	ENDIF
-ENDIF
-RETURN 1
+	RETURN 1
 
+;==================================================
+;选项存在判定函数
+;==================================================
+@KOJO_AME_OPTION_EXIST_K36
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+;==================================================
+;选项主接口
+;==================================================
+@KOJO_AME_OPTION_K36
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	LOCAL = TARGET
+	TARGET = 36
+
+	CALL KOJO_OPTION_ITEM("1", 1)
+	CALL KOJO_OPTION_ITEM("2", 2)
+	CALL KOJO_OPTION_ITEM("3", 3)
+
+	TARGET = LOCAL
+
+;==================================================
+;选项子函数
+;==================================================
+@KOJO_AME_OPTION_K36_RESULT_1
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	LOCAL = TARGET
+	TARGET = 36
+
+	PRINTFORMW this is option 1
+
+	TARGET = LOCAL
+
+;==================================================
+@KOJO_AME_OPTION_K36_RESULT_2
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	LOCAL = TARGET
+	TARGET = 36
+
+	PRINTFORMW this is option 2
+
+	TARGET = LOCAL
+;==================================================
+@KOJO_AME_OPTION_K36_RESULT_3
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	LOCAL = TARGET
+	TARGET = 36
+
+	PRINTFORMW this is option 3
+
+	TARGET = LOCAL
 ;==================================================
 ;初次见面
 ;==================================================
 @M_KOJO_AME_ENCOUNTER_K36
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
-	PRINTFORMDW 和阿燐第一次见面啦
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	;是否启用（= 0，不启用；= 1，启用）
+	LOCAL = 1
+	;-------------
+	IF LOCAL
+		;-------------------------------------------------
+		;甚至在初次见面前就被阿燐讨厌了（时停玩弄之类的）
+		;-------------------------------------------------
+		IF CFLAG:AME36_CONTEMPT
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;初见在阿燐刚醒的时候
+		;-------------------------------------------------
+		IF CFLAG:ASLEEP_AMER
+			;-------------------------------------------------
+			;清掉「害羞的阿燐在换衣服时把MASTER暂时赶出去了」
+			;你这个没用的东西！
+			;-------------------------------------------------
+			CLEARLINE 1
+			PRINTFORMW miao
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;初见在阿燐工作的时候
+		;-------------------------------------------------
+		IF CFLAG:ACTION_AMER == 5
+			PRINTFORML
+			RETURN 1
+		ENDIF
+		;-------------------------------------------------
+		;若MASTER住在地底，根据初见地点差分
+		;-------------------------------------------------
+		IF MAIN_MAP == 9
+			;-------------------------------------------------
+			;在MASTER的私室里
+			;-------------------------------------------------
+			IF CFLAG:LOCATION_AMER == CFLAG:MASTER:RESIDENCE_AMER
+				PRINTFORML
+				RETURN 1
+			ENDIF
+			SELECTCASE CFLAG:LOCATION_AMER
+				;-------------------------------------------------
+				;在阿燐的私室里
+				;-------------------------------------------------
+				CASE 912
+					PRINTFORML
+				;-------------------------------------------------
+				;在地灵殿里的其他地方
+				;-------------------------------------------------
+				CASE 904 TO 911, 913 TO 926
+					PRINTFORML
+				;-------------------------------------------------
+				;在地底的其他地方
+				;-------------------------------------------------
+				CASEELSE
+					;-------------------------------------------------
+					;在室内
+					;-------------------------------------------------
+					IF INROOM(CFLAG:LOCATION_AMER)
+						PRINTFORML
+					;-------------------------------------------------
+					;在室外
+					;-------------------------------------------------
+					ELSE
+						PRINTFORML
+					ENDIF
+			ENDSELECT
+		;-------------------------------------------------
+		;若MASTER住在其他地图，则只有室内和室外的差分
+		;-------------------------------------------------
+		ELSE
+			;-------------------------------------------------
+			;在室内
+			;-------------------------------------------------
+			IF INROOM(CFLAG:LOCATION_AMER)
+				PRINTFORML
+			;-------------------------------------------------
+			;在室外
+			;-------------------------------------------------
+			ELSE
+				PRINTFORML
+			ENDIF
+		ENDIF
+	ENDIF
 	RETURN 1
-ENDIF
-RETURN 1
 
 ;==================================================
 ;在一天开始时调取的函数
 ;==================================================
 @K36_BEFORETRAIN_AME
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;--------------------------------------------------
-;如果没有事先UPDATE，在这里修正素质
-;--------------------------------------------------
-IF AME36_FIRSTTIME(1)
-	IF EXP:VXP_AMER == 10
-		TALENT:VIRGIN_AMER = 1
-		CSTR:VIRGIN_HISTORY_AMER '= ""
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	;--------------------------------------------------
+	;如果没有事先UPDATE，在这里修正素质
+	;--------------------------------------------------
+	IF AME36_FIRSTTIME(1)
+		IF EXP:VXP_AMER == 10
+			TALENT:VIRGIN_AMER = 1
+			CSTR:VIRGIN_HISTORY_AMER '= ""
+		ENDIF
+		TALENT:BRAVE_AMER = 1
+		TALENT:ATTITUDE_TALENT_AMER = -1
+		TALENT:SELF_CONTROL_AMER = 1
+		TALENT:BOTTOM_LINE_AMER = 1
+		TALENT:SHOWY_AMER = 0
+		TALENT:CHASTE_AMER = 1
+		TALENT:LIBERAL_AMER = 0
+		TALENT:SHAME_AMER = -1
+		TALENT:PAIN_TOLERANCE_AMER = -1
+		TALENT:FILTH_TOLERANCE_AMER = 2
+		TALENT:CUP_SIZE_AMER = -1
+		TALENT:ALCOHOL_TOLERANCE_AMER = 1
+
+		SIF ABL:INTIMACY_AMER == 2
+			ABL:INTIMACY_AMER = 0
+		SIF ABL:LIBIDO_AMER == 1
+			ABL:LIBIDO_AMER = 0
+		SIF ABL:SERVITUDE_AMER < 3
+			ABL:SERVITUDE_AMER = 3
+		SIF ABL:SCHOLARSHIP_AMER < 3
+			ABL:SCHOLARSHIP_AMER = 3
+		SIF ABL:DICTION_AMER < 4
+			ABL:DICTION_AMER = 4
+		SIF ABL:COOKERY_AMER < 3
+			ABL:COOKERY_AMER = 3
+		SIF TALENT:FISHING_AMER < 3
+			TALENT:FISHING_AMER = 3
+		SIF TALENT:ALCHEMY_AMER < 1
+			TALENT:ALCHEMY_AMER = 1
+
+		EXP:VXP_AMER -= 10
+		EXP:SEMENXP_AMER -= 5
+		EXP:MASOXP_AMER -= 1
+		EXP:CONVERSATIONXP_AMER += 480
+		EXP:STUDYXP_AMER += 180
+		EXP:COOKINGXP_AMER += 200
+		EXP:FISHINGXP_AMER += 180
+		EXP:ALCHEMYXP_AMER += 20
+
+		SIF CFLAG:GENDER_AMER == 3
+			CFLAG:AME36_INNATE_FUTA = 1
 	ENDIF
-	TALENT:BRAVE_AMER = 1
-	TALENT:ATTITUDE_TALENT_AMER = -1
-	TALENT:SELF_CONTROL_AMER = 1
-	TALENT:BOTTOM_LINE_AMER = 1
-	TALENT:SHOWY_AMER = 0
-	TALENT:CHASTE_AMER = 1
-	TALENT:LIBERAL_AMER = 0
-	TALENT:SHAME_AMER = -1
-	TALENT:PAIN_TOLERANCE_AMER = -1
-	TALENT:FILTH_TOLERANCE_AMER = 2
-	TALENT:CUP_SIZE_AMER = -1
-	TALENT:ALCOHOL_TOLERANCE_AMER = 1
-
-	SIF ABL:INTIMACY_AMER == 2
-		ABL:INTIMACY_AMER = 0
-	SIF ABL:LIBIDO_AMER == 1
-		ABL:LIBIDO_AMER = 0
-	SIF ABL:SERVITUDE_AMER < 3
-		ABL:SERVITUDE_AMER = 3
-	SIF ABL:SCHOLARSHIP_AMER < 3
-		ABL:SCHOLARSHIP_AMER = 3
-	SIF ABL:DICTION_AMER < 4
-		ABL:DICTION_AMER = 4
-	SIF ABL:COOKERY_AMER < 3
-		ABL:COOKERY_AMER = 3
-	SIF TALENT:FISHING_AMER < 3
-		TALENT:FISHING_AMER = 3
-	SIF TALENT:ALCHEMY_AMER < 1
-		TALENT:ALCHEMY_AMER = 1
-
-	EXP:VXP_AMER -= 10
-	EXP:SEMENXP_AMER -= 5
-	EXP:MASOXP_AMER -= 1
-	EXP:CONVERSATIONXP_AMER += 480
-	EXP:STUDYXP_AMER += 180
-	EXP:COOKINGXP_AMER += 200
-	EXP:FISHINGXP_AMER += 180
-	EXP:ALCHEMYXP_AMER += 20
-
-	SIF CFLAG:GENDER_AMER == 3
-		CFLAG:AME36_INNATE_FUTA = 1
-ENDIF
-;--------------------------------------------------
-;暂且禁用约会后初吻赠予和告白
-;--------------------------------------------------
-SETBIT CFLAG:13, 0
-SETBIT CFLAG:13, 1
-;--------------------------------------------------
-;初始化COM计数器
-;--------------------------------------------------
-VARSET AME36_COM_COUNTER
-;--------------------------------------------------
-;每日随机数的重置
-;--------------------------------------------------
-CFLAG:AME36_RAND_TODAY = RAND:10000
-;--------------------------------------------------
-;打开口上COM的开关（为什么这玩意默认是关的）
-;--------------------------------------------------
-CFLAG:599 = 1
-;--------------------------------------------------
-;若为一个月第一天，重置当月请假天数
-;--------------------------------------------------
-SIF DAY % 30 == 1
-	CFLAG:AME36_LEAVE_DAYS = 0
-;--------------------------------------------------
-;若未达到相识，不允许买礼物
-;--------------------------------------------------
-SIF !CFLAG:AME36_ACQUAINTANCE
-	CFLAG:399 = 1
-RETURN 0
+	;--------------------------------------------------
+	;如果中途切换口上，打印警告
+	;--------------------------------------------------
+	IF AME36_FIRSTTIME(3) && DAY > 1
+		CALL COLORMESSAGE("警告：本口上必须在游戏开始前便选择，中途切换会导致某些机制发生错误", C_RED, 2, 1)
+		FORCEWAIT
+	ENDIF
+	;--------------------------------------------------
+	;暂且禁用约会后初吻赠予和告白
+	;--------------------------------------------------
+	SETBIT CFLAG:13, 0
+	SETBIT CFLAG:13, 1
+	;--------------------------------------------------
+	;初始化COM计数器
+	;--------------------------------------------------
+	VARSET AME36_COM_COUNTER
+	;--------------------------------------------------
+	;每日随机数的重置
+	;--------------------------------------------------
+	CFLAG:AME36_RAND_TODAY = RAND:10000
+	;--------------------------------------------------
+	;打开口上COM的开关（为什么这玩意默认是关的）
+	;--------------------------------------------------
+	CFLAG:599 = 1
+	;--------------------------------------------------
+	;若为一个月第一天，重置当月请假天数
+	;--------------------------------------------------
+	SIF DAY % 30 == 1
+		CFLAG:AME36_LEAVE_DAYS = 0
+	;--------------------------------------------------
+	;若未达到相识，不允许买礼物
+	;--------------------------------------------------
+	SIF !CFLAG:AME36_ACQUAINTANCE
+		CFLAG:399 = 1
+	RETURN 0
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;SP_EVENT系
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;--------------------------------------------------
+;先在这里把所有SP_EVENT的通用文本都禁用
+;--------------------------------------------------
+@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_1
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 0
+@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_2
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 0
+@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_3
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 0
+@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_4
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 0
+@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_5
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 0
+@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_6
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 0
+@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_7
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	RETURN 0
 
 ;==================================================
 ;约会回家路上的初吻赠予
 ;--------------------------------------------------
 ;ERB\イベント関連\DATE_CMN.ERB
 ;==================================================
-
-;--------------------------------------------------
-;你这个没用的东西！
-;--------------------------------------------------
-@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_1
-#LOCALSIZE 1
-#LOCALSSIZE 1
-RETURN 0
-
-;--------------------------------------------------
-;这是主函数哦
-;--------------------------------------------------
 @M_KOJO_AME_SPEVENT_K36_1(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	PRINTFORML 
 	RETURN 1
-ENDIF
-RETURN 1
 
 ;==================================================
 ;约会回家路上，角色向MASTER告白了（要求成为恋人）
 ;--------------------------------------------------
 ;ERB\イベント関連\DATE_CMN.ERB
 ;==================================================
-
-;--------------------------------------------------
-;你这个没用的东西！
-;--------------------------------------------------
-@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_2
-#LOCALSIZE 1
-#LOCALSSIZE 1
-RETURN 0
-
-;--------------------------------------------------
-;这是主函数哦
-;--------------------------------------------------
 @M_KOJO_AME_SPEVENT_K36_2(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;告白内容
 	;在这些告白内容后，MASTER将被提问是否接受
@@ -564,35 +724,17 @@ IF LOCAL
 		RETURN 1
 	ENDIF
 
-ENDIF
-RETURN 1
+	RETURN 1
 
 ;==================================================
 ;约会回家
 ;--------------------------------------------------
 ;ERB\イベント関連\DATE_CMN.ERB
 ;==================================================
-
-;--------------------------------------------------
-;你这个没用的东西！
-;--------------------------------------------------
-@M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_3
-#LOCALSIZE 1
-#LOCALSSIZE 1
-RETURN 0
-
-;--------------------------------------------------
-;这是主函数哦
-;--------------------------------------------------
 @M_KOJO_AME_SPEVENT_K36_3(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;通常归家
 	;-------------------------------------------------
@@ -624,8 +766,328 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+	RETURN 1
+
+;==================================================
+;早安/晚安事件
+;--------------------------------------------------
+;ERB\fromEN\DAYEVENT.ERB
+;==================================================
+
+;==================================================
+;早晨 H 事件
+;==================================================
+@M_KOJO_AME_SPEVENT_K36_4(ARG, ARG:1)
+	#LOCALSIZE 1
+	#LOCALSSIZE 1	
+
+	;-------------------------------------------------
+	;事件类型：口交/舔阴唤醒
+	;描述：角色通过口交或舔阴将玩家唤醒。
+	;-------------------------------------------------
+	IF ARG == 1
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：乳交唤醒
+	;描述：角色通过乳交将玩家唤醒。
+	;-------------------------------------------------
+	IF ARG == 2
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：骑乘位/磨豆腐唤醒
+	;描述：角色骑在玩家身上将玩家唤醒。
+	;分支 (ARG:1)：
+	;   ARG:1 == 0 : 事件开始时的描写
+	;   ARG:1 == 1 : H结束后的对话（玩家选择是否起床还是继续做）
+	;-------------------------------------------------
+	IF ARG == 3
+		;=== 第一阶段：事件开始 ===
+		IF ARG:1 == 0
+			;如果是异性/有非处女判定等
+			IF TALENT:MASTER:非童貞 == 0 ;根据需要修改判断条件
+				;骑乘位描写
+			ELSE
+				;磨豆腐描写
+			ENDIF
+			PRINTFORMW 
+
+		;=== 第二阶段：事后选择 ===
+		ELSE
+			;TFLAG:193 == 1 代表玩家选择了【推倒她继续做】
+			IF TFLAG:193 == 1
+				;被推倒时的反应
+				PRINTFORMW 
+			;否则代表玩家选择了【起床整理衣服】
+			ELSE
+				;遗憾或满足地结束
+				PRINTFORMW 
+			ENDIF
+		ENDIF
+		RETURN 1
+	ENDIF
+	RETURN 1
+
+;==================================================
+;早安的非H事件
+;==================================================
+@M_KOJO_AME_SPEVENT_K36_5(ARG, ARG:1)
+	;--------------------------------------------------
+	;事件类型：早安吻
+	;描述：用亲吻唤醒玩家。
+	;-------------------------------------------------
+	IF ARG == 1
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：叫醒服务
+	;描述：普通的摇晃身体叫醒玩家。
+	;-------------------------------------------------
+	IF ARG == 2
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：同床共枕（被动）
+	;描述：玩家醒来时发现角色正睡在自己身边（并未主动叫醒玩家）。
+	;注意：对应的枚举常量是 DAYEVENT_COSLEEPING（6）
+	;-------------------------------------------------
+	IF ARG == 3
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：凝视
+	;描述：玩家醒来时，发现角色正在盯着自己的脸看。
+	;-------------------------------------------------
+	IF ARG == 4
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：恶作剧
+	;描述：角色通过恶作剧的方式叫醒玩家。
+	;-------------------------------------------------
+	IF ARG == 5
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+	RETURN 1
+
+;==================================================
+;入睡时的H事件（诶嘿嘿）
+;==================================================
+@M_KOJO_AME_SPEVENT_K36_6(ARG, ARG:1)
+	;--------------------------------------------------
+	;事件类型：晚安吻
+	;描述：临睡前的亲吻。
+	;-------------------------------------------------
+	IF ARG == 1
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：夜袭
+	;描述：角色在夜里潜入玩家房间求欢。
+	;分支 (ARG:1):
+	;   ARG:1 == 0 : 潜入并索求H
+	;   ARG:1 == 1 : H行为结束后的反应
+	;-------------------------------------------------
+	IF ARG == 2
+		;=== 第一阶段：索求 ===
+		IF ARG:1 == 0
+			;在这里编写口上文本
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+
+		;=== 第二阶段：事后 ===
+		IF ARG:1 == 1
+			;在这里编写口上文本
+			PRINTFORMW 
+			RETURN 1
+		ENDIF
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：自慰 (未实装)
+	;描述：角色夜袭后看着玩家自慰（别写就完事了）。
+	;-------------------------------------------------
+	;IF ARG == 3
+	;	PRINTFORML 
+	;	RETURN 1
+	;ENDIF
+
+;==================================================
+;入睡后的非H事件
+;==================================================
+@M_KOJO_AME_SPEVENT_K36_7(ARG, ARG:1)
+	;--------------------------------------------------
+	;事件类型：晚酌
+	;描述：带着酒来找玩家一起喝一杯。
+	;-------------------------------------------------
+	IF ARG == 1
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：赏月
+	;描述：邀请玩家一起去吹夜风或赏月。
+	;注意：此事件有时间限制（通常是20:00-04:00）。
+	;-------------------------------------------------
+	IF ARG == 2
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+	;--------------------------------------------------
+	;事件类型：留宿请求
+	;描述：角色钻进玩家被窝，要求一起睡觉（纯睡觉）。
+	;-------------------------------------------------
+	IF ARG == 3
+		;在这里编写口上文本
+		PRINTFORMW 
+		RETURN 1
+	ENDIF
+
+;==================================================
+;DE系统的CHECKS系控制接口
+;用于控制该角色是否允许触发特定事件，以及覆盖系统的默认条件
+;==================================================
+@M_KOJO_XXX_CHECK_KX_DAYEVENT_COND(ARGS, ARG, ARG:1)
+	;ARG 代表事件ID，具体对应如下：
+	; --- 早晨 H ---
+	; 1: 口交/舔阴
+	; 2: 乳交
+	; 3: 骑乘位/磨豆腐
+	; --- 早晨 日常 ---
+	; 4: 早安吻
+	; 5: 普通叫醒
+	; 6: 同床共枕 (醒来时发现)
+	; 7: 凝视
+	; 8: 恶作剧
+	; --- 夜晚 H ---
+	; 9: 晚安吻 (带H气氛)
+	; 10: 夜袭
+	; --- 夜晚 日常 ---
+	; 11: 晚酌
+	; 12: 赏月
+	; 13: 留宿请求
+	;对应的枚举常量如下：
+	;DAYEVENT_GENERAL = 0
+	;DAYEVENT_ORAL = 1
+	;DAYEVENT_PAIZURI = 2
+	;DAYEVENT_COWGIRL = 3
+	;DAYEVENT_KISS = 4
+	;DAYEVENT_WAKEUP = 5
+	;DAYEVENT_COSLEEPING = 6
+	;DAYEVENT_STARE = 7
+	;DAYEVENT_PRANK = 8
+	;NIGHTEVENT_KISS = 9
+	;NIGHTEVENT_YOBAI = 10
+	;NIGHTEVENT_DRINK = 11
+	;NIGHTEVENT_MOONVIEWING = 12
+	;NIGHTEVENT_SLEEPOVER = 13
+
+	;返回值说明：
+	; RETURN -1 : 【绝对禁止】。
+	;             剧本侧禁止，即使满足系统默认条件也不触发。
+	;
+	; RETURN 0  : 【默认判定】。
+	;             交给系统通用逻辑判断（如好感度、能力等级、是否允许该类事件等）。
+	;
+	; RETURN 1  : 【条件允许】。
+	;             剧本侧允许触发，但必须遵守“3天冷却时间(CD)”和“随机来访概率”的限制。
+	;             这是最常用的返回值，适用于正常的恋人互动。
+	;
+	; RETURN 2  : 【强制允许】。
+	;             剧本侧强制允许触发，完全无视系统的限制条件：
+	;             1. 无视3天冷却时间（昨天刚来今天还能来）。
+	;             2. 无视随机概率（不需要掷骰子，必定发生）。
+	;             3. 无视作息时间（即使睡觉时间也能强制触发）。
+	;             适用于：病娇角色（每天必来）、特殊状态（如发情中）、剧情关键日（如生日）。
+	;             注意：这只是保证角色必定进入【候选池】，最终是否选中还得看权重抽奖。
+	;如果不写这个函数，或者所有情况都返回0，则完全遵循系统的通用判定。
+
+	SELECTCASE ARG
+		CASE DAYEVENT_GENERAL
+			RETURN -1
+			; 整个DE系统的关口，决定该角色今天是否有资格参与早安/晚安事件的判定
+			; 返回 2，该角色今天必定会出现在早安/晚安名单里。
+			; 返回 1，视为有剧本角色参与抽选。
+			; 返回 0，视为无剧本角色。
+			; 返回 -1，该角色今天绝对不会出现在早安/晚安名单里。
+
+			; 示例：如果今天心情极差，或者有反发刻印，直接关闭所有事件
+			;SIF MARK:反発刻印 || TALENT:機嫌 < 0
+			;	RETURN -1
+
+			; 示例：如果处于某些特殊状态（如：刚生完孩子、正在禁闭、或者剧情强制不准触发）
+			; SIF CFLAG:具体剧情状态 == 1
+			;     RETURN -1
+
+			; 示例：如果你希望只有恋慕才能触发这个系统的任何事件
+			; SIF !TALENT:恋慕
+			;     RETURN -1
+
+			;RETURN 1
+		;案例：修改口交的触发条件
+		;CASE DAYEVENT_ORAL ;口交
+			;如果是妹子但主角没有JJ，禁止 (系统默认其实也有判断，这里是双重保险)
+			;SIF !HAS_PENIS(MASTER)
+			;	RETURN -1
+
+			;必须满足比系统默认更高的要求才行 (系统默认是 欲望3, 技巧3)
+			;SIF !( ABL:欲望 >= 5 && ABL:技巧 >= 4 && EXP:奉仕快楽経験 >= 100 )
+			;	RETURN -1
+
+			;满足上述条件后允许
+			;RETURN 1
+
+		;案例：修改骑乘位的触发条件
+		;CASE DAYEVENT_COWGIRL ;骑乘位
+			;必须是恋人才能做
+			;SIF !TALENT:恋人
+			;	RETURN -1
+			;RETURN 1
+
+		;案例：晚酌条件放宽
+		;CASE DAYEVENT_DRINK ;晚酌
+			;如果有“酒豪”素质，无视好感度要求强制允许
+			;SIF TALENT:酒豪
+			;	RETURN 1
+			;否则交给系统判断
+			;RETURN 0
+
+		;案例：禁用某些没写剧本的事件
+		;CASE DAYEVENT_STARE, DAYEVENT_PRANK, DAYEVENT_MOONVIEWING
+		;	RETURN -1
+	ENDSELECT
+
+	;默认返回0，交给系统通用逻辑判断
+	RETURN 0
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;EVENT系
@@ -637,14 +1099,9 @@ RETURN 1
 ;ERB\イベント関連\情事発覚.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_1(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;MASTER进入区域见到了TARGET
 	;-------------------------------------------------
@@ -739,8 +1196,8 @@ IF LOCAL
 			RETURN 1
 		ENDIF
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;MASTER醒来时（早安口上）
@@ -749,14 +1206,9 @@ RETURN 1
 ;ERB\MOVEMENTS\SLEEP.ERB (ARG == 4 的情况)
 ;==================================================
 @M_KOJO_AME_EVENT_K36_2(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;非同居，对方先起床了
 	;-------------------------------------------------
@@ -810,8 +1262,8 @@ IF LOCAL
 			RETURN 1
 		ENDIF
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;睡觉时（晚安口上）
@@ -821,14 +1273,9 @@ RETURN 1
 ;ERB\MOVEMENTS\MOVEMENTS.ERB（ARG == 7, ARG:1 == 1 的情况）
 ;==================================================
 @M_KOJO_AME_EVENT_K36_3(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;TARGET回到自己房间睡觉的口上（仅限同住主地图的角色）
 	;-------------------------------------------------
@@ -1019,8 +1466,8 @@ IF LOCAL
 		PRINTFORMW 
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;移动中经过角色
@@ -1028,14 +1475,9 @@ RETURN 1
 ;ERB\コマンド関連\COMF\日常系\COMF400 移動.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_4(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;在角色这里停下来
 	;之后会接遭遇口上
@@ -1058,8 +1500,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;不够亲密的其他角色进入时，气氛变得尴尬了（不能进行某些亲密举动了）
@@ -1067,15 +1509,9 @@ RETURN 1
 ;ERB\ステータス表示関連\INFO.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_5(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG是进入角色的编号（以下均为示例，请根据需要增改）
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;灵梦进来了
 	;-------------------------------------------------
@@ -1097,8 +1533,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;目击了MASTER与其他人的情事
@@ -1106,15 +1542,10 @@ RETURN 1
 ;ERB\イベント関連\情事発覚.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_6(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG是情事的对象
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG是情事的对象
 	;-------------------------------------------------
 	;正常进入，情事被迫终止
 	;-------------------------------------------------
@@ -1203,8 +1634,8 @@ IF LOCAL
 		ENDIF
 		RETURN 1
 	ENDIF 
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;与MASTER的情事被其他角色撞破
@@ -1212,15 +1643,10 @@ RETURN 1
 ;ERB\イベント関連\情事発覚.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_7(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG是目击者的编号
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG是目击者的编号
 	;-------------------------------------------------
 	;目击者进入，情事被迫终止
 	;-------------------------------------------------
@@ -1309,8 +1735,8 @@ IF LOCAL
 		ENDIF
 		RETURN 1
 	ENDIF 
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;追问目击到的情事（不知道为什么原模板写已弃用、明明可以正常触发的）
@@ -1322,15 +1748,9 @@ RETURN 1
 ;ERB\イベント関連\情事発覚.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_8(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG是情事的对象
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	;ARG是情事的对象
 	;-------------------------------------------------
 	;追问时，ARG不在MASTER身边（被TARGET追问了刚才和ARG在一起的事情...）
 	;-------------------------------------------------
@@ -1344,8 +1764,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF  
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;内裤被没收了
@@ -1356,14 +1776,9 @@ RETURN 1
 ;ERB\イベント関連\ボッシュート.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_9(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;MASTER和TARGET在一起的时候，内裤被没收了
 	;-------------------------------------------------
@@ -1378,8 +1793,8 @@ IF LOCAL
 	;	PRINTFORML
 	;	RETURN 1
 	;ENDIF  
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;推倒相关
@@ -1393,14 +1808,9 @@ RETURN 1
 ;ERB\イベント関連\情事発覚.ERB （ARG == 2 && ARG:1 == 2（被目击）的情况）
 ;==================================================
 @M_KOJO_AME_EVENT_K36_10(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;逆推倒（开始時）
 	;-------------------------------------------------
@@ -1512,24 +1922,19 @@ IF LOCAL
 	;	PRINTFORML
 	;	RETURN 1
 	;ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
-;浴場的遭遇
+;浴场的遭遇
 ;关于催眠检测，请见上文提及处
 ;--------------------------------------------------
 ;ERB\コマンド関連\COMF\日常系\COMF400 移動.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_11(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;被赶出去了
 	;-------------------------------------------------
@@ -1547,8 +1952,8 @@ IF LOCAL
 	ENDIF
 	;其他情况
 	PRINTFORML  
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;潜入卧室
@@ -1556,14 +1961,9 @@ RETURN 1
 ;ERB\コマンド関連\COMF\日常系\侵入.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_12(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;TARGET处于愤怒状态，被赶出去了（一往房间里窥去就发现TARGET正瞪大眼睛睨视着这边）
 	;-------------------------------------------------
@@ -1628,8 +2028,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;工作中
@@ -1638,14 +2038,9 @@ RETURN 1
 ;ERB\MOVEMENTS\JOB_仕事開始終了処理.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_13(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;工作开始（会前往职场）
 	;-------------------------------------------------
@@ -1668,8 +2063,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;食事系
@@ -1677,14 +2072,8 @@ RETURN 1
 ;ERB\イベント関連\ボッシュート.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_14(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	;-------------------------------------------------
 	;所带的食物被TARGET吃掉了
 	;TCVAR:盗み食い抑制 = 1 可以避免被偷吃，仅生效一次
@@ -1700,8 +2089,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;更多的推倒相关
@@ -1710,12 +2099,6 @@ RETURN 1
 ;ERB\イベント関連\AFTER_AFFAIR.ERB（ARG == 3的情况）
 ;==================================================
 @M_KOJO_AME_EVENT_K36_15(ARG, ARG:1)
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
 	;-------------------------------------------------
 	;推倒开始时（已迁移，该情况不再被调用）
 	;-------------------------------------------------
@@ -1771,8 +2154,8 @@ IF LOCAL
 			RETURN 1
 		ENDIF
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;陪睡
@@ -1780,14 +2163,9 @@ RETURN 1
 ;ERB\コマンド関連\USERCOM.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_16(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;陪睡开始（已迁移，该情况不再被调用）
 	;-------------------------------------------------
@@ -1802,8 +2180,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;时间停止终了时
@@ -1811,22 +2189,17 @@ RETURN 1
 ;ERB\時間停止解除.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_17(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;解除时停之后，会按照下列顺序依次触发（如果满足条件的话）
-;ARG == 1/2 → 3 → 7 → 8 → 9 → 4 → 5 → 6 → 0
-;如果触发浴室逐出，ARG == 7 之后的不会触发
-;虽然有自带的 CFLAG:時間停止バレ 来表示角色知晓时停，但还是建议自行建立机制
-;自带的判定机制会导致出现一些很敷衍的地文，并且无陷落素质时的惩罚非常严重，比如偷一条胖次直接反发3（这倒更贴近真实情况了）
-;再加上惩罚是以增加SOURCE的方式，而该处并没有SOURCE的结算，所以会出现不碰就没事，一旦交互就反发的滑稽场景
-;当然还要考虑移动到别处解除时停以避开惩罚的可能性，这个漏洞要不要堵看作者自己的选择了
-;总绝顶次数计算方式：EX:無自覚Ｃ絶頂 + EX:無自覚Ｖ絶頂 + EX:無自覚Ａ絶頂 + EX:無自覚Ｂ絶頂 + EX:無自覚Ｍ絶頂
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;解除时停之后，会按照下列顺序依次触发（如果满足条件的话）
+	;ARG == 1/2 → 3 → 7 → 8 → 9 → 4 → 5 → 6 → 0
+	;如果触发浴室逐出，ARG == 7 之后的不会触发
+	;虽然有自带的 CFLAG:時間停止バレ 来表示角色知晓时停，但还是建议自行建立机制
+	;自带的判定机制会导致出现一些很敷衍的地文，并且无陷落素质时的惩罚非常严重，比如偷一条胖次直接反发3（这倒更贴近真实情况了）
+	;再加上惩罚是以增加SOURCE的方式，而该处并没有SOURCE的结算，所以会出现不碰就没事，一旦交互就反发的滑稽场景
+	;当然还要考虑移动到别处解除时停以避开惩罚的可能性，这个漏洞要不要堵看作者自己的选择了
+	;总绝顶次数计算方式：EX:無自覚Ｃ絶頂 + EX:無自覚Ｖ絶頂 + EX:無自覚Ａ絶頂 + EX:無自覚Ｂ絶頂 + EX:無自覚Ｍ絶頂
 	;-------------------------------------------------
 	;【谜之快感】（0 < 绝顶次数 <= 20）或【突如其来的快感】（20 < 绝顶次数 <= 40）
 	;-------------------------------------------------
@@ -2026,8 +2399,8 @@ IF LOCAL
 	IF ARG == 0
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;无防护插入时
@@ -2039,14 +2412,9 @@ RETURN 1
 ;ERB\イベント関連\妊娠関連\OGAMITAOSHI.ERB（ARG == 2, 3, 4, 5 的情况）
 ;==================================================
 @M_KOJO_AME_EVENT_K36_18(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;避孕要求
 	;-------------------------------------------------
@@ -2078,8 +2446,8 @@ IF LOCAL
 	IF ARG == 5
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;同居相关
@@ -2088,15 +2456,10 @@ RETURN 1
 ;ERB\SHOP関連\SHOP_住環境設定.ERB（ARG == 3 的情况）
 ;==================================================
 @M_KOJO_AME_EVENT_K36_19(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;%CALLNAME:拠点_家主% 即为主地图的家主
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;%CALLNAME:拠点_家主% 即为主地图的家主
 	;-------------------------------------------------
 	;TARGET请求搬到主地图生活，MASTER同意了
 	;-------------------------------------------------
@@ -2118,8 +2481,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;回家时
@@ -2131,14 +2494,8 @@ RETURN 1
 ;ERB\イベント関連\デート終了タイムアップ処理.ERB（只有一条，其实只是用于应对极端情况的）
 ;==================================================
 @M_KOJO_AME_EVENT_K36_20(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	;-------------------------------------------------
 	;通常回家
 	;-------------------------------------------------
@@ -2251,8 +2608,8 @@ IF LOCAL
 		ENDIF
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;陷落素质（与部分性素质）取得时
@@ -2260,14 +2617,9 @@ RETURN 1
 ;ERB\イベント関連\EVENTTURNEND.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_21(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;恋慕取得
 	;-------------------------------------------------
@@ -2331,8 +2683,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;当日结束后的自慰
@@ -2347,14 +2699,9 @@ RETURN 1
 ;ERB\イベント関連\AFTERTRA.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_22(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;通常自慰
 	;所有判定都失败的时候，才会触发这里
@@ -2416,8 +2763,8 @@ IF LOCAL
 		PRINTFORML 
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;同行时邀请一起进入浴场
@@ -2427,14 +2774,9 @@ RETURN 1
 ;ERB\コマンド関連\COMF\日常系\COMF400 移動.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_23(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;共同入浴的邀请被TARGET拒绝了
 	;-------------------------------------------------
@@ -2449,8 +2791,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;怀孕
@@ -2459,14 +2801,9 @@ RETURN 1
 ;ERB\イベント関連\妊娠関連\PREGNANCY.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_24(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;恋慕（羞不可抑地诉说）
 	;-------------------------------------------------
@@ -2493,8 +2830,8 @@ IF LOCAL
 	IF ARG == 4
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;出产
@@ -2502,15 +2839,10 @@ RETURN 1
 ;ERB\イベント関連\妊娠関連\BIRTH.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_25(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG:1 这是第几个孩子
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG:1 这是第几个孩子
 	;-------------------------------------------------
 	;恋慕
 	;-------------------------------------------------
@@ -2535,8 +2867,8 @@ IF LOCAL
 	IF ARG == 4
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;被看见自慰
@@ -2552,14 +2884,9 @@ RETURN 1
 ;RETURN -1 强制失败，RETURN 1 强制成功
 ;--------------------------------------------------
 @M_KOJO_AME_EVENT_K36_26_1(ARGS)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;选择「请在我的注视下继续做吧」
 	;-------------------------------------------------
@@ -2571,7 +2898,8 @@ IF LOCAL
 	ELSEIF ARGS == "二人"
 		RETURN 0
 	ENDIF
-ENDIF
+
+	RETURN 1
 
 ;--------------------------------------------------
 ;描写发现角色自慰过程的地文开关
@@ -2579,16 +2907,10 @@ ENDIF
 ;ARG表示自慰部位，0 = V自慰，1 = A自慰
 ;--------------------------------------------------
 @M_KOJO_AME_EVENT_K36_ONABARE_1(ARG)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	RETURN 2
-ENDIF
 
 ;--------------------------------------------------
 ;描写角色在注视下自慰过程的地文开关
@@ -2596,16 +2918,10 @@ ENDIF
 ;ARG表示自慰部位，0 = V自慰，1 = A自慰
 ;--------------------------------------------------
 @M_KOJO_AME_EVENT_K36_ONABARE_2(ARG)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	RETURN 2
-ENDIF
 
 ;--------------------------------------------------
 ;描写经过允许，与角色进行情事过程的地文开关
@@ -2614,33 +2930,23 @@ ENDIF
 ;当MASTER为女性时，根本无法选择该选项，更不会触发此函数，所以可以放心写肉棒
 ;--------------------------------------------------
 @M_KOJO_AME_EVENT_K36_ONABARE_3(ARG, ARG:1, ARG:2, ARG:3)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG表示前戏部位，1 = 爱抚C（必须 C感觉 >= B感觉），2 = 爱抚B（必须 C感觉 < B感觉），3 = 接吻（若TARGET无接吻经验则一定会选择该选项，并会夺走初吻，否则1/3概率）
-;ARG:1表示插入部位，0 = 插入V，1 = 插入A
-;ARG:2表示中出的次数
-;ARG:3表示注入精液量
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG表示前戏部位，1 = 爱抚C（必须 C感觉 >= B感觉），2 = 爱抚B（必须 C感觉 < B感觉），3 = 接吻（若TARGET无接吻经验则一定会选择该选项，并会夺走初吻，否则1/3概率）
+	;ARG:1表示插入部位，0 = 插入V，1 = 插入A
+	;ARG:2表示中出的次数
+	;ARG:3表示注入精液量
+
 	RETURN 2
-ENDIF
 
 ;--------------------------------------------------
 ;这个是主函数哦
 ;--------------------------------------------------
 @M_KOJO_AME_EVENT_K36_26(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;被看见的瞬间
 	;口上的调用在描述发现TARGET自慰的地文之后，需要注意
@@ -2696,8 +3002,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;TARGET邀请一起约会/去房间
@@ -2707,15 +3013,10 @@ RETURN 1
 ;ERB\イベント関連\情事発覚.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_27(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG:1是目的地
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG:1是目的地
 	;-------------------------------------------------
 	;邀请一起去约会时（非宴会）
 	;ARG:1为目的地的地图编号
@@ -2786,8 +3087,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;脱衣口上
@@ -2795,14 +3096,9 @@ RETURN 1
 ;ERB\コマンド関連\USERCOM_服を脱がせる.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_28(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;脱成全裸
 	;在索要胖次以及其他描述脱衣的地文之后才触发
@@ -2872,8 +3168,8 @@ IF LOCAL
 			RETURN 1
 		ENDIF
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;角色愤怒值满，进入怒/泣状态
@@ -2881,14 +3177,9 @@ RETURN 1
 ;ERB\イベント関連\EVENTCOMEND.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_29(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;惹生气过的记录
 	;-------------------------------------------------
@@ -2909,8 +3200,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;TARGET解除了逆推状态
@@ -2919,14 +3210,9 @@ RETURN 1
 ;ARG == 1 或 2 的情况由函数 @被逆推終了 管理，路径为 ERB\コマンド関連\COMF\COMF850 抜け出す.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_30(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;TARGET似乎有点疲劳、放开了MASTER
 	;-------------------------------------------------
@@ -2959,8 +3245,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 
 ;==================================================
@@ -2969,15 +3255,10 @@ RETURN 1
 ;ERB\イベント関連\AFTERTRA.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_31(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG为没见面的天数
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG为没见面的天数
 	;-------------------------------------------------
 	;禁用自慰显示：将积攒度临时储存起来
 	;-------------------------------------------------
@@ -3025,8 +3306,8 @@ IF LOCAL
 	IF ARG == 7
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;自由行动
@@ -3039,15 +3320,10 @@ RETURN 1
 ;ERB\MOVEMENTS\自由行動\MOVEMENT_自由行動.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_32(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;Activity_Duration:TARGET 为剩余的时间
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;Activity_Duration:TARGET 为剩余的时间
 	;-------------------------------------------------
 	;0.思考事情
 	;无任何要求
@@ -3478,8 +3754,8 @@ IF LOCAL
 			RETURN 1
 		ENDIF
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;新年快乐
@@ -3488,18 +3764,11 @@ RETURN 1
 ;ERB\ステータス表示関連\INFO.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_33(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	PRINTFORML
 	RETURN 1
-ENDIF
-RETURN 1
 
 ;==================================================
 ;技能升级
@@ -3509,14 +3778,9 @@ RETURN 1
 ;ERB\イベント関連\EVENTTURNEND.ERB（获得[乐器知识]和[相对音感]）
 ;==================================================
 @M_KOJO_AME_EVENT_K36_34(ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	;-------------------------------------------------
 	;战斗能力
 	;-------------------------------------------------
@@ -3728,8 +3992,8 @@ IF LOCAL
 			RETURN 1
 		ENDIF
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;日常事件：梦遗
@@ -3744,32 +4008,25 @@ RETURN 1
 ;ERB\イベント関連\デイリーイベント\DAIRY_EV2.ERB
 ;==================================================
 @M_KOJO_AME_DAILY_EVENT_MESSAGECHECK_K36_2
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;--------------------------------------------------
-;口上与地文的控制开关
-;RETURN 0：口上与地文均显示
-;RETURN 1：口上显示，地文不显示
-;RETURN 2：口上不显示，地文显示
-;RETURN 3：口上与地文均不显示
-;--------------------------------------------------
-;若关闭地文，则不会增加欲情之珠
-;--------------------------------------------------
-RETURN 0
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	;--------------------------------------------------
+	;口上与地文的控制开关
+	;RETURN 0：口上与地文均显示
+	;RETURN 1：口上显示，地文不显示
+	;RETURN 2：口上不显示，地文显示
+	;RETURN 3：口上与地文均不显示
+	;--------------------------------------------------
+	;若关闭地文，则不会增加欲情之珠
+	;--------------------------------------------------
+	RETURN 0
 ;--------------------------------------------------
 @M_KOJO_AME_DAILY_EVENT_K36_2(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARGS:1, ARGS:2)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	PRINTFORML
 	RETURN 1
-ENDIF
-RETURN 1
 
 ;==================================================
 ;日常事件：沉思
@@ -3781,30 +4038,23 @@ RETURN 1
 ;ERB\イベント関連\デイリーイベント\DAIRY_EV4 MONOOMOI.ERB
 ;==================================================
 @M_KOJO_AME_DAILY_EVENT_MESSAGECHECK_K36_4
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;--------------------------------------------------
-;口上与地文的控制开关
-;RETURN 0：口上与地文均显示
-;RETURN 1：口上显示，地文不显示
-;RETURN 2：口上不显示，地文显示
-;RETURN 3：口上与地文均不显示
-;--------------------------------------------------
-RETURN 0
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	;--------------------------------------------------
+	;口上与地文的控制开关
+	;RETURN 0：口上与地文均显示
+	;RETURN 1：口上显示，地文不显示
+	;RETURN 2：口上不显示，地文显示
+	;RETURN 3：口上与地文均不显示
+	;--------------------------------------------------
+	RETURN 0
 ;--------------------------------------------------
 @M_KOJO_AME_DAILY_EVENT_K36_4(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARGS:1, ARGS:2)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	PRINTFORML
 	RETURN 1
-ENDIF
-RETURN 1
 
 ;==================================================
 ;日常事件：特训
@@ -3818,26 +4068,20 @@ RETURN 1
 ;ERB\イベント関連\デイリーイベント\DAIRY_EV12 特訓.ERB
 ;==================================================
 @M_KOJO_AME_DAILY_EVENT_MESSAGECHECK_K36_12
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;--------------------------------------------------
-;口上与地文的控制开关
-;RETURN 0：口上与地文均显示
-;RETURN 1：口上显示，地文不显示
-;RETURN 2：口上不显示，地文显示
-;RETURN 3：口上与地文均不显示
-;--------------------------------------------------
-RETURN 0
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	;--------------------------------------------------
+	;口上与地文的控制开关
+	;RETURN 0：口上与地文均显示
+	;RETURN 1：口上显示，地文不显示
+	;RETURN 2：口上不显示，地文显示
+	;RETURN 3：口上与地文均不显示
+	;--------------------------------------------------
+	RETURN 0
 ;--------------------------------------------------
 @M_KOJO_AME_DAILY_EVENT_K36_12(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARGS:1, ARGS:2)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	;-------------------------------------------------
 	;委托训练时
 	;-------------------------------------------------
@@ -3886,8 +4130,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;送礼事件
@@ -3910,18 +4154,13 @@ RETURN 1
 ;ERB\イベント関連\贈り物関連\贈り物.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_GIFT(ARG, ARG:1, ARG:2, ARGS, ARGS:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG:1 是礼物的ID（包含关于礼物的一切信息）
-;ARG:2 是TARGET对该礼物的评价点数
-;ARGS  是礼物的名称
-;ARGS:1是礼物的属性，一个长字符串中礼物的每个属性由「/」隔开，属性的强度由其出现次数决定
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG:1 是礼物的ID（包含关于礼物的一切信息）
+	;ARG:2 是TARGET对该礼物的评价点数
+	;ARGS  是礼物的名称
+	;ARGS:1是礼物的属性，一个长字符串中礼物的每个属性由「/」隔开，属性的强度由其出现次数决定
 	;-------------------------------------------------
 	;约会结束时，TARGET送给MASTER礼物
 	;在 亲密 >= 5，情绪 >= 1200（四颗心），无反发刻印、非心情差、非愤怒时有几率发生
@@ -3959,8 +4198,8 @@ IF LOCAL
 		PRINTFORML
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;斗虫相关
@@ -3973,15 +4212,10 @@ RETURN 1
 ;ERB\コマンド関連\COMF\日常系\MUSHI_BATTLE.ERB
 ;==================================================
 @M_KOJO_AME_MESSAGE_COM_K36_MUSHI_BATTLE(ARGS, ARG)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;MUSHI_NAME是虫的名字
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;MUSHI_NAME是虫的名字
 	;-------------------------------------------------
 	;斗虫开始前（显示斗虫力之后，尚未选择对战开始）
 	;-------------------------------------------------
@@ -4073,8 +4307,8 @@ IF LOCAL
 		RESULTS = 
 		RETURN 1
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;打西瓜相关
@@ -4092,14 +4326,8 @@ RETURN 1
 ;参加的角色会随机成为「诚实者」或「说谎者」，「诚实者」永远说真话，「说谎者」永远说假话
 ;==================================================
 @M_KOJO_AME_MESSAGE_COM_K36_SUIKA(ARGS, ARG)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	;-------------------------------------------------
 	;就是这里（西瓜与AIM重合，或距离为1）
 	;-------------------------------------------------
@@ -4227,8 +4455,8 @@ IF LOCAL
 			RETURN 1
 		ENDIF
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;炮友契约相关
@@ -4236,14 +4464,8 @@ RETURN 1
 ;ERB\コマンド関連\COMF\日常系\COMF357 セフレ契約.ERB
 ;==================================================
 @KOJO_AME_SF_CONTRACT_EVENT_K36(ARGS)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	;-------------------------------------------------
 	;提出契约时
 	;-------------------------------------------------
@@ -4269,8 +4491,8 @@ IF LOCAL
 	IF ARGS == "失敗"
 		PRINTFORML
 	ENDIF
-ENDIF
-RETURN 1
+
+	RETURN 1
 
 ;==================================================
 ;对角色私室的描写
@@ -4278,21 +4500,14 @@ RETURN 1
 ;ERB\ANOTHER_TALK.ERB
 ;==================================================
 @K36_AME_ROOM_DESCRIPTION
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	RETURN 1
-ENDIF
-RETURN 1
 
 ;==================================================
 ;插入处女或无自觉非处女之前的判定
-;只有在FLAGSETTING函数里开启 CFLAG:破瓜キャンセル口上有 才会生效
+;只有在FLAGSETTING函数里开启 CFLAG:破瓜中止口上有 才会生效
 ;一旦开启，该函数将会※替代※原本对合意判定的检查，请务必注意
 ;RETURN 1 会导致插入强制失败
 ;RETURN 其他值 则判定成功
@@ -4301,16 +4516,10 @@ RETURN 1
 ;在所有插入指令之前均有调用
 ;==================================================
 @M_KOJO_AME_EVENT_K36_LOST_VIRGIN_STOP
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL 
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	RETURN 0
-ENDIF
 
 ;==================================================
 ;初次推倒角色时的判定
@@ -4323,16 +4532,10 @@ ENDIF
 ;ERB\コマンド関連\COMF\日常系\COMF350 押し倒す.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_PERMISSION_1
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL 
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	RETURN 0
-ENDIF
 
 ;==================================================
 ;在取得合意之后推倒角色时的判定
@@ -4344,16 +4547,10 @@ ENDIF
 ;ERB\コマンド関連\COMF\日常系\COMF350 押し倒す.ERB
 ;==================================================
 @M_KOJO_AME_EVENT_K36_PERMISSION_2
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	RETURN 0
-ENDIF
 
 ;==================================================
 ;约会前是否遇见的判定函数
@@ -4364,16 +4561,10 @@ ENDIF
 ;ERB\イベント関連\お出かけイベント\お出かけイベント.ERB
 ;==================================================
 @RUN_INTO_AME_EVENT_K36(ARG)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	RETURN 0
-ENDIF
 
 ;==================================================
 ;一般依赖的抑制
@@ -4402,17 +4593,12 @@ ENDIF
 ;ERB\コマンド関連\COMF\依頼\CTRL_IRAI.ERB
 ;==================================================
 @M_KOJO_AME_CHECK_K36_IRAI_BLOCKED(ARGS, ARG, ARG:1)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;ARG是依赖编号
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;ARG是依赖编号
+
 	RETURN 0
-ENDIF
 
 ;==================================================
 ;引力操作：自定义角色移动
@@ -4426,17 +4612,11 @@ ENDIF
 ;==================================================
 [SKIPSTART]
 @M_KOJO_AME_EVENT_K36_GRAVITY(ARG)
-#LOCALSIZE 1
-#LOCALSSIZE 1
-;口上角色编号 = TARGET
-;--------------------------------------------------
-;是否启用（= 0，不启用；= 1，启用）
-LOCAL = 1
-;-------------
-IF LOCAL
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
 	TCVAR:引力点 = 0
 	RETURN 1
-ENDIF
 [SKIPEND]
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
