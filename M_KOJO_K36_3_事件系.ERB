@@ -1,13 +1,8 @@
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;eraTheWorld 4.954 画蛇又添足 火焰猫燐别人版口上
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
-;他者による修正、加筆、改変については、同梱のライセンス条項に従ってください。
-;他人所做的任何修改、添加或修改均受随附许可条款的约束。
+;他人所做的任何添加或修改均受随附许可条款的约束。
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
-
-;--------------------------------------------------
-;eraTheWorld proto4.07用于额外的程序导入 Ver1.13
-;--------------------------------------------------
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;基础设定系
@@ -26,7 +21,7 @@
 	;--------------------------------------------------
 	;口上名称
 	;--------------------------------------------------
-	RESULTS:1 = 不知道呜呜呜
+	RESULTS:1 = 咱要事再不好好写口上就打咱屁股
 	;--------------------------------------------------
 	;口上描述
 	;--------------------------------------------------
@@ -40,7 +35,7 @@
 @KOJO_AME_VERSION_K36
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	RETURN 20250315
+	RETURN 20260628
 
 ;==================================================
 ;口上版本更新
@@ -216,6 +211,24 @@
 	ELSE
 		CFLAG:AME36_TIMESTOP_PREV = 0
 	ENDIF
+
+	;临时探针，测一下到过的地方
+	FOR LOCAL, 1001, 1500
+		IF CFLAG:ASLEEP_AMER
+			BREAK
+		ENDIF
+		IF CFLAG:37:LOCAL != 0
+			IF CFLAG:37:LOCAL == CFLAG:LOCATION_AMER
+				CFLAG:37:(LOCAL + 500) += 1
+				BREAK
+			ENDIF
+		ELSE
+			CFLAG:37:LOCAL = CFLAG:LOCATION_AMER
+			CFLAG:37:(LOCAL + 500) += 1
+			BREAK
+		ENDIF
+	NEXT
+
 	RETURN 0
 
 ;==================================================
@@ -230,175 +243,79 @@
 	RETURN 0
 
 ;==================================================
-;口上的自定义UPDATE
+;初始化人物素质
 ;==================================================
-@M_KOJO_AME_UPDATE_K36
+@AME36_INIT
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	PRINTL
+	;--------------------------------------------------
+	;进行的素质修改一览：
+	;获得：[坚强][坦率][自制心][难以越过的底线][贞操重视][不知羞耻][不怕痛][污臭无视][贫乳][擅于喝酒]
+	;失去：[喜欢引人注目][解放]
+	;能力修改：亲密→0、欲望→0、奉仕精神→3、教养→3、话术→4、料理→3、钓鱼→3、调合→1
+	;经验修改：V经验→0、精液经验→0、苦痛快乐经验→0；
+	;　　　　　会话经验→500、学习经验→200、料理经验→200、钓鱼经验→200、调合经验→20（与调整后的能力等级相对应）
+	;--------------------------------------------------
 	IF AME36_FIRSTTIME(0)
-		;-------------------------------------------------
-		;第一次UPDATE是游戏开始前，好样的
-		;-------------------------------------------------
-		IF CFLAG:MENSTRUATION_AMER == 0 && DAY:0 == 1
-			PRINTFORMW 是在游戏开始前会进行UPDATE的好孩子呢、实在太感谢你了
-		;-------------------------------------------------
-		;没有在游戏开始前UPDATE呢
-		;-------------------------------------------------
-		ELSE
-			PRINTFORMW 并没有在游戏开始前进行UPDATE呢、好伤心
-		ENDIF  
-	ENDIF
-	
-	IF AME36_FIRSTTIME(1)
-		PRINTFORMW ※变更素质、能力与经验中※
-
-		IF EXP:VXP_AMER == 10
+		IF !TALENT:VIRGIN_AMER
 			TALENT:VIRGIN_AMER = 1
 			CSTR:VIRGIN_HISTORY_AMER '= ""
-			PRINTFORML 阿燐变成了[处女]
 		ENDIF
-
 		TALENT:BRAVE_AMER = 1
-		PRINTFORML 阿燐获得了[坚强]
-
 		TALENT:ATTITUDE_TALENT_AMER = -1
-		PRINTFORML 阿燐获得了[坦率]
-
 		TALENT:SELF_CONTROL_AMER = 1
-		PRINTFORML 阿燐获得了[自制心]
-
 		TALENT:BOTTOM_LINE_AMER = 1
-		PRINTFORML 阿燐获得了[难以越过的底线]
-
 		TALENT:SHOWY_AMER = 0
-		PRINTFORML 阿燐失去了[喜欢引人注目]
-
 		TALENT:CHASTE_AMER = 1
-		PRINTFORML 阿燐获得了[贞操重视]
-
 		TALENT:LIBERAL_AMER = 0
-		PRINTFORML 阿燐失去了[解放]
-
 		TALENT:SHAME_AMER = -1
-		PRINTFORML 阿燐获得了[不知羞耻]
-
 		TALENT:PAIN_TOLERANCE_AMER = -1
-		PRINTFORML 阿燐获得了[不怕痛]
-
 		TALENT:FILTH_TOLERANCE_AMER = 2
-		PRINTFORML 阿燐获得了[污臭无视]
-
 		TALENT:CUP_SIZE_AMER = -1
-		PRINTFORML 阿燐变成了[贫乳]
-
 		TALENT:ALCOHOL_TOLERANCE_AMER = 1
-		PRINTFORMW 阿燐获得了[擅于喝酒]
 
-		IF ABL:INTIMACY_AMER == 2
-			PRINTFORM 亲密 (
-			CALL PRINT_RANK(2, "MAX_99")
-			PRINTFORM  2 →
-			CALL PRINT_RANK(0, "MAX_99")
-			PRINTFORML  0)
-			ABL:INTIMACY_AMER = 0
-		ENDIF
+		ABL:INTIMACY_AMER = 0
+		ABL:LIBIDO_AMER = 0
+		ABL:SERVITUDE_AMER = 3
+		ABL:SCHOLARSHIP_AMER = 3
+		ABL:DICTION_AMER = 4
+		ABL:COOKERY_AMER = 3
+		TALENT:FISHING_AMER = 3
+		TALENT:ALCHEMY_AMER = 1
 
-		IF ABL:LIBIDO_AMER == 1
-			PRINTFORM 欲望 (
-			CALL PRINT_RANK(1, "MAX_99")
-			PRINTFORM  1 →
-			CALL PRINT_RANK(0, "MAX_99")
-			PRINTFORML  0)
-			ABL:LIBIDO_AMER = 0
-		ENDIF
-
-		IF ABL:SERVITUDE_AMER < 3
-			PRINTFORM 奉仕精神 (
-			CALL PRINT_RANK(ABL:SERVITUDE_AMER, "MAX_99")
-			PRINTFORM  {ABL:SERVITUDE_AMER} →
-			CALL PRINT_RANK(3, "MAX_99")
-			PRINTFORML  3)
-			ABL:SERVITUDE_AMER = 3
-		ENDIF
-
-		IF ABL:SCHOLARSHIP_AMER < 3
-			PRINTFORM 教养 (
-			CALL PRINT_RANK(ABL:SCHOLARSHIP_AMER, "MAX_6")
-			PRINTFORM  {ABL:SCHOLARSHIP_AMER} →
-			CALL PRINT_RANK(3, "MAX_6")
-			PRINTFORML  3)
-			ABL:SCHOLARSHIP_AMER = 3
-		ENDIF
-
-		IF ABL:DICTION_AMER < 4
-			PRINTFORM 话术技能 (
-			CALL PRINT_RANK(ABL:DICTION_AMER, "MAX_6")
-			PRINTFORM  {ABL:DICTION_AMER} →
-			CALL PRINT_RANK(4, "MAX_6")
-			PRINTFORML  4)
-			ABL:DICTION_AMER = 4
-		ENDIF
-
-		IF ABL:COOKERY_AMER < 3
-			PRINTFORM 料理技能 (
-			CALL PRINT_RANK(ABL:COOKERY_AMER, "MAX_6")
-			PRINTFORM  {ABL:COOKERY_AMER} →
-			CALL PRINT_RANK(3, "MAX_6")
-			PRINTFORML  3)
-			ABL:COOKERY_AMER = 3
-		ENDIF
-
-		IF TALENT:FISHING_AMER < 3
-			PRINTFORM 钓鱼技能 (
-			CALL PRINT_RANK(TALENT:FISHING_AMER, "MAX_6")
-			PRINTFORM  {TALENT:FISHING_AMER} →
-			CALL PRINT_RANK(3, "MAX_6")
-			PRINTFORML  3)
-			TALENT:FISHING_AMER = 3
-		ENDIF
-
-		IF TALENT:ALCHEMY_AMER < 1
-			PRINTFORM 调合技能 (
-			CALL PRINT_RANK(TALENT:ALCHEMY_AMER, "MAX_6")
-			PRINTFORM  {TALENT:ALCHEMY_AMER} →
-			CALL PRINT_RANK(1, "MAX_6")
-			PRINTFORMW  1)
-			TALENT:ALCHEMY_AMER = 1
-		ENDIF
-
-		PRINTFORML V经验 ({EXP:VXP_AMER} → {EXP:VXP_AMER - 10})
-		EXP:VXP_AMER -= 10
-
-		PRINTFORML 精液经验 ({EXP:SEMENXP_AMER} → {EXP:SEMENXP_AMER - 5})
-		EXP:SEMENXP_AMER -= 5
-
-		PRINTFORML 苦痛快乐经验 ({EXP:MASOXP_AMER} → {EXP:MASOXP_AMER - 1})
-		EXP:MASOXP_AMER -= 1
-
-		PRINTFORML 会话经验 ({EXP:CONVERSATIONXP_AMER} → {EXP:CONVERSATIONXP_AMER + 480})
-		EXP:CONVERSATIONXP_AMER += 480
-
-		PRINTFORML 学习经验 ({EXP:STUDYXP_AMER} → {EXP:STUDYXP_AMER + 180})
-		EXP:STUDYXP_AMER += 180
-
-		PRINTFORML 料理经验 ({EXP:COOKINGXP_AMER} → {EXP:COOKINGXP_AMER + 200})
-		EXP:COOKINGXP_AMER += 200
-
-		PRINTFORML 钓鱼经验 ({EXP:FISHINGXP_AMER} → {EXP:FISHINGXP_AMER + 180})
-		EXP:FISHINGXP_AMER += 180
-
-		PRINTFORML 调合经验 ({EXP:ALCHEMYXP_AMER} → {EXP:ALCHEMYXP_AMER + 20})
-		EXP:ALCHEMYXP_AMER += 20
-
-		PRINTFORMW 那么、就这样吧
+		EXP:VXP_AMER = 0
+		EXP:SEMENXP_AMER = 0
+		EXP:MASOXP_AMER = 0
+		EXP:CONVERSATIONXP_AMER = 500
+		EXP:STUDYXP_AMER = 200
+		EXP:COOKINGXP_AMER = 200
+		EXP:FISHINGXP_AMER = 200
+		EXP:ALCHEMYXP_AMER = 20
 		;--------------------------------------------------
 		;先天扶她的记录
 		;--------------------------------------------------
 		SIF CFLAG:GENDER_AMER == 3
 			CFLAG:AME36_INNATE_FUTA = 1
 	ENDIF
-	RETURN 1
+
+	RETURN 0
+
+;==================================================
+;口上的自定义UPDATE
+;==================================================
+@M_KOJO_AME_UPDATE_K36
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+
+	;--------------------------------------------------
+	;此时TARGET未指定，需要手动设定然后归还
+	;--------------------------------------------------
+	LOCAL = TARGET
+	TARGET = 36
+	CALL AME36_INIT
+
+	TARGET = LOCAL
+	RETURN 0
 
 ;==================================================
 ;选项存在判定函数
@@ -437,7 +354,7 @@
 
 	TARGET = LOCAL
 
-;==================================================
+;--------------------------------------------------
 @KOJO_AME_OPTION_K36_RESULT_2
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
@@ -448,7 +365,7 @@
 	PRINTFORMW this is option 2
 
 	TARGET = LOCAL
-;==================================================
+;--------------------------------------------------
 @KOJO_AME_OPTION_K36_RESULT_3
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
@@ -465,91 +382,189 @@
 @M_KOJO_AME_ENCOUNTER_K36
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	;是否启用（= 0，不启用；= 1，启用）
-	LOCAL = 1
-	;-------------
-	IF LOCAL
-		;-------------------------------------------------
-		;甚至在初次见面前就被阿燐讨厌了（时停玩弄之类的）
-		;-------------------------------------------------
-		IF CFLAG:AME36_CONTEMPT
-			PRINTFORML
-			RETURN 1
-		ENDIF
-		;-------------------------------------------------
-		;初见在阿燐刚醒的时候
-		;-------------------------------------------------
-		IF CFLAG:ASLEEP_AMER
-			;-------------------------------------------------
-			;清掉「害羞的阿燐在换衣服时把MASTER暂时赶出去了」
-			;你这个没用的东西！
-			;-------------------------------------------------
-			CLEARLINE 1
-			PRINTFORMW miao
-			RETURN 1
-		ENDIF
-		;-------------------------------------------------
-		;初见在阿燐工作的时候
-		;-------------------------------------------------
-		IF CFLAG:ACTION_AMER == 5
-			PRINTFORML
-			RETURN 1
-		ENDIF
-		;-------------------------------------------------
-		;若MASTER住在地底，根据初见地点差分
-		;-------------------------------------------------
-		IF MAIN_MAP == 9
-			;-------------------------------------------------
-			;在MASTER的私室里
-			;-------------------------------------------------
-			IF CFLAG:LOCATION_AMER == CFLAG:MASTER:RESIDENCE_AMER
-				PRINTFORML
-				RETURN 1
-			ENDIF
+	
+	PRINTFORML ENCOUNTER IS TRIGGERED
+	;--------------------------------------------------
+	;论外情况
+	;--------------------------------------------------
+	;阿燐刚醒就见面了
+	;--------------------------------------------------
+	IF CFLAG:ASLEEP_AMER
+		PRINTFORMW wakey wakey
+		RETURN 1
+	ENDIF
+	;--------------------------------------------------
+	;开场环境描写
+	;--------------------------------------------------
+	;若MASTER进入阿燐所在位置（包括同时进入）
+	;--------------------------------------------------
+	IF CFLAG:PREV_LOCATION_AMER == CFLAG:LOCATION_AMER && CFLAG:MASTER:LOCATION_AMER == CFLAG:LOCATION_AMER
+		;--------------------------------------------------
+		;主地图在地底，也在地底初见的情况
+		;--------------------------------------------------
+		IF MAIN_MAP == 9 && CFLAG:LOCATION_AMER / 100 == 9
 			SELECTCASE CFLAG:LOCATION_AMER
-				;-------------------------------------------------
-				;在阿燐的私室里
-				;-------------------------------------------------
+				;--------------------------------------------------
+				;阿燐的房间
+				;--------------------------------------------------
 				CASE 912
 					PRINTFORML
-				;-------------------------------------------------
-				;在地灵殿里的其他地方
-				;-------------------------------------------------
-				CASE 904 TO 911, 913 TO 926
+				;--------------------------------------------------
+				;阿空的房间
+				;--------------------------------------------------
+				CASE 911
 					PRINTFORML
-				;-------------------------------------------------
-				;在地底的其他地方
-				;-------------------------------------------------
+				;--------------------------------------------------
+				;觉大人的房间
+				;--------------------------------------------------
+				CASE 918
+					PRINTFORML
+				;--------------------------------------------------
+				;恋大人的房间
+				;--------------------------------------------------
+				CASE 919
+					PRINTFORML
+				;--------------------------------------------------
+				;血枪的房间
+				;--------------------------------------------------
+				CASE 947
+					PRINTFORML
+				;--------------------------------------------------
+				;厨房和食料库
+				;--------------------------------------------------
+				CASE 909, 910
+					PRINTFORML
+				;--------------------------------------------------
+				;露台
+				;--------------------------------------------------
+				CASE 915
+					PRINTFORML
+				;--------------------------------------------------
+				;书斋
+				;--------------------------------------------------
+				CASE 920
+					PRINTFORML
+				;--------------------------------------------------
+				;浴室，换衣间
+				;--------------------------------------------------
+				CASE 921, 922
+					PRINTFORML
+				;--------------------------------------------------
+				;后院，蔷薇园
+				;--------------------------------------------------
+				CASE 923, 924
+					PRINTFORML
+				;--------------------------------------------------
+				;中庭
+				;--------------------------------------------------
+				CASE 926
+					PRINTFORML
+				;--------------------------------------------------
+				;灼热地狱遗迹
+				;--------------------------------------------------
+				CASE 928
+					PRINTFORML
+				;--------------------------------------------------
+				;地狱的人工太阳
+				;--------------------------------------------------
+				CASE 929
+					PRINTFORML
+				;--------------------------------------------------
+				;旧血池地狱
+				;--------------------------------------------------
+				CASE 930
+					PRINTFORML
+				;--------------------------------------------------
+				;酒场
+				;--------------------------------------------------
+				CASE 933
+					PRINTFORML
+				;--------------------------------------------------
+				;温泉
+				;--------------------------------------------------
+				CASE 934
+					PRINTFORML
+				;--------------------------------------------------
+				;鬼的聚集场所
+				;--------------------------------------------------
+				CASE 938
+					PRINTFORML
+				;--------------------------------------------------
+				;河岸，桥
+				;--------------------------------------------------
+				CASE 945, 946
+					PRINTFORML
+				;--------------------------------------------------
+				;一般室内：大会堂，一楼走廊，食堂，二楼走廊
+				;--------------------------------------------------
+				CASE 904, 905, 913, 914
+					PRINTFORML
+				;--------------------------------------------------
+				;一般街道：地灵殿前、大街、后街、小胡同、街道、洞穴底部
+				;--------------------------------------------------
+				CASE 901, 931, 932, 939, 944, 948
+					PRINTFORML
+				;--------------------------------------------------
+				;其他的地方（都是不会自然去的）
+				;--------------------------------------------------
 				CASEELSE
-					;-------------------------------------------------
-					;在室内
-					;-------------------------------------------------
-					IF INROOM(CFLAG:LOCATION_AMER)
-						PRINTFORML
-					;-------------------------------------------------
-					;在室外
-					;-------------------------------------------------
-					ELSE
-						PRINTFORML
-					ENDIF
+					PRINTFORML
 			ENDSELECT
-		;-------------------------------------------------
-		;若MASTER住在其他地图，则只有室内和室外的差分
-		;-------------------------------------------------
-		ELSE
-			;-------------------------------------------------
-			;在室内
-			;-------------------------------------------------
-			IF INROOM(CFLAG:LOCATION_AMER)
-				PRINTFORML
-			;-------------------------------------------------
-			;在室外
-			;-------------------------------------------------
-			ELSE
-				PRINTFORML
-			ENDIF
+		;--------------------------------------------------
+		;主地图在地底，但不在地底初见的情况（为什么会做这样的事）
+		;--------------------------------------------------
+		ELSEIF MAIN_MAP == 9 && CFLAG:LOCATION_AMER / 100 != 9
+			PRINTFORML
+		;--------------------------------------------------
+		;主地图不在地底，不在主地图初见的情况
+		;--------------------------------------------------
+		ELSEIF MAIN_MAP != 9 && CFLAG:LOCATION_AMER / 100 != MAIN_MAP
+			SELECTCASE CFLAG:LOCATION_AMER
+				;--------------------------------------------------
+				;地灵殿
+				;--------------------------------------------------
+				CASE 960
+				;--------------------------------------------------
+				;灼热地狱遗迹
+				;--------------------------------------------------
+				CASE 970
+				;--------------------------------------------------
+				;地底其他地方
+				;--------------------------------------------------
+				CASE 910, 920, 930, 940
+				;--------------------------------------------------
+				;其他会出现的地方
+				;--------------------------------------------------
+				CASE 10, 20, 30, 40, 150, 220, 570, 630, 760
+				;--------------------------------------------------
+				;不会出现的地方（为什么会变成这样）
+				;--------------------------------------------------
+				CASEELSE
+				
+			ENDSELECT
+		;--------------------------------------------------
+		;主地图不在地底，且在主地图初见的情况
+		;--------------------------------------------------
 		ENDIF
+	;--------------------------------------------------
+	;若阿燐进入MASTER所在位置
+	;--------------------------------------------------
+	ELSEIF CFLAG:MASTER:LOCATION_AMER == CFLAG:LOCATION_AMER
+		PRINTFORMW
+	;--------------------------------------------------
+	;怎么能不在同一个位置相遇呢，报个错
+	;--------------------------------------------------
+	ELSE
+		PRINTFORMW
 	ENDIF
+	;--------------------------------------------------
+	;角色描写
+	;--------------------------------------------------
+
+	;--------------------------------------------------
+	;角色反应
+	;--------------------------------------------------
+
 	RETURN 1
 
 ;==================================================
@@ -559,60 +574,14 @@
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
 	;--------------------------------------------------
-	;如果没有事先UPDATE，在这里修正素质
+	;UPDATE的Fallback
 	;--------------------------------------------------
-	IF AME36_FIRSTTIME(1)
-		IF EXP:VXP_AMER == 10
-			TALENT:VIRGIN_AMER = 1
-			CSTR:VIRGIN_HISTORY_AMER '= ""
-		ENDIF
-		TALENT:BRAVE_AMER = 1
-		TALENT:ATTITUDE_TALENT_AMER = -1
-		TALENT:SELF_CONTROL_AMER = 1
-		TALENT:BOTTOM_LINE_AMER = 1
-		TALENT:SHOWY_AMER = 0
-		TALENT:CHASTE_AMER = 1
-		TALENT:LIBERAL_AMER = 0
-		TALENT:SHAME_AMER = -1
-		TALENT:PAIN_TOLERANCE_AMER = -1
-		TALENT:FILTH_TOLERANCE_AMER = 2
-		TALENT:CUP_SIZE_AMER = -1
-		TALENT:ALCOHOL_TOLERANCE_AMER = 1
-
-		SIF ABL:INTIMACY_AMER == 2
-			ABL:INTIMACY_AMER = 0
-		SIF ABL:LIBIDO_AMER == 1
-			ABL:LIBIDO_AMER = 0
-		SIF ABL:SERVITUDE_AMER < 3
-			ABL:SERVITUDE_AMER = 3
-		SIF ABL:SCHOLARSHIP_AMER < 3
-			ABL:SCHOLARSHIP_AMER = 3
-		SIF ABL:DICTION_AMER < 4
-			ABL:DICTION_AMER = 4
-		SIF ABL:COOKERY_AMER < 3
-			ABL:COOKERY_AMER = 3
-		SIF TALENT:FISHING_AMER < 3
-			TALENT:FISHING_AMER = 3
-		SIF TALENT:ALCHEMY_AMER < 1
-			TALENT:ALCHEMY_AMER = 1
-
-		EXP:VXP_AMER -= 10
-		EXP:SEMENXP_AMER -= 5
-		EXP:MASOXP_AMER -= 1
-		EXP:CONVERSATIONXP_AMER += 480
-		EXP:STUDYXP_AMER += 180
-		EXP:COOKINGXP_AMER += 200
-		EXP:FISHINGXP_AMER += 180
-		EXP:ALCHEMYXP_AMER += 20
-
-		SIF CFLAG:GENDER_AMER == 3
-			CFLAG:AME36_INNATE_FUTA = 1
-	ENDIF
+	CALL AME36_INIT
 	;--------------------------------------------------
 	;如果中途切换口上，打印警告
 	;--------------------------------------------------
 	IF AME36_FIRSTTIME(3) && DAY > 1
-		CALL COLORMESSAGE("警告：本口上必须在游戏开始前便选择，中途切换会导致某些机制发生错误", C_RED, 2, 1)
+		CALL COLORMESSAGE("警告：本口上仅支持在游戏开始前的选择界面启用，在任何时间切换均会导致大量机制发生错误", C_RED, 2, 1)
 		FORCEWAIT
 	ENDIF
 	;--------------------------------------------------
@@ -627,7 +596,7 @@
 	;--------------------------------------------------
 	;每日随机数的重置
 	;--------------------------------------------------
-	CFLAG:AME36_RAND_TODAY = RAND:10000
+	CFLAG:AME36_RAND_TODAY = RAND:1000000
 	;--------------------------------------------------
 	;打开口上COM的开关（为什么这玩意默认是关的）
 	;--------------------------------------------------
@@ -3258,7 +3227,14 @@
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
 
-	;ARG为没见面的天数
+	;喵了个咪的测试一下到过的地方
+	FOR LOCAL, 1001, 1500
+		IF CFLAG:37:LOCAL == 0
+			BREAK
+		ENDIF
+		PRINTFORM {CFLAG:37:LOCAL}:{CFLAG:37:(LOCAL + 500)}次, 
+	NEXT
+	PRINTL
 	;-------------------------------------------------
 	;禁用自慰显示：将积攒度临时储存起来
 	;-------------------------------------------------
@@ -3289,9 +3265,7 @@
 	CALLF AME36_RECOLLECTION()
 	IF CFLAG:AME36_BREAKTHROUGH && AME36_FIRSTTIME(2)
 		PRINTL
-		PRINTFORMDL 似乎已经和阿燐混熟了呢……
-		CALL COLORMESSAGE("这样的话、应该可以一起做更多事情了吧？", C_YELLOW, 2, 1)
-		PRINTL
+		PRINTFORMDL xsxsxs
 		CFLAG:AME36_ACQUAINTANCE = 1
 	ENDIF
 	;-------------------------------------------------
@@ -4019,7 +3993,7 @@
 	;--------------------------------------------------
 	;若关闭地文，则不会增加欲情之珠
 	;--------------------------------------------------
-	RETURN 0
+	RETURN 3
 ;--------------------------------------------------
 @M_KOJO_AME_DAILY_EVENT_K36_2(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARGS:1, ARGS:2)
 	#LOCALSIZE 1
@@ -4047,13 +4021,13 @@
 	;RETURN 2：口上不显示，地文显示
 	;RETURN 3：口上与地文均不显示
 	;--------------------------------------------------
-	RETURN 0
+	RETURN 1
 ;--------------------------------------------------
 @M_KOJO_AME_DAILY_EVENT_K36_4(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARGS:1, ARGS:2)
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
 
-	PRINTFORML
+	;这个地方想着反制一下吧，直接设置事没有用的
 	RETURN 1
 
 ;==================================================
@@ -4077,7 +4051,7 @@
 	;RETURN 2：口上不显示，地文显示
 	;RETURN 3：口上与地文均不显示
 	;--------------------------------------------------
-	RETURN 0
+	RETURN 3
 ;--------------------------------------------------
 @M_KOJO_AME_DAILY_EVENT_K36_12(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARGS:1, ARGS:2)
 	#LOCALSIZE 1
