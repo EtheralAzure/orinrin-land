@@ -15,9 +15,9 @@
 ;RETURN 4：恋人
 ;==================================================
 @AME36_FALL_STATE
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	IF TALENT:LOVER_AMER
 		RETURNF 4
 	ELSEIF TALENT:AFFECTION_AMER
@@ -33,9 +33,9 @@
 ;额外的一些小东西
 ;==================================================
 @AME36_FALL_EX
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	RETURNF 0
 
 ;==================================================
@@ -43,9 +43,9 @@
 ;获得思慕、恋慕与恋人的必需条件之一
 ;==================================================
 @AME36_RECOLLECTION
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	#DIM DYNAMIC RECOLLECTION
 	;--------------------------------------------------
 	;相守值的贡献
@@ -53,7 +53,6 @@
 	RECOLLECTION += AME36_PERSISTENCE_RECOLLECTION()
 	;--------------------------------------------------
 	;COM经验的贡献
-	;--------------------------------------------------
 	;刚认识就可以做的：300会话、301泡茶、410扫除、414吃饭/招待吃饭、416演奏、483斗虫、484打西瓜
 	;最大回忆值：会话4000点、泡茶2000点、扫除1000点、吃饭/招待吃饭1200点、演奏800点、斗虫200点、打西瓜200点
 	;期望频率：会话1天3次、泡茶1天2次、扫除1天1次、吃饭/招待吃饭1天1次、演奏3天1次、斗虫共5次、打西瓜共5次
@@ -154,9 +153,9 @@
 ;以陷落状态需要为上限的回忆值
 ;==================================================
 @AME36_EFFECTIVE_RECOLLECTION
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	LOCAL = AME36_RECOLLECTION()
 	SELECTCASE AME36_FALL_STATE()
 		CASE 4
@@ -175,9 +174,9 @@
 ;对回忆值的相守值部分计算的包装
 ;==================================================
 @AME36_PERSISTENCE_RECOLLECTION
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	LOCAL = CFLAG:AME36_PERSISTENCE
 	SELECTCASE LOCAL
 		CASE IS <= 40
@@ -208,9 +207,9 @@
 ;酒共31种
 ;==================================================
 @AME36_ALCOHOL_RECOLLECTION
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	LOCAL = AME36_BINARY_SUM(CFLAG:AME36_ALCOHOL_TYPE)
 	IF LOCAL <= 4
 		LOCAL *= 20
@@ -230,16 +229,16 @@
 
 ;==================================================
 ;对回忆值的料理经历部分计算的包装
-;常规料理共174种
+;普通料理按历史计数，计算分母174暂保留，数值重做另行安排
 ;==================================================
 @AME36_DISH_RECOLLECTION
-	#FUNCTION
 	#LOCALSIZE 2
 	#LOCALSSIZE 1
-	LOCAL = AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_1) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_2) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_3)
+	#FUNCTION
+	LOCAL = AME36_DISH_HISTORY_COUNT(TARGET, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_SPECIAL_OFFSET - 1)
 	LOCAL = 1700 * LOCAL / 174
-	LOCAL:1 = AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C1) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C2) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C3)
-	IF GETBIT(CFLAG:AME36_DISH_TYPE_C1, 35)
+	LOCAL:1 = AME36_DISH_HISTORY_COUNT(TARGET, AME36_DISH_SPECIAL_OFFSET + 1, AME36_DISH_HISTORY_LAST_ID)
+	IF AME36_DISH_HISTORY_HAS(TARGET, AME36_DISH_SELF_ID)
 		LOCAL += 100
 		LOCAL:1 -= 1
 	ENDIF
@@ -256,12 +255,98 @@
 	ENDSELECT
 	
 ;==================================================
+;记录已确认成功制作的料理，1为新增、0为重复、-1为输入无效
+;普通空号的有效性由成功制作入口保证，允许固有料理的剧本覆写
+;==================================================
+@AME36_DISH_HISTORY_RECORD(CHARA, DISH_ID)
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	#FUNCTION
+	#DIM CHARA
+	#DIM DISH_ID
+	SIF CHARA < 0 || CHARA >= CHARANUM
+		RETURNF -1
+	SIF NO:CHARA != 36
+		RETURNF -1
+	SIF !INRANGE(DISH_ID, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_HISTORY_LAST_ID)
+		RETURNF -1
+	SIF GROUPMATCH(DISH_ID, AME36_DISH_DEBUG_ID, AME36_DISH_SPECIAL_OFFSET)
+		RETURNF -1
+	LOCAL = DISH_ID - AME36_DISH_HISTORY_FIRST_ID
+	;--------------------------------------------------
+	;动态属性索引：料理历史1252～1259，位号始终为0～62
+	;--------------------------------------------------
+	SIF GETBIT(CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + LOCAL / AME36_DISH_HISTORY_BITS), LOCAL % AME36_DISH_HISTORY_BITS)
+		RETURNF 0
+	;--------------------------------------------------
+	;动态属性索引：料理历史1252～1259，不使用符号位
+	;--------------------------------------------------
+	SETBIT CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + LOCAL / AME36_DISH_HISTORY_BITS), LOCAL % AME36_DISH_HISTORY_BITS
+	RETURNF 1
+
+;==================================================
+;按料理编号读取历史标记，不改变TARGET或料理实例
+;==================================================
+@AME36_DISH_HISTORY_HAS(CHARA, DISH_ID)
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	#FUNCTION
+	#DIM CHARA
+	#DIM DISH_ID
+	SIF CHARA < 0 || CHARA >= CHARANUM
+		RETURNF 0
+	SIF NO:CHARA != 36
+		RETURNF 0
+	SIF !INRANGE(DISH_ID, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_HISTORY_LAST_ID)
+		RETURNF 0
+	SIF GROUPMATCH(DISH_ID, AME36_DISH_DEBUG_ID, AME36_DISH_SPECIAL_OFFSET)
+		RETURNF 0
+	LOCAL = DISH_ID - AME36_DISH_HISTORY_FIRST_ID
+	;--------------------------------------------------
+	;动态属性索引：料理历史1252～1259，位号始终为0～62
+	;--------------------------------------------------
+	RETURNF GETBIT(CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + LOCAL / AME36_DISH_HISTORY_BITS), LOCAL % AME36_DISH_HISTORY_BITS)
+
+;==================================================
+;统计指定编号区间的料理记录，排除DEBUG料理和保留编号
+;只读取历史，不查询制作条件、材料或数据库
+;==================================================
+@AME36_DISH_HISTORY_COUNT(CHARA, FIRST_ID, LAST_ID)
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	#FUNCTION
+	#DIM CHARA
+	#DIM FIRST_ID
+	#DIM LAST_ID
+	#DIM DYNAMIC DISH_ID
+	#DIM DYNAMIC OFFSET
+	SIF CHARA < 0 || CHARA >= CHARANUM
+		RETURNF 0
+	SIF NO:CHARA != 36
+		RETURNF 0
+	FIRST_ID = MAX(FIRST_ID, AME36_DISH_HISTORY_FIRST_ID)
+	LAST_ID = MIN(LAST_ID, AME36_DISH_HISTORY_LAST_ID)
+	SIF FIRST_ID > LAST_ID
+		RETURNF 0
+	LOCAL = 0
+	FOR DISH_ID, FIRST_ID, LAST_ID + 1
+		SIF GROUPMATCH(DISH_ID, AME36_DISH_DEBUG_ID, AME36_DISH_SPECIAL_OFFSET)
+			CONTINUE
+		OFFSET = DISH_ID - AME36_DISH_HISTORY_FIRST_ID
+		;--------------------------------------------------
+		;动态属性索引：料理历史1252～1259，逐位计数避免跨类别混算
+		;--------------------------------------------------
+		LOCAL += GETBIT(CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + OFFSET / AME36_DISH_HISTORY_BITS), OFFSET % AME36_DISH_HISTORY_BITS)
+	NEXT
+	RETURNF LOCAL
+
+;==================================================
 ;获取一个数字所有二进制位值的和
 ;==================================================
 @AME36_BINARY_SUM(ARG)
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	VARSET LOCAL
 	WHILE ARG
 		LOCAL += ARG & 1
@@ -276,9 +361,9 @@
 ;ARG:6 为计算参数
 ;==================================================
 @AME36_COM_RECOLLECTION(ARG, ARG:1, ARG:2, ARG:3, ARG:4, ARG:5, ARG:6)
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	SELECTCASE AME36_FALL_STATE()
 		CASE 4
 			ARG = MIN(ARG, ARG:5)
@@ -297,19 +382,6 @@
 		RETURNF ARG * (2 * ARG:5 - ARG) * (- ARG:6)
 	ENDIF
 
-;==================================================
-;测试用，使所有回忆值达到最大
-;==================================================
-@AME36_MAX_RECOLLECTION
-	#FUNCTION
-	#LOCALSIZE 1
-	#LOCALSSIZE 1
-	FOR LOCAL, 1201, 1254
-		CFLAG:LOCAL = 99999
-	NEXT
-	CFLAG:1204 = 0
-	RETURNF 1
-
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;对原版判定的改动
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
@@ -319,9 +391,9 @@
 ;原版的执行效率实在低到没法看
 ;==================================================
 @AME36_WEEKDAY_MATCH(ARG:0, ARG:1 = -1, ARG:2 = -1, ARG:3 = -1, ARG:4 = -1, ARG:5 = -1)
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	FOR LOCAL, 0, 6
 		SIF ARG:LOCAL == -1
 			BREAK
@@ -335,9 +407,9 @@
 ;角色处于强行状态，或非恋慕时角色处于衰弱、烂醉状态，受催情药、媚药影响，或恋慕时角色处于衰弱、烂醉状态，MASTER不在身边时
 ;==================================================
 @AME36_DANGEROUS(ARG)
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	SIF TCVAR:ARG:FORCED_AMER
 		RETURNF 1
 	IF TALENT:ARG:AFFECTION_AMER
@@ -354,9 +426,9 @@
 ;要求非情事中、非睡眠或陪睡中
 ;==================================================
 @AME36_FOLLOWABLE(ARG)
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	SIF !CFLAG:ARG:SEX_AMER && !CFLAG:ARG:ASLEEP_AMER && !CFLAG:ARG:SNUGGLE_AMER
 		RETURNF 1
 	RETURNF 0
@@ -365,9 +437,9 @@
 ;去除催眠条件之后的 @風呂逐出条件
 ;==================================================
 @AME36_CLEAN_BATHCHECK()
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	SIF FLAG:TIMESTOP_AMER
 		RETURNF 0
 	SIF !GETBIT(TALENT:MASTER:GENDER_AMER, 1) && HETEROSEX(MASTER, 36)
@@ -399,9 +471,9 @@
 ;SLIMIT：随机数上限，下限始终为0
 ;==================================================
 @AME36_SRAND(OFFSET, SLIMIT)
-	#FUNCTION
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
+	#FUNCTION
 	#DIM OFFSET
 	#DIM SLIMIT
 	RANDOMIZE CFLAG:AME36_RAND_TODAY + OFFSET
@@ -427,10 +499,19 @@
 	LOCAL = EVENT_NO / 64
 	LOCAL:1 = EVENT_NO % 64
 	IF MODE
+		;--------------------------------------------------
+		;属性索引：1101～1110为自定义FIRSTTIME位存储区，LOCAL为事件号/64
+		;--------------------------------------------------
 		LOCAL:2 = GETBIT(CFLAG:(1101 + LOCAL), LOCAL:1)
+		;--------------------------------------------------
+		;属性索引：1101～1110为自定义FIRSTTIME位存储区，LOCAL为事件号/64
+		;--------------------------------------------------
 		SETBIT CFLAG:(1101 + LOCAL), LOCAL:1
 		RETURNF !LOCAL:2
 	ELSE
+		;--------------------------------------------------
+		;属性索引：1101～1110为自定义FIRSTTIME位存储区，LOCAL为事件号/64
+		;--------------------------------------------------
 		RETURNF !GETBIT(CFLAG:(1101 + LOCAL), LOCAL:1)
 	ENDIF
 	RETURNF 0
@@ -445,23 +526,23 @@
 	#DIM PERCENTAGE
 	SIF PERCENTAGE == 100
 		RETURN 1
-	SOURCE:10 = SOURCE:10 * PERCENTAGE / 100
-	SOURCE:12 = SOURCE:12 * PERCENTAGE / 100
-	SOURCE:13 = SOURCE:13 * PERCENTAGE / 100
-	SOURCE:14 = SOURCE:14 * PERCENTAGE / 100
-	SOURCE:15 = SOURCE:15 * PERCENTAGE / 100
-	SOURCE:16 = SOURCE:16 * PERCENTAGE / 100
-	SOURCE:17 = SOURCE:17 * PERCENTAGE / 100
-	SOURCE:18 = SOURCE:18 * PERCENTAGE / 100
-	SOURCE:20 = SOURCE:20 * PERCENTAGE / 100
-	SOURCE:21 = SOURCE:21 * PERCENTAGE / 100
-	SOURCE:22 = SOURCE:22 * PERCENTAGE / 100
-	SOURCE:50 = SOURCE:50 * PERCENTAGE / 100
-	SOURCE:51 = SOURCE:51 * PERCENTAGE / 100
-	SOURCE:52 = SOURCE:52 * PERCENTAGE / 100
-	SOURCE:53 = SOURCE:53 * PERCENTAGE / 100
-	SOURCE:54 = SOURCE:54 * PERCENTAGE / 100
-	SOURCE:55 = SOURCE:55 * PERCENTAGE / 100
+	SOURCE:SLOVE_AMER = SOURCE:SLOVE_AMER * PERCENTAGE / 100
+	SOURCE:SACHIEVEMENT_AMER = SOURCE:SACHIEVEMENT_AMER * PERCENTAGE / 100
+	SOURCE:SPAIN_AMER = SOURCE:SPAIN_AMER * PERCENTAGE / 100
+	SOURCE:SFEAR_AMER = SOURCE:SFEAR_AMER * PERCENTAGE / 100
+	SOURCE:SLUST_AMER = SOURCE:SLUST_AMER * PERCENTAGE / 100
+	SOURCE:SRESPECT_AMER = SOURCE:SRESPECT_AMER * PERCENTAGE / 100
+	SOURCE:SEXPOSURE_AMER = SOURCE:SEXPOSURE_AMER * PERCENTAGE / 100
+	SOURCE:SSUBMISSION_AMER = SOURCE:SSUBMISSION_AMER * PERCENTAGE / 100
+	SOURCE:SJOY_AMER = SOURCE:SJOY_AMER * PERCENTAGE / 100
+	SOURCE:SCONQUEST_AMER = SOURCE:SCONQUEST_AMER * PERCENTAGE / 100
+	SOURCE:SPASSIVITY_AMER = SOURCE:SPASSIVITY_AMER * PERCENTAGE / 100
+	SOURCE:SALLURE_AMER = SOURCE:SALLURE_AMER * PERCENTAGE / 100
+	SOURCE:SINSULT_AMER = SOURCE:SINSULT_AMER * PERCENTAGE / 100
+	SOURCE:SINDUCTION_AMER = SOURCE:SINDUCTION_AMER * PERCENTAGE / 100
+	SOURCE:SSERVE_AMER = SOURCE:SSERVE_AMER * PERCENTAGE / 100
+	SOURCE:SCOMPULSION_AMER = SOURCE:SCOMPULSION_AMER * PERCENTAGE / 100
+	SOURCE:SABUSE_AMER = SOURCE:SABUSE_AMER * PERCENTAGE / 100
 	RETURN 1
 
 ;==================================================
@@ -470,29 +551,29 @@
 @AME36_CLEAR_SOURCE()
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	SOURCE:9 = 0
-	SOURCE:10 = 0
-	SOURCE:11 = 0
-	SOURCE:12 = 0
-	SOURCE:13 = 0
-	SOURCE:14 = 0
-	SOURCE:15 = 0
-	SOURCE:16 = 0
-	SOURCE:17 = 0
-	SOURCE:18 = 0
-	SOURCE:20 = 0
-	SOURCE:21 = 0
-	SOURCE:22 = 0
-	SOURCE:30 = 0
-	SOURCE:31 = 0
-	SOURCE:32 = 0
-	SOURCE:33 = 0
-	SOURCE:50 = 0
-	SOURCE:51 = 0
-	SOURCE:52 = 0
-	SOURCE:53 = 0
-	SOURCE:54 = 0
-	SOURCE:55 = 0
+	SOURCE:SLIQUID_AMER = 0
+	SOURCE:SLOVE_AMER = 0
+	SOURCE:SSEXACT_AMER = 0
+	SOURCE:SACHIEVEMENT_AMER = 0
+	SOURCE:SPAIN_AMER = 0
+	SOURCE:SFEAR_AMER = 0
+	SOURCE:SLUST_AMER = 0
+	SOURCE:SRESPECT_AMER = 0
+	SOURCE:SEXPOSURE_AMER = 0
+	SOURCE:SSUBMISSION_AMER = 0
+	SOURCE:SJOY_AMER = 0
+	SOURCE:SCONQUEST_AMER = 0
+	SOURCE:SPASSIVITY_AMER = 0
+	SOURCE:SFILTH_AMER = 0
+	SOURCE:SDEPRESSION_AMER = 0
+	SOURCE:SDEVIATION_AMER = 0
+	SOURCE:SHATE_AMER = 0
+	SOURCE:SALLURE_AMER = 0
+	SOURCE:SINSULT_AMER = 0
+	SOURCE:SINDUCTION_AMER = 0
+	SOURCE:SSERVE_AMER = 0
+	SOURCE:SCOMPULSION_AMER = 0
+	SOURCE:SABUSE_AMER = 0
 	RETURN 1
 
 ;==================================================
@@ -501,11 +582,11 @@
 @AME36_CLEAR_PLEASURE_SOURCE()
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	SOURCE:0 = 0
-	SOURCE:1 = 0
-	SOURCE:2 = 0
-	SOURCE:3 = 0
-	SOURCE:4 = 0
+	SOURCE:SC_AMER = 0
+	SOURCE:SV_AMER = 0
+	SOURCE:SA_AMER = 0
+	SOURCE:SB_AMER = 0
+	SOURCE:SM_AMER = 0
 	RETURN 1
 
 ;==================================================
@@ -613,7 +694,7 @@
 	RETURN 1
 
 ;==================================================
-;根据料理名称获取料理的编号
+;取得当前料理编号，并保留自定义料理标记
 ;一定要把写料理系统的家伙头砍下来挂在地灵殿门口
 ;==================================================
 @AME36_DISH_INDEX(ARGS)
@@ -637,13 +718,10 @@
 	TDISH_TIME = DISH_TIME
 	TDISH_MAXLIMIT = DISH_MAXLIMIT
 
-	FOR LOCAL, 101, 401 + CHARANUM
-		CALL DISHDATA(LOCAL)
-		IF DISH_NAME == ARGS
-			RESULT_NO = LOCAL
-			BREAK
-		ENDIF
-	NEXT
+	;--------------------------------------------------
+	;属性索引：FLAG:20为当前料理编号，在COM413成功后读取
+	;--------------------------------------------------
+	RESULT_NO = FLAG:20
 	VARSET RESULT
 	IF RESULT_NO > 400
 		TRYCALLFORM SPECIAL_MENU_{RESULT_NO - 400}
@@ -668,6 +746,8 @@
 ;根据条件打印按钮或纯文本的函数
 ;==================================================
 @AME36_CONDITIONAL_PRINT(ARGS, ARG)
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	IF ARG
 		PRINTFORML %ARGS%
 	ELSE
@@ -682,6 +762,8 @@
 ;自用的报错信息，出现了不该出现的情况时调用
 ;==================================================
 @AME36_ERROR(ARG, ARGS)
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
 	DRAWLINE
 	LOCAL = GETCOLOR()
 	CALL M_KOJO_AME_COLOR_K36
@@ -749,7 +831,7 @@
 ;RETURN -2：屏幕装不下字符画啦
 ;==================================================
 @AME36_AA(ARG, ARGS = "LEFT")
-	#LOCALSIZE 2
+	#LOCALSIZE 1
 	#LOCALSSIZE 1
 	#DIMS DYNAMIC AA, 50
 	;--------------------------------------------------
@@ -1198,6 +1280,34 @@
 	NEXT
 
 	RETURN 1
+
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;测试专用函数
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;测试用，提高回忆记录并填满当前目录的料理历史
+;==================================================
+@AME36_MAX_RECOLLECTION
+	#LOCALSIZE 1
+	#LOCALSSIZE 1
+	#FUNCTION
+	FOR LOCAL, 1201, AME36_DISH_HISTORY_BEGIN
+		;--------------------------------------------------
+		;属性索引：测试工具访问1201～1251，料理历史另按目录记录
+		;--------------------------------------------------
+		CFLAG:LOCAL = 99999
+	NEXT
+	CFLAG:AME36_RECOLLECTION_303 = 0
+	;--------------------------------------------------
+	;按现有目录记录料理，不将普通整数当作料理位图写入
+	;--------------------------------------------------
+	FOR LOCAL, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_HISTORY_LAST_ID + 1
+		SIF !QOL_DISH_HAS_DATA(LOCAL)
+			CONTINUE
+		CALLF AME36_DISH_HISTORY_RECORD, TARGET, LOCAL
+	NEXT
+	RETURNF 1
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;已弃用留档

@@ -1,0 +1,21 @@
+{
+  "owner_pid": 12724,
+  "state": "restored",
+  "errors": [],
+  "tail_quiet": true,
+  "sessions": [
+    {
+      "Number": 0,
+      "InitiallyMuted": false,
+      "MutedDuring": true,
+      "Restored": true
+    },
+    {
+      "Number": 1,
+      "InitiallyMuted": false,
+      "MutedDuring": true,
+      "Restored": true
+    }
+  ],
+  "guard_pid": 19356
+}

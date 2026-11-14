@@ -1,0 +1,318 @@
+{
+  "date": "2026-11-14",
+  "status": "complete",
+  "self_check_id": "e05c613cd2d64d3095f5b3fbaa69b151",
+  "checks": [
+    {
+      "name": "engine_positive",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\d368a1ae6c9a485c9f135dc95eca9237\\result.json",
+        "expected_pass": true,
+        "actual_pass": true,
+        "exit_code": 0,
+        "reasons": [],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_assertion_failure",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\f8bc91c43f0b40eea5e93613a0fccaec\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 0,
+        "reasons": [
+          "assertion_failed",
+          "failure_output"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_syntax_error",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\137e1a2cde7f4a11b05dab5999c32ecb\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 1,
+        "reasons": [
+          "timed_out",
+          "abnormal_exit",
+          "missing_current_begin",
+          "missing_log_end",
+          "missing_saved_end",
+          "engine_error_output"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_runtime_error_after_end",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\c544a274ba6b4c7d89b47038faf88810\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 1,
+        "reasons": [
+          "timed_out",
+          "abnormal_exit",
+          "engine_error_output"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_runtime_warning_after_end",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\a3abf13237f449d69d3e56457f793b9d\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 0,
+        "reasons": [
+          "engine_error_output"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_timeout",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\0f5d41dd47ae48f4954a70b834e72265\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 1,
+        "reasons": [
+          "timed_out",
+          "abnormal_exit",
+          "missing_current_begin",
+          "missing_log_end",
+          "missing_saved_end"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_missing_summary",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\e37e7c1fceda414a875da9381e820e9f\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 0,
+        "reasons": [
+          "missing_current_begin",
+          "missing_log_end",
+          "missing_saved_end",
+          "engine_error_output"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_stale_result",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\7517ae76a8a341649d38b593ccdb698c\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 0,
+        "reasons": [
+          "missing_current_begin",
+          "missing_log_end",
+          "missing_saved_end",
+          "engine_error_output"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_empty_suite",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\e6d7fa787b804effa1cd8579297c00f9\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": 0,
+        "reasons": [
+          "empty_suite",
+          "assertion_count_mismatch",
+          "engine_error_output"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "restored"
+      }
+    },
+    {
+      "name": "engine_source_mismatch",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\5c221cd1d210435ba3cab648328145fd\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": null,
+        "reasons": [
+          "source_changed:F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\5c221cd1d210435ba3cab648328145fd\\original.source",
+          "engine_not_launched",
+          "abnormal_exit",
+          "missing_current_begin",
+          "missing_log_end",
+          "missing_saved_end"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "not_needed"
+      }
+    },
+    {
+      "name": "engine_fixture_mismatch",
+      "passed": true,
+      "details": {
+        "result": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\28e7f2130b174edf8b5dbc75b4f603fb\\result.json",
+        "expected_pass": false,
+        "actual_pass": false,
+        "exit_code": null,
+        "reasons": [
+          "fixture_changed:ERB\\value.ERB",
+          "engine_not_launched",
+          "abnormal_exit",
+          "missing_current_begin",
+          "missing_log_end",
+          "missing_saved_end"
+        ],
+        "cleanup_ok": true,
+        "audio_state": "not_needed"
+      }
+    },
+    {
+      "name": "verdict_nonzero_exit",
+      "passed": true,
+      "details": {
+        "passed": false,
+        "reasons": [
+          "abnormal_exit",
+          "engine_error_output"
+        ],
+        "benign_force_quit_trace_ignored": false,
+        "summaries": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "failures": []
+      }
+    },
+    {
+      "name": "verdict_wrong_run_id",
+      "passed": true,
+      "details": {
+        "passed": false,
+        "reasons": [
+          "missing_current_begin",
+          "wrong_run_id",
+          "engine_error_output"
+        ],
+        "benign_force_quit_trace_ignored": false,
+        "summaries": [],
+        "failures": []
+      }
+    },
+    {
+      "name": "verdict_conflicting_summary",
+      "passed": true,
+      "details": {
+        "passed": false,
+        "reasons": [
+          "conflicting_summaries",
+          "assertion_count_mismatch",
+          "engine_error_output"
+        ],
+        "benign_force_quit_trace_ignored": false,
+        "summaries": [
+          [
+            "1",
+            "0"
+          ],
+          [
+            "2",
+            "0"
+          ]
+        ],
+        "failures": []
+      }
+    },
+    {
+      "name": "verdict_failure_line_with_zero_summary",
+      "passed": true,
+      "details": {
+        "passed": false,
+        "reasons": [
+          "failure_output"
+        ],
+        "benign_force_quit_trace_ignored": true,
+        "summaries": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "failures": [
+          "ISO_FAIL run=d368a1ae6c9a485c9f135dc95eca9237 deliberate"
+        ]
+      }
+    },
+    {
+      "name": "verdict_missing_saved_output",
+      "passed": true,
+      "details": {
+        "passed": false,
+        "reasons": [
+          "missing_saved_end",
+          "engine_error_output"
+        ],
+        "benign_force_quit_trace_ignored": false,
+        "summaries": [
+          [
+            "1",
+            "0"
+          ]
+        ],
+        "failures": []
+      }
+    },
+    {
+      "name": "duplicate_extraction_rejected",
+      "passed": true,
+      "details": "Duplicate labels must not silently select a definition"
+    },
+    {
+      "name": "no_active_fixture_scripts",
+      "passed": true,
+      "details": 8
+    }
+  ],
+  "passed": true,
+  "check_count": 18,
+  "tool_fingerprints": {
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\check_isolated_engine_reliability.py": "a94aa0ec27ab3e323db259bc6916e2f9b54d1719f39d35b4da6b26029fa5e0de",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\isolated_engine_support.py": "feb1c4505e4fd42881a5849d63f19f13b8bcf943ad8bcff7566fd4f3e5ab4432",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\isolated_audio_guard.py": "2e7a39b0d16ad18827571977aebab4e006067501411c20b1348df36eda3c9cfd",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\engine_system_sound_guard.ps1": "02bd875e443904022ff7f13a3180cb7042e72a025ddd6be356d4eec5af1286da",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\engine_system_sound_guard.cs": "f629e382c5a4f8aef8258812dc1404195dbd4ba2a654b7a9b75ba8b47c7baafe"
+  },
+  "tools_unchanged": true,
+  "scope": "runner reliability; no business-source changes or real-game integration"
+}

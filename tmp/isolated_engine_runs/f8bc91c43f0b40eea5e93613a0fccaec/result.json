@@ -1,0 +1,73 @@
+{
+  "label": "reliability_assertion_failure",
+  "run_id": "f8bc91c43f0b40eea5e93613a0fccaec",
+  "fixture": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\f8bc91c43f0b40eea5e93613a0fccaec",
+  "started_utc": "2026-11-14T08:25:23.540651+00:00",
+  "engine_sha256": "87f81a561038422548016a95086b44054e5df5bdd34de47abc8de74f5e4001cd",
+  "engine_version": [
+    "Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1"
+  ],
+  "engine_exit_code": 0,
+  "engine_launched": true,
+  "timed_out": false,
+  "expected_assertions": 1,
+  "source_fingerprints": {
+    "F:\\eratw\\CSV\\VariableSize.csv": "9b662ff9d7b42fd6754763c50e22e11f47c19f796b0ceb41fed07ba087558a81",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\isolated_engine_runs\\f8bc91c43f0b40eea5e93613a0fccaec\\original.source": "29f7588d7f8f10267744e965ea9d33bbc863ea9df7ee5ff5981c308df3540fe6",
+    "F:\\eratw\\Emuera_skiaV10_x64.exe": "87f81a561038422548016a95086b44054e5df5bdd34de47abc8de74f5e4001cd",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\engine_system_sound_guard.ps1": "02bd875e443904022ff7f13a3180cb7042e72a025ddd6be356d4eec5af1286da",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\engine_system_sound_guard.cs": "f629e382c5a4f8aef8258812dc1404195dbd4ba2a654b7a9b75ba8b47c7baafe",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\isolated_audio_guard.py": "2e7a39b0d16ad18827571977aebab4e006067501411c20b1348df36eda3c9cfd"
+  },
+  "audio_guard": {
+    "owner_pid": 12724,
+    "guard_pid": 14724,
+    "sessions": [
+      {
+        "Number": 0,
+        "InitiallyMuted": false,
+        "MutedDuring": true,
+        "Restored": true
+      },
+      {
+        "Number": 1,
+        "InitiallyMuted": false,
+        "MutedDuring": true,
+        "Restored": true
+      }
+    ],
+    "tail_quiet": true,
+    "errors": [],
+    "state": "restored"
+  },
+  "input_fingerprints": {
+    "CSV\\Chara0.csv": "6b603b847d9acf535385a4001b738ae61ebdec6ad9bce50f6a7db04303ed5b7c",
+    "CSV\\GameBase.csv": "58929f804a902d6de08e12ef3546f3f3a99bbdd931f3b9011d876c079a25eb84",
+    "CSV\\VariableSize.csv": "9b662ff9d7b42fd6754763c50e22e11f47c19f796b0ceb41fed07ba087558a81",
+    "ERB\\fixture.ERH": "ccd9bfc328c244c9072c04dd3fc4196697a3ed4c7640cf534bfeaaecf9100b5d",
+    "ERB\\main.ERB": "fc87e116df1d11d9cf35cf60df7f1ed651e5fc11d3f5c599538459be424cccd3",
+    "ERB\\value.ERB": "5da71801de5f10007ced22c1cc3076d023669c155d6bda24926cacbe2e6c10ed"
+  },
+  "extractions": [],
+  "archived_test_sources": [
+    "ERB\\fixture.ERH.fixture",
+    "ERB\\main.ERB.fixture",
+    "ERB\\value.ERB.fixture"
+  ],
+  "copied_engine_removed": true,
+  "passed": false,
+  "reasons": [
+    "assertion_failed",
+    "failure_output"
+  ],
+  "benign_force_quit_trace_ignored": true,
+  "summaries": [
+    [
+      "1",
+      "1"
+    ]
+  ],
+  "failures": [
+    "ISO_FAIL run=f8bc91c43f0b40eea5e93613a0fccaec known_value"
+  ]
+}

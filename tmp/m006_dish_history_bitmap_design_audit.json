@@ -1,0 +1,138 @@
+{
+  "method": "static arithmetic/source allocation review, read-only SQLite; no game execution",
+  "rejected": "one CFLAG per ID using 599 slots; withdrawn after user storage-budget objection",
+  "chosen_design": {
+    "first_slot": 1252,
+    "word_count": 8,
+    "last_slot": 1259,
+    "exclusive_end": 1260,
+    "bits_per_word": 63,
+    "first_id": 101,
+    "last_id": 604,
+    "capacity": 504,
+    "new_slots_over_old_six": 2
+  },
+  "word_ranges": [
+    [
+      1252,
+      101,
+      163
+    ],
+    [
+      1253,
+      164,
+      226
+    ],
+    [
+      1254,
+      227,
+      289
+    ],
+    [
+      1255,
+      290,
+      352
+    ],
+    [
+      1256,
+      353,
+      415
+    ],
+    [
+      1257,
+      416,
+      478
+    ],
+    [
+      1258,
+      479,
+      541
+    ],
+    [
+      1259,
+      542,
+      604
+    ]
+  ],
+  "source_sha256": {
+    "AGENTS.md": "4ebe8b3022add1ce315759c94cb3c9344d61f8f06e544518a32035e0b0c09bc1",
+    "README.md": "3016c23a7a163018a892ec3518e77d1cf3ecff420e8da494d8eaf471da780a53",
+    "M_KOJO_K36_3_EVENTCOM.ERB": "19a62243ab0badb3c9c7802e39c47e4135fd989309740c5c8270ed7acde9fde2",
+    "M_KOJO_K36_3_事件系.ERB": "2671e061ddf44e2b819f57e60148183bf1d295c76ebc07e1eb4902ff5b97d0e5",
+    "M_KOJO_K36_3_工具函数.ERB": "315ef89423a3a18be07862948772950f7af001b7361d205a1dfdd42912400c35",
+    "M_KOJO_K36_3_日记.ERB": "0e3fdbf145d30846852b4415906ac10513758a2732ff0ed04334962db73f1339",
+    "M_KOJO_K36_3_自定义机制_SOURCE相关.ERB": "c6992282ee9115bb807927291494e83f47e726961ce32431ad22242db4f1e810",
+    "M_KOJO_K36_3_自定义机制_指令.ERB": "dab9e0ff892c2eb6d5823521f08c557655eecaafd22b4ee2d0e7f495b1e0ffdc",
+    "M_KOJO_K36_3_自定义机制_杂项.ERB": "fbf39a2c3af0755340409cda5309dea96e95cd5d3e6b5a21235c7c912074d218",
+    "M_KOJO_K36_3_DIM变量用.ERH": "6fc287eecb31ce339518526c00672552504da1e1f165b7a28a3e91ce164530df"
+  },
+  "cache_sha256": "e03c5a3279735f68e0cabf108e1a786fb5793ab94c69e5a6f46d078b495593a1",
+  "current_catalog_count": 342,
+  "current_max_id": 560,
+  "all_current_ids_fit": true,
+  "no_mapping_collisions": true,
+  "all_bit_indices_between_0_and_62": true,
+  "examples": {
+    "101": [
+      1252,
+      0
+    ],
+    "104": [
+      1252,
+      3
+    ],
+    "163": [
+      1252,
+      62
+    ],
+    "164": [
+      1253,
+      0
+    ],
+    "299": [
+      1255,
+      9
+    ],
+    "345": [
+      1255,
+      55
+    ],
+    "399": [
+      1256,
+      46
+    ],
+    "400": [
+      1256,
+      47
+    ],
+    "401": [
+      1256,
+      48
+    ],
+    "415": [
+      1256,
+      62
+    ],
+    "416": [
+      1257,
+      0
+    ],
+    "436": [
+      1257,
+      20
+    ],
+    "560": [
+      1259,
+      18
+    ],
+    "599": [
+      1259,
+      57
+    ],
+    "604": [
+      1259,
+      62
+    ]
+  },
+  "validation_note": "arithmetic checks only, not engine tests; 299 DEBUG and 400 reserved are addressable but not valid collection entries"
+}

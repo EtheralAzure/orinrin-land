@@ -1,0 +1,32 @@
+{
+  "outer": [
+    {
+      "Number": 0,
+      "InitiallyMuted": false,
+      "MutedDuring": true,
+      "Restored": true
+    },
+    {
+      "Number": 1,
+      "InitiallyMuted": false,
+      "MutedDuring": true,
+      "Restored": true
+    }
+  ],
+  "passed": true,
+  "inner": [
+    {
+      "Number": 0,
+      "InitiallyMuted": true,
+      "MutedDuring": true,
+      "Restored": true
+    },
+    {
+      "Number": 1,
+      "InitiallyMuted": true,
+      "MutedDuring": true,
+      "Restored": true
+    }
+  ],
+  "outerErrors": []
+}

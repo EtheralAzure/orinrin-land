@@ -1,0 +1,14 @@
+﻿# 環境情報
+Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1
+
+# バリアント
+Isolated engine checks 0.001
+
+# ログ
+
+Now Loading...
+ISO_BEGIN run=e6d7fa787b804effa1cd8579297c00f9
+ISO_END run=e6d7fa787b804effa1cd8579297c00f9 assertions=0 failures=0
+※※※Log file isolated_output.log has been created. Please provide stacktrace or save data with steps to reproduce to help fix it※※※
+An error has occurred at the end of the function:Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1
+Script execution terminated

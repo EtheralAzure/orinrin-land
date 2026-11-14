@@ -1,0 +1,33 @@
+{
+  "beforeEndpoint": {
+    "volume": 0.3,
+    "muted": false
+  },
+  "probes": [
+    {
+      "systemSessionPeak": 0.6401529908180237,
+      "tailQuiet": true,
+      "renderedEndpointPeak": 2.3283064365386963E-10,
+      "errors": [],
+      "sessions": [
+        {
+          "Number": 0,
+          "InitiallyMuted": false,
+          "MutedDuring": true,
+          "Restored": true
+        },
+        {
+          "Number": 1,
+          "InitiallyMuted": false,
+          "MutedDuring": true,
+          "Restored": true
+        }
+      ],
+      "mode": "guarded"
+    }
+  ],
+  "afterEndpoint": {
+    "volume": 0.3,
+    "muted": false
+  }
+}

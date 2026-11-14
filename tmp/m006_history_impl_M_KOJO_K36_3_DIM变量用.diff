@@ -1,0 +1,29 @@
+--- before-task/M_KOJO_K36_3_DIM变量用.ERH
++++ after-task/M_KOJO_K36_3_DIM变量用.ERH
+@@ -651,14 +651,18 @@
+ ;--------------------------------------------------
+ #DIM CONST AME36_ALCOHOL_TYPE = 1251
+ ;--------------------------------------------------
+-;1252 ~ 1257 做过料理的记录
+-;--------------------------------------------------
+-#DIM CONST AME36_DISH_TYPE_1 = 1252
+-#DIM CONST AME36_DISH_TYPE_2 = 1253
+-#DIM CONST AME36_DISH_TYPE_3 = 1254
+-#DIM CONST AME36_DISH_TYPE_C1 = 1255
+-#DIM CONST AME36_DISH_TYPE_C2 = 1256
+-#DIM CONST AME36_DISH_TYPE_C3 = 1257
++;1252 ~ 1259 - 料理历史，每槽使用bit0～62，按料理编号自动寻址
++;料理编号101～604分别映射到8块，不保存名称、次数或日期
++;299为DEBUG料理，400为固有料理编号的基准，不记录这两个编号
++;--------------------------------------------------
++#DIM CONST AME36_DISH_HISTORY_BEGIN = 1252
++#DIM CONST AME36_DISH_HISTORY_BLOCKS = 8
++#DIM CONST AME36_DISH_HISTORY_BITS = 63
++#DIM CONST AME36_DISH_HISTORY_FIRST_ID = 101
++#DIM CONST AME36_DISH_HISTORY_LAST_ID = AME36_DISH_HISTORY_FIRST_ID + AME36_DISH_HISTORY_BLOCKS * AME36_DISH_HISTORY_BITS - 1
++#DIM CONST AME36_DISH_SPECIAL_OFFSET = 400
++#DIM CONST AME36_DISH_SELF_ID = AME36_DISH_SPECIAL_OFFSET + 36
++#DIM CONST AME36_DISH_DEBUG_ID = 299
+ ;--------------------------------------------------
+ ;1298 - 陪伴值，用于在一日结束后决定相守值的增加，每日开始时清零
+ ;--------------------------------------------------

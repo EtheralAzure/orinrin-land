@@ -1,0 +1,129 @@
+{
+  "date": "2026-11-14",
+  "passed": true,
+  "checks": [
+    {
+      "name": "normal_restore",
+      "passed": true,
+      "details": {
+        "errors": [],
+        "tail_quiet": true,
+        "sessions": [
+          {
+            "Number": 0,
+            "InitiallyMuted": false,
+            "MutedDuring": true,
+            "Restored": true
+          },
+          {
+            "Number": 1,
+            "InitiallyMuted": false,
+            "MutedDuring": true,
+            "Restored": true
+          }
+        ],
+        "guard_pid": 19812,
+        "state": "restored",
+        "owner_pid": 5936
+      }
+    },
+    {
+      "name": "concurrent_guard_refused",
+      "passed": true,
+      "details": {
+        "refused": true,
+        "first_restored": {
+          "owner_pid": 5936,
+          "sessions": [
+            {
+              "Number": 0,
+              "InitiallyMuted": false,
+              "MutedDuring": true,
+              "Restored": true
+            },
+            {
+              "Number": 1,
+              "InitiallyMuted": false,
+              "MutedDuring": true,
+              "Restored": true
+            }
+          ],
+          "errors": [],
+          "state": "restored",
+          "guard_pid": 20184,
+          "tail_quiet": true
+        }
+      }
+    },
+    {
+      "name": "owner_death_restores",
+      "passed": true,
+      "details": {
+        "state": "restored",
+        "owner_pid": 888,
+        "sessions": [
+          {
+            "Number": 0,
+            "InitiallyMuted": false,
+            "MutedDuring": true,
+            "Restored": true
+          },
+          {
+            "Number": 1,
+            "InitiallyMuted": false,
+            "MutedDuring": true,
+            "Restored": true
+          }
+        ],
+        "guard_pid": 5832,
+        "tail_quiet": true,
+        "errors": []
+      }
+    },
+    {
+      "name": "prior_mute_preserved",
+      "passed": true,
+      "details": {
+        "outer": [
+          {
+            "Number": 0,
+            "InitiallyMuted": false,
+            "MutedDuring": true,
+            "Restored": true
+          },
+          {
+            "Number": 1,
+            "InitiallyMuted": false,
+            "MutedDuring": true,
+            "Restored": true
+          }
+        ],
+        "passed": true,
+        "inner": [
+          {
+            "Number": 0,
+            "InitiallyMuted": true,
+            "MutedDuring": true,
+            "Restored": true
+          },
+          {
+            "Number": 1,
+            "InitiallyMuted": true,
+            "MutedDuring": true,
+            "Restored": true
+          }
+        ],
+        "outerErrors": []
+      }
+    }
+  ],
+  "directory": "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tmp\\audio_guard_checks\\6f530d910d99462aa0deddf14e254483",
+  "tool_fingerprints": {
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\check_isolated_audio_guard.py": "e2b890bc92c32d461126c85f50b521addcf4e4eb27578b4c4abafd3af938dbb2",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\isolated_audio_guard.py": "2e7a39b0d16ad18827571977aebab4e006067501411c20b1348df36eda3c9cfd",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\engine_system_sound_guard.cs": "f629e382c5a4f8aef8258812dc1404195dbd4ba2a654b7a9b75ba8b47c7baafe",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\engine_system_sound_guard.ps1": "02bd875e443904022ff7f13a3180cb7042e72a025ddd6be356d4eec5af1286da",
+    "F:\\eratw\\ERB\\口上・メッセージ関連\\個人口上\\036 Orin [お燐]\\orinrin-land\\tools\\check_audio_guard_prior_mute.ps1": "afd2cee7fe6e0c3e51759b3ae1493bf0d56002a1cee6409e9c7f68325b521229"
+  },
+  "tools_unchanged": true
+}

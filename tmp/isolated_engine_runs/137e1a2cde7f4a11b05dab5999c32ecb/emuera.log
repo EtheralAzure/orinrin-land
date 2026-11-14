@@ -1,0 +1,15 @@
+﻿# 環境情報
+Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1
+
+# バリアント
+Isolated engine checks 0.001
+
+# ログ
+
+Now Loading...
+ISO_BEGIN run=137e1a2cde7f4a11b05dab5999c32ecb
+main.ERB at line 6Error has occurred:Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1
+IF ISO_KNOWN_VALUE() != 42
+Error description: Found an unexpected ')' during parsing
+Function: @SYSTEM_TITLE（file:main.ERB in line 1）
+Function call stack:

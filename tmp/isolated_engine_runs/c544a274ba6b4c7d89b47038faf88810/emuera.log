@@ -1,0 +1,17 @@
+﻿# 環境情報
+Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1
+
+# バリアント
+Isolated engine checks 0.001
+
+# ログ
+
+Now Loading...
+ISO_BEGIN run=c544a274ba6b4c7d89b47038faf88810
+ISO_END run=c544a274ba6b4c7d89b47038faf88810 assertions=1 failures=0
+※※※Log file isolated_output.log has been created. Please provide stacktrace or save data with steps to reproduce to help fix it※※※
+main.ERB at line 13Error has occurred:Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1
+ISO_TEST_ARRAY:VARSIZE("ISO_TEST_ARRAY") = 1
+Error description: Array variable "ISO_TEST_ARRAY" at the 1 argument (1) is out of the range of the array
+Function: @SYSTEM_TITLE（file:main.ERB in line 1）
+Function call stack:

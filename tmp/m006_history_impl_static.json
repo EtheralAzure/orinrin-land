@@ -1,0 +1,61 @@
+{
+  "method": "source diff/format/size checks plus separately reported isolated engine fixture",
+  "changed_files": [
+    "M_KOJO_K36_3_工具函数.ERB",
+    "M_KOJO_K36_3_自定义机制_SOURCE相关.ERB",
+    "M_KOJO_K36_3_自定义机制_指令.ERB",
+    "M_KOJO_K36_3_DIM变量用.ERH"
+  ],
+  "function_changes": {
+    "M_KOJO_K36_3_工具函数.ERB": {
+      "added": [
+        "AME36_DISH_HISTORY_COUNT",
+        "AME36_DISH_HISTORY_HAS",
+        "AME36_DISH_HISTORY_RECORD"
+      ],
+      "modified_executable_bodies": [
+        "AME36_DISH_RECOLLECTION",
+        "AME36_MAX_RECOLLECTION"
+      ]
+    },
+    "M_KOJO_K36_3_自定义机制_SOURCE相关.ERB": {
+      "added": [],
+      "modified_executable_bodies": [
+        "AME36_EXTRASOURCE_GENERAL"
+      ]
+    },
+    "M_KOJO_K36_3_自定义机制_指令.ERB": {
+      "added": [
+        "AME36_DISH_HISTORY_PRINT_RANGE"
+      ],
+      "modified_executable_bodies": [
+        "M_KOJO_AME_MESSAGE_COM_K36_299"
+      ]
+    },
+    "M_KOJO_K36_3_DIM变量用.ERH": {
+      "added": [],
+      "modified_executable_bodies": []
+    }
+  },
+  "no_clear_or_firsttime_added": true,
+  "no_old_dish_aliases": true,
+  "active_project_erb_erh_files": 8,
+  "isolated_engine_assertions": [
+    [
+      "2093",
+      "0"
+    ]
+  ],
+  "source_sha256": {
+    "AGENTS.md": "4ebe8b3022add1ce315759c94cb3c9344d61f8f06e544518a32035e0b0c09bc1",
+    "README.md": "3016c23a7a163018a892ec3518e77d1cf3ecff420e8da494d8eaf471da780a53",
+    "M_KOJO_K36_3_EVENTCOM.ERB": "19a62243ab0badb3c9c7802e39c47e4135fd989309740c5c8270ed7acde9fde2",
+    "M_KOJO_K36_3_事件系.ERB": "2671e061ddf44e2b819f57e60148183bf1d295c76ebc07e1eb4902ff5b97d0e5",
+    "M_KOJO_K36_3_工具函数.ERB": "8b387ea0d88f68faf0ed6a1bd72133739146bf3be0adbb247930d5da43e88f34",
+    "M_KOJO_K36_3_日记.ERB": "0e3fdbf145d30846852b4415906ac10513758a2732ff0ed04334962db73f1339",
+    "M_KOJO_K36_3_自定义机制_SOURCE相关.ERB": "2ed3566e9234713acf025e079cea93d70eee6beb4bc399422d68caeff4002769",
+    "M_KOJO_K36_3_自定义机制_指令.ERB": "71010cfef3cb8a7eb8ee0f9db4cd602f17578c1b911731c5c527b0eafe969e48",
+    "M_KOJO_K36_3_自定义机制_杂项.ERB": "fbf39a2c3af0755340409cda5309dea96e95cd5d3e6b5a21235c7c912074d218",
+    "M_KOJO_K36_3_DIM变量用.ERH": "6d247c754cd8740ec44c173ac6ea0f3df3b068be01de3a70a23cee4bc1c091ae"
+  }
+}

@@ -1,0 +1,1 @@
+﻿M006_TEST_SUMMARY assertions=2093 failures=0

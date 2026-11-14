@@ -1,0 +1,56 @@
+--- before-task/M_KOJO_K36_3_自定义机制_SOURCE相关.ERB
++++ after-task/M_KOJO_K36_3_自定义机制_SOURCE相关.ERB
+@@ -470,52 +470,7 @@
+             ;--------------------------------------------------
+             ;做过料理种类的记录
+             ;--------------------------------------------------
+-            SELECTCASE RESULT
+-                CASE 101 TO 103
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 101
+-                CASE 111 TO 119
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 108
+-                CASE 121 TO 127
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 109
+-                CASE 131 TO 146
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 112
+-                CASE 151 TO 166
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 116
+-                CASE 171 TO 174
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 120
+-                CASE 181 TO 185
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 126
+-                CASE 191 TO 194
+-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 131
+-                CASE 195 TO 196
+-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 195
+-                CASE 201 TO 221
+-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 199
+-                CASE 231 TO 238
+-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 208
+-                CASE 241 TO 251
+-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 210
+-                CASE 261 TO 273
+-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 219
+-                CASE 281 TO 287
+-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 226
+-                CASE 291 TO 292
+-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 229
+-                CASE 293 TO 295
+-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 293
+-                CASE 301 TO 330
+-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 298
+-                CASE 341 TO 343
+-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 308
+-                CASE 351 TO 355
+-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 315
+-                CASE 401 TO 464
+-                    SETBIT CFLAG:AME36_DISH_TYPE_C1, RESULT - 401
+-                CASE 465 TO 528
+-                    SETBIT CFLAG:AME36_DISH_TYPE_C2, RESULT - 465
+-                CASE 528 TO 400 + CHARANUM
+-                    SETBIT CFLAG:AME36_DISH_TYPE_C3, RESULT - 528
+-            ENDSELECT
++            CALLF AME36_DISH_HISTORY_RECORD, TARGET, RESULT
+         ;--------------------------------------------------
+         ;414, 415 - 吃饭/招待吃饭 (Dynamic)
+         ;--------------------------------------------------

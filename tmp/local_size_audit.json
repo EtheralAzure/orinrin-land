@@ -1,0 +1,2418 @@
+[
+  {
+    "file": "M_KOJO_K36_3_EVENTCOM.ERB",
+    "changed": false,
+    "bom": true,
+    "functions": [
+      {
+        "label": "M_KOJO_AME_EVENT_K36_EVENTCOM",
+        "line_before": 3,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_EVENTCOMEND_PRI",
+        "line_before": 9,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_EVENTCOMEND",
+        "line_before": 15,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_AFTERTRAIN_BEGIN",
+        "line_before": 22,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_AFTERTRAIN_END",
+        "line_before": 28,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_BEFORETRAIN_END",
+        "line_before": 35,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_MONTH_CHANGE",
+        "line_before": 43,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "EVENTTRAIN",
+        "line_before": 51,
+        "exempt": true,
+        "changed": false
+      },
+      {
+        "label": "AME36_WARN_TEXT_SETTING",
+        "line_before": 61,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "EVENTTRAIN",
+        "line_before": 85,
+        "exempt": true,
+        "changed": false
+      },
+      {
+        "label": "AME36_WARN_MIDGAME_SWITCH",
+        "line_before": 93,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_WARN_REAL_TIME_SAVE",
+        "line_before": 116,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "file": "M_KOJO_K36_3_事件系.ERB",
+    "changed": false,
+    "bom": false,
+    "functions": [
+      {
+        "label": "M_KOJO_K36_3",
+        "line_before": 14,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_VERSION_K36",
+        "line_before": 35,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_VERSION_UPDATE_K36",
+        "line_before": 43,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_FLAGSETTING_K36",
+        "line_before": 56,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_COLOR_K36",
+        "line_before": 237,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_INIT",
+        "line_before": 248,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_UPDATE_K36",
+        "line_before": 306,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_OPTION_EXIST_K36",
+        "line_before": 323,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_OPTION_K36",
+        "line_before": 330,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_OPTION_K36_RESULT_1",
+        "line_before": 346,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_OPTION_K36_RESULT_2",
+        "line_before": 358,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_OPTION_K36_RESULT_3",
+        "line_before": 369,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_ENCOUNTER_K36",
+        "line_before": 382,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "K36_BEFORETRAIN_AME",
+        "line_before": 573,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_1",
+        "line_before": 611,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_2",
+        "line_before": 615,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_3",
+        "line_before": 619,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_4",
+        "line_before": 623,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_5",
+        "line_before": 627,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_6",
+        "line_before": 631,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_MESSAGECHECK_K36_7",
+        "line_before": 635,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_K36_1",
+        "line_before": 645,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_K36_2",
+        "line_before": 657,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_K36_3",
+        "line_before": 691,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_K36_4",
+        "line_before": 737,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_K36_5",
+        "line_before": 798,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_K36_6",
+        "line_before": 856,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_SPEVENT_K36_7",
+        "line_before": 904,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_XXX_CHECK_KX_DAYEVENT_COND",
+        "line_before": 942,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_1",
+        "line_before": 1066,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_2",
+        "line_before": 1173,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_3",
+        "line_before": 1240,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_4",
+        "line_before": 1442,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_5",
+        "line_before": 1476,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_6",
+        "line_before": 1509,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_7",
+        "line_before": 1610,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_8",
+        "line_before": 1715,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_9",
+        "line_before": 1743,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_10",
+        "line_before": 1775,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_11",
+        "line_before": 1899,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_12",
+        "line_before": 1928,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_13",
+        "line_before": 2005,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_14",
+        "line_before": 2039,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_15",
+        "line_before": 2066,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_16",
+        "line_before": 2132,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_17",
+        "line_before": 2158,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_18",
+        "line_before": 2381,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_19",
+        "line_before": 2425,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_20",
+        "line_before": 2463,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_21",
+        "line_before": 2586,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_22",
+        "line_before": 2668,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_23",
+        "line_before": 2743,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_24",
+        "line_before": 2770,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_25",
+        "line_before": 2808,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_26_1",
+        "line_before": 2853,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_ONABARE_1",
+        "line_before": 2876,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_ONABARE_2",
+        "line_before": 2887,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_ONABARE_3",
+        "line_before": 2899,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_26",
+        "line_before": 2913,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_27",
+        "line_before": 2982,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_28",
+        "line_before": 3065,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_29",
+        "line_before": 3146,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_30",
+        "line_before": 3179,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_31",
+        "line_before": 3224,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_32",
+        "line_before": 3294,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_33",
+        "line_before": 3738,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_34",
+        "line_before": 3752,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_DAILY_EVENT_MESSAGECHECK_K36_2",
+        "line_before": 3982,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_DAILY_EVENT_K36_2",
+        "line_before": 3996,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_DAILY_EVENT_MESSAGECHECK_K36_4",
+        "line_before": 4012,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_DAILY_EVENT_K36_4",
+        "line_before": 4024,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_DAILY_EVENT_MESSAGECHECK_K36_12",
+        "line_before": 4042,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_DAILY_EVENT_K36_12",
+        "line_before": 4054,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_GIFT",
+        "line_before": 4128,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_COM_K36_MUSHI_BATTLE",
+        "line_before": 4186,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_COM_K36_SUIKA",
+        "line_before": 4300,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_SF_CONTRACT_EVENT_K36",
+        "line_before": 4438,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "K36_AME_ROOM_DESCRIPTION",
+        "line_before": 4474,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_LOST_VIRGIN_STOP",
+        "line_before": 4490,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_PERMISSION_1",
+        "line_before": 4506,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_PERMISSION_2",
+        "line_before": 4521,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "RUN_INTO_AME_EVENT_K36",
+        "line_before": 4535,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_CHECK_K36_IRAI_BLOCKED",
+        "line_before": 4567,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EVENT_K36_GRAVITY",
+        "line_before": 4586,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "file": "M_KOJO_K36_3_工具函数.ERB",
+    "changed": false,
+    "bom": true,
+    "functions": [
+      {
+        "label": "AME36_FALL_STATE",
+        "line_before": 17,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_FALL_EX",
+        "line_before": 35,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_RECOLLECTION",
+        "line_before": 45,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_EFFECTIVE_RECOLLECTION",
+        "line_before": 156,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_PERSISTENCE_RECOLLECTION",
+        "line_before": 177,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_ALCOHOL_RECOLLECTION",
+        "line_before": 210,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DISH_RECOLLECTION",
+        "line_before": 235,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 2",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          2,
+          1
+        ]
+      },
+      {
+        "label": "AME36_BINARY_SUM",
+        "line_before": 261,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_COM_RECOLLECTION",
+        "line_before": 278,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_MAX_RECOLLECTION",
+        "line_before": 303,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_WEEKDAY_MATCH",
+        "line_before": 321,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DANGEROUS",
+        "line_before": 337,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_FOLLOWABLE",
+        "line_before": 356,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_CLEAN_BATHCHECK",
+        "line_before": 367,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_SRAND",
+        "line_before": 401,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_FIRSTTIME",
+        "line_before": 418,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 3",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          3,
+          1
+        ]
+      },
+      {
+        "label": "AME36_TIMES_RELAVENT_SOURCE",
+        "line_before": 442,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_CLEAR_SOURCE",
+        "line_before": 470,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_CLEAR_PLEASURE_SOURCE",
+        "line_before": 501,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_ADD_COM_RECOLLECTION",
+        "line_before": 514,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DISH_INDEX",
+        "line_before": 619,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_CONDITIONAL_PRINT",
+        "line_before": 670,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_ERROR",
+        "line_before": 686,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_WIPE",
+        "line_before": 711,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 2",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          2,
+          1
+        ]
+      },
+      {
+        "label": "AME36_AA",
+        "line_before": 755,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DQ_INITIALIZE",
+        "line_before": 1002,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DQ_SETCOLOR",
+        "line_before": 1033,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DQ_GRADIENT",
+        "line_before": 1056,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DQ_SETSTYLE",
+        "line_before": 1099,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DQ_SETINTERVAL",
+        "line_before": 1122,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DQ_ACCELERATE",
+        "line_before": 1145,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "AME36_DQ_PRINT",
+        "line_before": 1170,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 2",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          2,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "file": "M_KOJO_K36_3_日记.ERB",
+    "changed": false,
+    "bom": true,
+    "functions": [
+      {
+        "label": "DIARY_AME_K36_EXIST",
+        "line_before": 28,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "DIARY_AME_AFTER_CHECK_K36",
+        "line_before": 42,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "DIARY_AME_BEFORE_CHECK_K36",
+        "line_before": 62,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "DIARY_AME_TEXT_K36",
+        "line_before": 150,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_MESSAGECHECK_COM_K36_406",
+        "line_before": 198,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_COM_K36_406",
+        "line_before": 203,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_COM_K36_406_1",
+        "line_before": 211,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "file": "M_KOJO_K36_3_自定义机制_SOURCE相关.ERB",
+    "changed": false,
+    "bom": true,
+    "functions": [
+      {
+        "label": "AME36_EXTRASOURCE_GENERAL",
+        "line_before": 8,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 5",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          5,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EXTRASOURCE_COM_K36_PRI_GENERAL",
+        "line_before": 1482,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_EXTRASOURCE_SCOM_K36_PRI_GENERAL",
+        "line_before": 1491,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "file": "M_KOJO_K36_3_自定义机制_指令.ERB",
+    "changed": false,
+    "bom": true,
+    "functions": [
+      {
+        "label": "KOJO_AME_COM_NAME_K36_1",
+        "line_before": 10,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_ABLE_K36_1",
+        "line_before": 19,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_K36_1",
+        "line_before": 37,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_COM_K36_271",
+        "line_before": 45,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 2",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          2,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_NAME_K36_28",
+        "line_before": 240,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_ABLE_K36_28",
+        "line_before": 249,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_K36_28",
+        "line_before": 257,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_COM_K36_298",
+        "line_before": 265,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_NAME_K36_29",
+        "line_before": 275,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_ABLE_K36_29",
+        "line_before": 284,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_COM_K36_29",
+        "line_before": 302,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_COM_K36_299",
+        "line_before": 310,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 2",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          2,
+          1
+        ]
+      },
+      {
+        "label": "AME36_COMPLETION_PRINT",
+        "line_before": 687,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      }
+    ]
+  },
+  {
+    "file": "M_KOJO_K36_3_自定义机制_杂项.ERB",
+    "changed": false,
+    "bom": true,
+    "functions": [
+      {
+        "label": "M_KOJO_AME_SUCCESS_K36_GENERAL",
+        "line_before": 8,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_MESSAGE_MARKCNG_MESSAGECHECK_K36",
+        "line_before": 59,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_CHECK_K36_FALL_STATE_OVERRIDE",
+        "line_before": 75,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_CHECK_K36_FALL_STATE",
+        "line_before": 83,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_CUSTOM_BUTTON_CONDITION_K36_Y",
+        "line_before": 138,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "KOJO_AME_CUSTOM_BUTTON_K36_Y",
+        "line_before": 145,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_CHECK_K36_CCOM_ORDER",
+        "line_before": 156,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      },
+      {
+        "label": "M_KOJO_AME_CHECK_K36_CHARADATA",
+        "line_before": 164,
+        "exempt": false,
+        "changed": false,
+        "missing": false,
+        "old": [
+          "#LOCALSIZE 1",
+          "#LOCALSSIZE 1"
+        ],
+        "sizes": [
+          1,
+          1
+        ]
+      }
+    ]
+  }
+]

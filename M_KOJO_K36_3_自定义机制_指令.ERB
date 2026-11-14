@@ -2,26 +2,28 @@
 ;eraTheWorld 4.954 画蛇又添足 火焰猫燐别人版口上
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 
-;==================================================
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;COM271 - 猫车服务
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
 ;==================================================
 ;指令名
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_NAME_K36_1
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RESULTS = 猫车服务
     RETURN 0
 
-;--------------------------------------------------
+;==================================================
 ;指令的执行条件（需要相识，其他与会话基本相同）
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_ABLE_K36_1
     #LOCALSIZE 1
     #LOCALSSIZE 1
     SIF !CFLAG:AME36_ACQUAINTANCE
         RETURN 0
-    SIF !TFLAG:100
+    SIF !TFLAG:TRAIN_COMABLE_AMER
     	RETURN 0
     SIF GLOBAL_COMABLE(300)
     	RETURN RESULT
@@ -31,19 +33,19 @@
     	RETURN 0
     RETURN 1
 
-;--------------------------------------------------
+;==================================================
 ;指令的成功判定
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_K36_1
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RETURN 1
 
-;--------------------------------------------------
+;==================================================
 ;指令的主内容
-;--------------------------------------------------
+;==================================================
 @M_KOJO_AME_MESSAGE_COM_K36_271
-    #LOCALSIZE 3
+    #LOCALSIZE 2
     #LOCALSSIZE 1
     #DIM DYNAMIC HAS_WORK
     #DIM DYNAMIC DESTINATION
@@ -114,10 +116,10 @@
             SELECTCASE RESULTS
                 CASE "900"
                     DESTINATION = CFLAG:MASTER:RESIDENCE_AMER
-                    TFLAG:193 = 900
+                    TFLAG:COM_BRANCH_AMER = 900
                 CASE "909", "912", "920", "926", "931", "948"
                     DESTINATION = TOINT(RESULTS)
-                    TFLAG:193 = DESTINATION
+                    TFLAG:COM_BRANCH_AMER = DESTINATION
                 CASE "998"
                     DRAWLINE
                     PRINTFORML 去哪里呢……
@@ -134,7 +136,7 @@
                     SELECTCASE RESULTS
                         CASE "901", "923", "925", "926", "939", "945", "948"
                             DESTINATION = TOINT(RESULTS)
-                            TFLAG:193 = 998
+                            TFLAG:COM_BRANCH_AMER = 998
                         CASEELSE
                             CLEARLINE LINECOUNT - LOCAL:1
                             GOTO ACCOMPANY_GENERAL
@@ -151,7 +153,7 @@
                     SELECTCASE RESULTS
                         CASE "928", "945", "948"
                             DESTINATION = TOINT(RESULTS)
-                            TFLAG:193 = 999
+                            TFLAG:COM_BRANCH_AMER = 999
                         CASEELSE
                             CLEARLINE LINECOUNT - LOCAL:1
                             GOTO ACCOMPANY_GENERAL
@@ -174,7 +176,9 @@
                 ENDIF
             ENDIF
         ELSEIF AME36_FALL_STATE() > 1 && 0
+            ;--------------------------------------------------
             ;TBD
+            ;--------------------------------------------------
         ENDIF
     ;--------------------------------------------------
     ;思慕每月可以请假1天，恋慕2天，恋人3天
@@ -183,40 +187,40 @@
         SELECTCASE AME36_FALL_STATE()
             CASE 2
                 IF CFLAG:AME36_LEAVE_DAYS == 0
-                    TFLAG:193 = 11
+                    TFLAG:COM_BRANCH_AMER = 11
                     GOTO DAY_OFF
                 ELSE
-                    TFLAG:193 = 12
+                    TFLAG:COM_BRANCH_AMER = 12
                 ENDIF
             CASE 3
                 IF CFLAG:AME36_LEAVE_DAYS == 0
-                    TFLAG:193 = 13
+                    TFLAG:COM_BRANCH_AMER = 13
                     GOTO DAY_OFF
                 ELSEIF CFLAG:AME36_LEAVE_DAYS == 1
-                    TFLAG:193 = 14
+                    TFLAG:COM_BRANCH_AMER = 14
                     TIME += 5
                     GOTO DAY_OFF
                 ELSE
-                    TFLAG:193 = 15
+                    TFLAG:COM_BRANCH_AMER = 15
                 ENDIF
             CASE 4
                 IF CFLAG:AME36_LEAVE_DAYS == 0
-                    TFLAG:193 = 16
+                    TFLAG:COM_BRANCH_AMER = 16
                     GOTO DAY_OFF
                 ELSEIF CFLAG:AME36_LEAVE_DAYS == 1
-                    TFLAG:193 = 17
+                    TFLAG:COM_BRANCH_AMER = 17
                     GOTO DAY_OFF
                 ELSEIF CFLAG:AME36_LEAVE_DAYS == 2
-                    TFLAG:193 = 18
+                    TFLAG:COM_BRANCH_AMER = 18
                     TIME += 5
                     GOTO DAY_OFF
                 ELSE
-                    TFLAG:193 = 19
+                    TFLAG:COM_BRANCH_AMER = 19
                 ENDIF
         ENDSELECT
         RETURN 1
     ELSEIF RESULTS == "2"
-        TFLAG:193 = 0
+        TFLAG:COM_BRANCH_AMER = 0
         RETURN 1
     ENDIF
     CLEARLINE LINECOUNT - LOCAL
@@ -232,61 +236,65 @@
     TIME += 5
     RETURN 1
 
-;==================================================
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;COM298 - 指令失败时的占位函数
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
 ;==================================================
 ;指令名
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_NAME_K36_28
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RESULTS = 不可以哦
     RETURN 0
 
-;--------------------------------------------------
+;==================================================
 ;指令的执行条件（无法主动执行）
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_ABLE_K36_28
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RETURN 0
 
-;--------------------------------------------------
+;==================================================
 ;指令的成功判定
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_K36_28
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RETURN 1
 
-;--------------------------------------------------
+;==================================================
 ;指令的主内容
-;--------------------------------------------------
+;==================================================
 @M_KOJO_AME_MESSAGE_COM_K36_298
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RETURN -1
 
-;==================================================
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
 ;COM299 - 回忆值的显示
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
 ;==================================================
 ;指令名
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_NAME_K36_29
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RESULTS = 回忆值
     RETURN 0
 
-;--------------------------------------------------
+;==================================================
 ;指令的执行条件（与会话基本相同）
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_ABLE_K36_29
     #LOCALSIZE 1
     #LOCALSSIZE 1
     ;SIF AME36_FALL_STATE() < 3
     ;    RETURN 0
-    SIF !TFLAG:100
+    SIF !TFLAG:TRAIN_COMABLE_AMER
     	RETURN 0
     SIF GLOBAL_COMABLE(300)
     	RETURN RESULT
@@ -296,19 +304,19 @@
     	RETURN 0
     RETURN 1
 
-;--------------------------------------------------
+;==================================================
 ;指令的成功判定
-;--------------------------------------------------
+;==================================================
 @KOJO_AME_COM_K36_29
     #LOCALSIZE 1
     #LOCALSSIZE 1
     RETURN 1
 
-;--------------------------------------------------
+;==================================================
 ;指令的主内容
-;--------------------------------------------------
+;==================================================
 @M_KOJO_AME_MESSAGE_COM_K36_299
-    #LOCALSIZE 2
+    #LOCALSIZE 1
     #LOCALSSIZE 1
     #DIM CURRENT_PAGE = 1
     #DIM MAX_PAGE = 3
@@ -553,115 +561,21 @@
             DRAWLINE
             PRINTFORML □都一起做过什么料理呢□
             PRINTFORML ＜轻食＞
-            FOR LOCAL, 101, 200
-                SELECTCASE LOCAL
-                    CASE 101 TO 103, 111 TO 119, 121 TO 127, 131 TO 146, 151 TO 166, 171 TO 174, 181 TO 185, 191 TO 196
-                        IF LOCAL:1 <= 63
-                            SIF GETBIT(CFLAG:AME36_DISH_TYPE_1, LOCAL:1)
-                                SETCOLOR C_GREEN
-                        ELSE
-                            SIF GETBIT(CFLAG:AME36_DISH_TYPE_2, LOCAL:1 - 64)
-                                SETCOLOR C_GREEN
-                        ENDIF
-                        CALL DISHDATA(LOCAL)
-                        STRLENFORM %DISH_NAME%
-                        PRINTFORM %DISH_NAME%%"　" * (10 - RESULT / 2)%
-                        RESETCOLOR
-                        SIF (LOCAL:1 + 1) % 4 == 0
-                            PRINTL
-                        LOCAL:1 += 1
-                ENDSELECT
-            NEXT
-            PRINTL
+            CALL AME36_DISH_HISTORY_PRINT_RANGE(TARGET, AME36_DISH_HISTORY_FIRST_ID, 200)
             PRINTL
             PRINTFORML ＜主食＞
-            FOR LOCAL, 201, 300
-                SELECTCASE LOCAL
-                    CASE 201 TO 221, 231 TO 238, 241 TO 251, 261 TO 273, 281 TO 287, 291 TO 295
-                        IF LOCAL:1 <= 127
-                            SIF GETBIT(CFLAG:AME36_DISH_TYPE_2, LOCAL:1 - 64)
-                                SETCOLOR C_GREEN
-                        ELSE
-                            SIF GETBIT(CFLAG:AME36_DISH_TYPE_3, LOCAL:1 - 128)
-                                SETCOLOR C_GREEN
-                        ENDIF
-                        CALL DISHDATA(LOCAL)
-                        STRLENFORM %DISH_NAME%
-                        PRINTFORM %DISH_NAME%%"　" * (10 - RESULT / 2)%
-                        RESETCOLOR
-                        SIF (LOCAL:1 - 1) % 4 == 0
-                            PRINTL
-                        LOCAL:1 += 1
-                ENDSELECT
-            NEXT
-            PRINTL
+            CALL AME36_DISH_HISTORY_PRINT_RANGE(TARGET, 201, 300)
             PRINTL
             PRINTFORML ＜甜点＞
-            FOR LOCAL, 301, 350
-                SELECTCASE LOCAL
-                    CASE 301 TO 330, 341 TO 343
-                        SIF GETBIT(CFLAG:AME36_DISH_TYPE_3, LOCAL:1 - 128)
-                            SETCOLOR C_GREEN
-                        CALL DISHDATA(LOCAL)
-                        STRLENFORM %DISH_NAME%
-                        PRINTFORM %DISH_NAME%%"　" * (10 - RESULT / 2)%
-                        RESETCOLOR
-                        SIF (LOCAL:1 - 2) % 4 == 0
-                            PRINTL
-                        LOCAL:1 += 1
-                ENDSELECT
-            NEXT
-            PRINTL
+            CALL AME36_DISH_HISTORY_PRINT_RANGE(TARGET, 301, 350)
             PRINTL
             PRINTFORML ＜跳蛋？＞
-            FOR LOCAL, 351, 360
-                SELECTCASE LOCAL
-                    CASE 351 TO 355
-                        SIF GETBIT(CFLAG:AME36_DISH_TYPE_3, LOCAL:1 - 128)
-                            SETCOLOR C_GREEN
-                        CALL DISHDATA(LOCAL)
-                        STRLENFORM %DISH_NAME%
-                        PRINTFORM %DISH_NAME%%"　" * (10 - RESULT / 2)%
-                        RESETCOLOR
-                        SIF (LOCAL:1 + 1) % 4 == 0
-                            PRINTL
-                        LOCAL:1 += 1
-                ENDSELECT
-            NEXT
+            CALL AME36_DISH_HISTORY_PRINT_RANGE(TARGET, 351, AME36_DISH_SPECIAL_OFFSET - 1)
             PRINTL
-            PRINTL
-            LOCAL:1 = 1
             PRINTFORML ＜固有料理＞
-            IF CFLAG:AME36_DISH_TYPE_C1 + CFLAG:AME36_DISH_TYPE_C2 + CFLAG:AME36_DISH_TYPE_C3 == 0
+            CALL AME36_DISH_HISTORY_PRINT_RANGE(TARGET, AME36_DISH_SPECIAL_OFFSET + 1, AME36_DISH_HISTORY_LAST_ID, 1)
+            SIF !RESULT
                 PRINTFORML 还什么都没有哦
-            ELSE
-                SETCOLOR C_GREEN
-                FOR LOCAL, 401, 401 + CHARANUM
-                    IF LOCAL <= 464
-                        SIF !GETBIT(CFLAG:AME36_DISH_TYPE_C1, LOCAL - 401)
-                            CONTINUE
-                    ELSEIF LOCAL <= 528
-                        SIF !GETBIT(CFLAG:AME36_DISH_TYPE_C1, LOCAL - 465)
-                            CONTINUE
-                    ELSEIF LOCAL <= 592
-                        SIF !GETBIT(CFLAG:AME36_DISH_TYPE_C1, LOCAL - 529)
-                            CONTINUE
-                    ENDIF
-                    CALL DISHDATA(LOCAL)
-                    STRLENFORM %DISH_NAME%
-                    PRINTFORM %DISH_NAME%
-                    IF RESULT % 2 == 1
-                        PRINTFORM %" "%
-                        RESULT += 1
-                    ENDIF
-                    PRINTFORM %"　" * (10 - RESULT / 2)%
-                    SIF LOCAL:1 % 4 == 0
-                        PRINTL
-                    LOCAL:1 += 1
-                NEXT
-                RESETCOLOR
-                PRINTL
-            ENDIF
             PRINTW
 
             DISH_NAME '= TDISH_NAME
@@ -681,9 +595,53 @@
     CALL M_KOJO_AME_COLOR_K36
     RETURN 1
 
-;--------------------------------------------------
+;==================================================
+;按本体目录显示料理，完成标记始终按料理编号查询
+;RECORDED_ONLY用于仅显示已记录的固有料理，允许剧本自定义食谱
+;==================================================
+@AME36_DISH_HISTORY_PRINT_RANGE(CHARA, FIRST_ID, LAST_ID, RECORDED_ONLY = 0)
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #DIM CHARA
+    #DIM FIRST_ID
+    #DIM LAST_ID
+    #DIM RECORDED_ONLY
+    #DIM DYNAMIC DISH_ID
+    SIF CHARA < 0 || CHARA >= CHARANUM
+        RETURN 0
+    SIF NO:CHARA != 36
+        RETURN 0
+    FIRST_ID = MAX(FIRST_ID, AME36_DISH_HISTORY_FIRST_ID)
+    LAST_ID = MIN(LAST_ID, AME36_DISH_HISTORY_LAST_ID)
+    SIF FIRST_ID > LAST_ID
+        RETURN 0
+    LOCAL = 0
+    FOR DISH_ID, FIRST_ID, LAST_ID + 1
+        SIF GROUPMATCH(DISH_ID, AME36_DISH_DEBUG_ID, AME36_DISH_SPECIAL_OFFSET)
+            CONTINUE
+        SIF RECORDED_ONLY && !AME36_DISH_HISTORY_HAS(CHARA, DISH_ID)
+            CONTINUE
+        SIF !RECORDED_ONLY && !QOL_DISH_HAS_DATA(DISH_ID)
+            CONTINUE
+        CALL DISHDATA(DISH_ID)
+        SIF DISH_NAME == ""
+            CONTINUE
+        SIF AME36_DISH_HISTORY_HAS(CHARA, DISH_ID)
+            SETCOLOR C_GREEN
+        STRLENFORM %DISH_NAME%
+        PRINTFORM %DISH_NAME%%"　" * MAX(10 - RESULT / 2, 1)%
+        RESETCOLOR
+        LOCAL += 1
+        SIF LOCAL % 4 == 0
+            PRINTL
+    NEXT
+    SIF LOCAL % 4
+        PRINTL
+    RETURN LOCAL
+
+;==================================================
 ;为了简化代码的一个工具函数
-;--------------------------------------------------
+;==================================================
 @AME36_COMPLETION_PRINT(PROGRESS, MAX_VALUE, IS_L)
     #LOCALSIZE 1
     #LOCALSSIZE 1

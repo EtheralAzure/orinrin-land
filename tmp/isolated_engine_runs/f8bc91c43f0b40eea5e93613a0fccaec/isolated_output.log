@@ -1,0 +1,12 @@
+﻿# 環境情報
+Emuera.NET SkiaSharp 1824+v24+EMv18+EEv56+Skiav10.1
+
+# バリアント
+Isolated engine checks 0.001
+
+# ログ
+
+Now Loading...
+ISO_BEGIN run=f8bc91c43f0b40eea5e93613a0fccaec
+ISO_FAIL run=f8bc91c43f0b40eea5e93613a0fccaec known_value
+ISO_END run=f8bc91c43f0b40eea5e93613a0fccaec assertions=1 failures=1

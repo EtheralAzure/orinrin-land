@@ -28,8 +28,17 @@
     ;哎呀、一不小心把奇迹之石清除了、这该怎么办呢
     ;--------------------------------------------------
     CALL AME36_CLEAR_SOURCE
+    ;--------------------------------------------------
+    ;属性索引：TFLAG索引92：情緒BONUS
+    ;--------------------------------------------------
     TFLAG:92 = 0
+    ;--------------------------------------------------
+    ;属性索引：TFLAG索引90：理性削り
+    ;--------------------------------------------------
     TFLAG:90 = 0
+    ;--------------------------------------------------
+    ;属性索引：CFLAG索引339：体目当て
+    ;--------------------------------------------------
     CFLAG:339 = 0
     ;--------------------------------------------------
     ;睡大觉魔法解除啦
@@ -67,6 +76,7 @@
         CASE 300
             ;--------------------------------------------------
             ;如果会话积累值太高，那就结束啦
+            ;属性索引：TCVAR索引302：会話不能
             ;--------------------------------------------------
             SIF TCVAR:302 && !TALENT:AFFECTION_AMER
                 RETURN -1
@@ -117,6 +127,7 @@
             SOURCE:SCONQUEST_AMER = 150
             ;--------------------------------------------------
             ;使用红茶的加成
+            ;属性索引：TCVAR索引143：特別的茶水
             ;--------------------------------------------------
             IF GETBIT(TCVAR:MASTER:143, 0)
                 TIMES SOURCE:SJOY_AMER , 1.75
@@ -136,7 +147,7 @@
         ;303 - 道歉
         ;--------------------------------------------------
         CASE 303
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
             CASE 0, 1, 2
                 SOURCE:SJOY_AMER = 100
                 SOURCE:SCONQUEST_AMER = 300
@@ -213,13 +224,13 @@
             ;--------------------------------------------------
             ;不知道为什么这里TFLAG搞特殊，直接一般化了
             ;--------------------------------------------------
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
                 CASE 1
-                    TFLAG:193 = -1
+                    TFLAG:COM_BRANCH_AMER = -1
                 CASE 2, 3
-                    TFLAG:193 = 0
+                    TFLAG:COM_BRANCH_AMER = 0
                 CASE 4
-                    TFLAG:193 = 1
+                    TFLAG:COM_BRANCH_AMER = 1
             ENDSELECT
         ;--------------------------------------------------
         ;311 - 拥抱 (10min)
@@ -246,23 +257,23 @@
         ;332 - 劝酒 (30min)
         ;--------------------------------------------------
         CASE 332
-            SOURCE:SJOY_AMER = 30 * ALCOHOL_TASTE(TFLAG:194)
+            SOURCE:SJOY_AMER = 30 * ALCOHOL_TASTE(TFLAG:COM_DETAIL_AMER)
             SOURCE:SPASSIVITY_AMER = 150
             IRREGULAR_TFLAG = 1
             ;--------------------------------------------------
             ;喝过酒种类的记录
             ;--------------------------------------------------
-            SELECTCASE TFLAG:194
+            SELECTCASE TFLAG:COM_DETAIL_AMER
                 CASE 51 TO 56
-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:194 - 51
+                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 51
                 CASE 58 TO 59
-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:194 - 52
+                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 52
                 CASE 513
                     SETBIT CFLAG:AME36_ALCOHOL_TYPE, 8
                 CASE 560 TO 575
-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:194 - 551
+                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 551
                 CASE 577 TO 586
-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:194 - 552
+                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 552
             ENDSELECT
         ;--------------------------------------------------
         ;333 - 听牢骚 (20min)
@@ -273,12 +284,12 @@
             ;--------------------------------------------------
             ;因为没有什么对TFLAG:193进行特殊处理的必要，所以直接一般化了
             ;--------------------------------------------------
-            SIF TFLAG:193 == 1 && TFLAG:193 == 4
-                TFLAG:193 = -1
-            SIF TFLAG:193 == 2 && TFLAG:193 == 5
-                TFLAG:193 = 0
-            SIF TFLAG:193 == 3 && TFLAG:193 == 6
-                TFLAG:193 = 1
+            SIF TFLAG:COM_BRANCH_AMER == 1 && TFLAG:COM_BRANCH_AMER == 4
+                TFLAG:COM_BRANCH_AMER = -1
+            SIF TFLAG:COM_BRANCH_AMER == 2 && TFLAG:COM_BRANCH_AMER == 5
+                TFLAG:COM_BRANCH_AMER = 0
+            SIF TFLAG:COM_BRANCH_AMER == 3 && TFLAG:COM_BRANCH_AMER == 6
+                TFLAG:COM_BRANCH_AMER = 1
             CFLAG:AME36_COM_TRUST = 1
         ;--------------------------------------------------
         ;334 - 碰杯 (30min)
@@ -453,58 +464,13 @@
             CFLAG:AME36_COM_TRUST = 1
             IRREGULAR_TFLAG = 1
             CALL AME36_DISH_INDEX(DISH_NAME)
-            TFLAG:193 = RESULT
+            TFLAG:COM_BRANCH_AMER = RESULT
             SIF RESULT:1
-                TFLAG:193 += 1000
+                TFLAG:COM_BRANCH_AMER += 1000
             ;--------------------------------------------------
             ;做过料理种类的记录
             ;--------------------------------------------------
-            SELECTCASE RESULT
-                CASE 101 TO 103
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 101
-                CASE 111 TO 119
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 108
-                CASE 121 TO 127
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 109
-                CASE 131 TO 146
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 112
-                CASE 151 TO 166
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 116
-                CASE 171 TO 174
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 120
-                CASE 181 TO 185
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 126
-                CASE 191 TO 194
-                    SETBIT CFLAG:AME36_DISH_TYPE_1, RESULT - 131
-                CASE 195 TO 196
-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 195
-                CASE 201 TO 221
-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 199
-                CASE 231 TO 238
-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 208
-                CASE 241 TO 251
-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 210
-                CASE 261 TO 273
-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 219
-                CASE 281 TO 287
-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 226
-                CASE 291 TO 292
-                    SETBIT CFLAG:AME36_DISH_TYPE_2, RESULT - 229
-                CASE 293 TO 295
-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 293
-                CASE 301 TO 330
-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 298
-                CASE 341 TO 343
-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 308
-                CASE 351 TO 355
-                    SETBIT CFLAG:AME36_DISH_TYPE_3, RESULT - 315
-                CASE 401 TO 464
-                    SETBIT CFLAG:AME36_DISH_TYPE_C1, RESULT - 401
-                CASE 465 TO 528
-                    SETBIT CFLAG:AME36_DISH_TYPE_C2, RESULT - 465
-                CASE 528 TO 400 + CHARANUM
-                    SETBIT CFLAG:AME36_DISH_TYPE_C3, RESULT - 528
-            ENDSELECT
+            CALLF AME36_DISH_HISTORY_RECORD, TARGET, RESULT
         ;--------------------------------------------------
         ;414, 415 - 吃饭/招待吃饭 (Dynamic)
         ;--------------------------------------------------
@@ -588,13 +554,13 @@
         ;--------------------------------------------------
         CASE 432
             ;--------------------------------------------------
-            ;TFLAG:209 = 1：人里浴场；= 7：人里浴场的涤身之泉
-            ;TFLAG:211 = 1：旧地狱温泉
+            ;TFLAG:PUBLIC_BATH_FLAGS_AMER = 1：人里浴场；= 7：人里浴场的涤身之泉
+            ;TFLAG:OLD_HELL_SPRING_FLAGS_AMER = 1：旧地狱温泉
             ;若不会被选为TARGET，则直接RETURN
             ;--------------------------------------------------
-            IF TFLAG:209 == 1 || TFLAG:209 == 7
+            IF TFLAG:PUBLIC_BATH_FLAGS_AMER == 1 || TFLAG:PUBLIC_BATH_FLAGS_AMER == 7
                 SOURCE:SJOY_AMER = 100
-            ELSEIF TFLAG:211 == 1
+            ELSEIF TFLAG:OLD_HELL_SPRING_FLAGS_AMER == 1
                 SOURCE:SJOY_AMER = 150
                 SOURCE:SLOVE_AMER = 150
             ELSE
@@ -606,9 +572,9 @@
         ;--------------------------------------------------
         CASE 436
             ;--------------------------------------------------
-            ;TFLAG:193：看的书编号，2为文学失败，3为文学成功，4为实用书失败，8为小黄书
+            ;TFLAG:COM_BRANCH_AMER：看的书编号，2为文学失败，3为文学成功，4为实用书失败，8为小黄书
             ;--------------------------------------------------
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
                 CASE 2
                     SOURCE:SJOY_AMER = 450
                     SOURCE:SPASSIVITY_AMER = 150
@@ -664,7 +630,7 @@
             ;--------------------------------------------------
             SIF ABL:INTIMACY_AMER < 5 || CFLAG:ACTION_AMER == 5
                 RETURN -1
-            SELECTCASE ITEMPRICE:(TFLAG:193)
+            SELECTCASE ITEMPRICE:(TFLAG:COM_BRANCH_AMER)
                 CASE 1 TO 1000
                     SOURCE:SJOY_AMER = 400
                     SOURCE:SPASSIVITY_AMER = 50
@@ -697,12 +663,12 @@
             ;--------------------------------------------------
             SIF ABL:INTIMACY_AMER < 5 || CFLAG:ACTION_AMER == 5
                 RETURN -1
-            IF TFLAG:193
+            IF TFLAG:COM_BRANCH_AMER
                 ;--------------------------------------------------
                 ;根据所调合出物品的等阶乘算
                 ;1-5级分别需要30/40/50/65/80min
                 ;--------------------------------------------------
-                SELECTCASE PHARMACY_RANK(TFLAG:193)
+                SELECTCASE PHARMACY_RANK(TFLAG:COM_BRANCH_AMER)
                     CASE 1
                         SOURCE:SJOY_AMER = 200
                         SOURCE:SPASSIVITY_AMER = 100
@@ -732,7 +698,7 @@
                 ;--------------------------------------------------
                 ;根据所调合出物品的数量乘算
                 ;--------------------------------------------------
-                SELECTCASE TFLAG:194 / RECIPE_DATA(TFLAG:193, 6)
+                SELECTCASE TFLAG:COM_DETAIL_AMER / RECIPE_DATA(TFLAG:COM_BRANCH_AMER, 6)
                     CASE 1
                         LOCAL = 10
                     CASE 2
@@ -777,7 +743,7 @@
             ;--------------------------------------------------
             ;根据销售额乘算
             ;--------------------------------------------------
-            SELECTCASE TFLAG:194
+            SELECTCASE TFLAG:COM_DETAIL_AMER
                 CASE 0
                     SOURCE:SJOY_AMER = 400
                     SOURCE:SPASSIVITY_AMER = 75
@@ -818,21 +784,21 @@
             ;--------------------------------------------------
             ;若不会被选为TARGET，则直接RETURN
             ;--------------------------------------------------
-            SIF ABL:INTIMACY_AMER < 10 || CFLAG:ACTION_AMER == 5 || TFLAG:194 == 0
+            SIF ABL:INTIMACY_AMER < 10 || CFLAG:ACTION_AMER == 5 || TFLAG:COM_DETAIL_AMER == 0
                 RETURN -1
             ;--------------------------------------------------
             ;根据捕获猎物的种类乘算
-            ;TFLAG:193 = -1：陷阱坏掉了；= 0：设下了陷阱；= 1：捕获了猎物
-            ;TFLAG:194 = 23：死亡蠕虫；= 19：亚洲黑熊
+            ;TFLAG:COM_BRANCH_AMER = -1：陷阱坏掉了；= 0：设下了陷阱；= 1：捕获了猎物
+            ;TFLAG:COM_DETAIL_AMER = 23：死亡蠕虫；= 19：亚洲黑熊
             ;--------------------------------------------------
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
                 CASE -1
                     SOURCE:SPASSIVITY_AMER = 200
                 CASE 0
                     SOURCE:SJOY_AMER = 200
                     SOURCE:SPASSIVITY_AMER = 50
                 CASE 1
-                    IF TFLAG:194 == 23
+                    IF TFLAG:COM_DETAIL_AMER == 23
     	    		    SOURCE:SJOY_AMER = 300
                         SOURCE:SPASSIVITY_AMER = 100
                         SOURCE:SCONQUEST_AMER = 300
@@ -842,7 +808,7 @@
                         SOURCE:SPASSIVITY_AMER = 150
                         SOURCE:SCONQUEST_AMER = 350
                         SOURCE:SACHIEVEMENT_AMER = 350
-        		    ELSEIF TFLAG:194 == 19
+                    ELSEIF TFLAG:COM_DETAIL_AMER == 19
             			SOURCE:SJOY_AMER = 350
                         SOURCE:SPASSIVITY_AMER = 150
                         SOURCE:SCONQUEST_AMER = 350
@@ -882,7 +848,7 @@
                 RETURN -1
             ;--------------------------------------------------
             ;根据选项差分进行赋值
-            ;TFLAG:193 =-2：阿燐捕到虫，选择「即使杀了你、也要得到它」（你还有心嘛？？？）
+            ;TFLAG:COM_BRANCH_AMER =-2：阿燐捕到虫，选择「即使杀了你、也要得到它」（你还有心嘛？？？）
             ;          =-1：阿燐捕到虫，MASTER索要未果
             ;          = 0：什么都没有捕到
             ;          = 1：MASTER捕到虫
@@ -890,7 +856,7 @@
             ;          = 3：阿燐捕到虫，MASTER索要，不乐意地给了
             ;          = 4：阿燐捕到虫，MASTER索要，欣然给了
             ;--------------------------------------------------
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
                 CASE -2
                     SOURCE:SHATE_AMER = 100
                     RETURN -1
@@ -901,7 +867,7 @@
                     SOURCE:SJOY_AMER = 250
                     SOURCE:SPASSIVITY_AMER = 100
                 CASEELSE
-                    SELECTCASE TFLAG:193
+                    SELECTCASE TFLAG:COM_BRANCH_AMER
                         CASE 1, 2
                             SOURCE:SJOY_AMER = 300
                             SOURCE:SPASSIVITY_AMER = 100
@@ -938,10 +904,10 @@
         ;--------------------------------------------------
         CASE 483
             ;--------------------------------------------------
-            ;TFLAG:193 = 1：决斗；= 2：乱斗；= 3：团队战
+            ;TFLAG:COM_BRANCH_AMER = 1：决斗；= 2：乱斗；= 3：团队战
             ;TCVAR:MUSHI_TRACK_AMER % 10：阿燐的名次
             ;--------------------------------------------------
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
                 CASE 1
                     IF TCVAR:MUSHI_TRACK_AMER % 10 == 1
                         SOURCE:SJOY_AMER = 550
@@ -987,13 +953,13 @@
             IRREGULAR_TFLAG = 1
         ;--------------------------------------------------
         ;484 - 打西瓜 (60min)
-        ;TFLAG:193 =-1：没有打到
+        ;TFLAG:COM_BRANCH_AMER =-1：没有打到
         ;          = 0：勉强打到了（距离1步）
         ;          = 1：正中西瓜
         ;          = 2：使用木刀正中西瓜
         ;--------------------------------------------------
         CASE 484
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
                 CASE -1, 0
                     SOURCE:SJOY_AMER = 400
                     SOURCE:SPASSIVITY_AMER = 100
@@ -1054,14 +1020,14 @@
             CFLAG:AME36_COM_TRUST = 1
         ;--------------------------------------------------
         ;621 - 钓鱼 (20min)
-        ;TFLAG:193：钓到物品的编号
-        ;TFLAG:194 / 1000 = 0：MASTER钓到；= 1：阿燐钓到
+        ;TFLAG:COM_BRANCH_AMER：钓到物品的编号
+        ;TFLAG:COM_DETAIL_AMER / 1000 = 0：MASTER钓到；= 1：阿燐钓到
         ;--------------------------------------------------
         CASE 621
             SIF ABL:INTIMACY_AMER < 5 - TALENT:FISHING_AMER || CFLAG:ACTION_AMER == 5
                 RETURN -1
-            IF TFLAG:194 / 1000
-                SELECTCASE TFLAG:193
+            IF TFLAG:COM_DETAIL_AMER / 1000
+                SELECTCASE TFLAG:COM_BRANCH_AMER
                     ;--------------------------------------------------
                     ;木材和守矢神签
                     ;--------------------------------------------------
@@ -1100,7 +1066,7 @@
                 SOURCE:SJOY_AMER = 200
                 SOURCE:SPASSIVITY_AMER = 150
             ENDIF
-            IF TFLAG:193 == 0
+            IF TFLAG:COM_BRANCH_AMER == 0
                 SOURCE:SJOY_AMER = 150
                 SOURCE:SPASSIVITY_AMER = 150
             ENDIF
@@ -1110,16 +1076,16 @@
         ;626 - 土产屋 (10+nmin)
         ;--------------------------------------------------
         CASE 626
-            SELECTCASE TFLAG:193
+            SELECTCASE TFLAG:COM_BRANCH_AMER
                 CASE IS < 0
                     SOURCE:SJOY_AMER = 100
                     SOURCE:SPASSIVITY_AMER = 50
                 CASE 1 TO 6
-                    SOURCE:SJOY_AMER = TFLAG:193 * 75
-                    SOURCE:SPASSIVITY_AMER = TFLAG:193 * 30
+                    SOURCE:SJOY_AMER = TFLAG:COM_BRANCH_AMER * 75
+                    SOURCE:SPASSIVITY_AMER = TFLAG:COM_BRANCH_AMER * 30
                 CASE IS > 7
-                    SOURCE:SJOY_AMER = TFLAG:193 * 125 - 300
-                    SOURCE:SPASSIVITY_AMER = TFLAG:193 * 100 - 300
+                    SOURCE:SJOY_AMER = TFLAG:COM_BRANCH_AMER * 125 - 300
+                    SOURCE:SPASSIVITY_AMER = TFLAG:COM_BRANCH_AMER * 100 - 300
                     CFLAG:AME36_COM_TRUST = 1
             ENDSELECT
             IRREGULAR_TFLAG = 1
@@ -1128,7 +1094,7 @@
     ;根据TFLAG:193分歧对SOURCE进行乘算
     ;--------------------------------------------------
     IF !IRREGULAR_TFLAG
-        SELECTCASE TFLAG:193
+        SELECTCASE TFLAG:COM_BRANCH_AMER
             CASE IS < 0
                 TIMES SOURCE:SJOY_AMER, 0.70
                 TIMES SOURCE:SLOVE_AMER, 0.50
@@ -1419,7 +1385,7 @@
             ;特殊：626土产屋，SOURCE同衰减最快，但只有在购买礼物时才会增加经验（直接在这里加）
             ;--------------------------------------------------
             CASE 626
-                IF TFLAG:194 < 0
+                IF TFLAG:COM_DETAIL_AMER < 0
                     SELECTCASE AME36_COM_COUNTER:(COM_EQUIVALENT - 300)
                         CASE 1
                             PERCENTAGE_DUPE = 100
@@ -1491,5 +1457,8 @@
 @M_KOJO_AME_EXTRASOURCE_SCOM_K36_PRI_GENERAL
     #LOCALSIZE 1
     #LOCALSSIZE 1
+    ;--------------------------------------------------
+    ;属性索引：TFLAG索引50：特殊COM
+    ;--------------------------------------------------
     CALL AME36_EXTRASOURCE_GENERAL(TFLAG:50 + 1000)
     RETURN 0

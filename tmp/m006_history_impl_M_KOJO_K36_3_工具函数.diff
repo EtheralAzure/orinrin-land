@@ -1,0 +1,147 @@
+--- before-task/M_KOJO_K36_3_工具函数.ERB
++++ after-task/M_KOJO_K36_3_工具函数.ERB
+@@ -229,16 +229,16 @@
+ 
+ ;==================================================
+ ;对回忆值的料理经历部分计算的包装
+-;常规料理共174种
++;普通料理按历史计数，计算分母174暂保留，数值重做另行安排
+ ;==================================================
+ @AME36_DISH_RECOLLECTION
+ 	#LOCALSIZE 2
+ 	#LOCALSSIZE 1
+ 	#FUNCTION
+-	LOCAL = AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_1) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_2) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_3)
++	LOCAL = AME36_DISH_HISTORY_COUNT(TARGET, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_SPECIAL_OFFSET - 1)
+ 	LOCAL = 1700 * LOCAL / 174
+-	LOCAL:1 = AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C1) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C2) + AME36_BINARY_SUM(CFLAG:AME36_DISH_TYPE_C3)
+-	IF GETBIT(CFLAG:AME36_DISH_TYPE_C1, 35)
++	LOCAL:1 = AME36_DISH_HISTORY_COUNT(TARGET, AME36_DISH_SPECIAL_OFFSET + 1, AME36_DISH_HISTORY_LAST_ID)
++	IF AME36_DISH_HISTORY_HAS(TARGET, AME36_DISH_SELF_ID)
+ 		LOCAL += 100
+ 		LOCAL:1 -= 1
+ 	ENDIF
+@@ -254,6 +254,92 @@
+ 			RETURNF MIN(LOCAL, 2000)
+ 	ENDSELECT
+ 	
++;==================================================
++;记录已确认成功制作的料理，1为新增、0为重复、-1为输入无效
++;普通空号的有效性由成功制作入口保证，允许固有料理的剧本覆写
++;==================================================
++@AME36_DISH_HISTORY_RECORD(CHARA, DISH_ID)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM CHARA
++	#DIM DISH_ID
++	SIF CHARA < 0 || CHARA >= CHARANUM
++		RETURNF -1
++	SIF NO:CHARA != 36
++		RETURNF -1
++	SIF !INRANGE(DISH_ID, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_HISTORY_LAST_ID)
++		RETURNF -1
++	SIF GROUPMATCH(DISH_ID, AME36_DISH_DEBUG_ID, AME36_DISH_SPECIAL_OFFSET)
++		RETURNF -1
++	LOCAL = DISH_ID - AME36_DISH_HISTORY_FIRST_ID
++	;--------------------------------------------------
++	;动态属性索引：料理历史1252～1259，位号始终为0～62
++	;--------------------------------------------------
++	SIF GETBIT(CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + LOCAL / AME36_DISH_HISTORY_BITS), LOCAL % AME36_DISH_HISTORY_BITS)
++		RETURNF 0
++	;--------------------------------------------------
++	;动态属性索引：料理历史1252～1259，不使用符号位
++	;--------------------------------------------------
++	SETBIT CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + LOCAL / AME36_DISH_HISTORY_BITS), LOCAL % AME36_DISH_HISTORY_BITS
++	RETURNF 1
++
++;==================================================
++;按料理编号读取历史标记，不改变TARGET或料理实例
++;==================================================
++@AME36_DISH_HISTORY_HAS(CHARA, DISH_ID)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM CHARA
++	#DIM DISH_ID
++	SIF CHARA < 0 || CHARA >= CHARANUM
++		RETURNF 0
++	SIF NO:CHARA != 36
++		RETURNF 0
++	SIF !INRANGE(DISH_ID, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_HISTORY_LAST_ID)
++		RETURNF 0
++	SIF GROUPMATCH(DISH_ID, AME36_DISH_DEBUG_ID, AME36_DISH_SPECIAL_OFFSET)
++		RETURNF 0
++	LOCAL = DISH_ID - AME36_DISH_HISTORY_FIRST_ID
++	;--------------------------------------------------
++	;动态属性索引：料理历史1252～1259，位号始终为0～62
++	;--------------------------------------------------
++	RETURNF GETBIT(CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + LOCAL / AME36_DISH_HISTORY_BITS), LOCAL % AME36_DISH_HISTORY_BITS)
++
++;==================================================
++;统计指定编号区间的料理记录，排除DEBUG料理和保留编号
++;只读取历史，不查询制作条件、材料或数据库
++;==================================================
++@AME36_DISH_HISTORY_COUNT(CHARA, FIRST_ID, LAST_ID)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM CHARA
++	#DIM FIRST_ID
++	#DIM LAST_ID
++	#DIM DYNAMIC DISH_ID
++	#DIM DYNAMIC OFFSET
++	SIF CHARA < 0 || CHARA >= CHARANUM
++		RETURNF 0
++	SIF NO:CHARA != 36
++		RETURNF 0
++	FIRST_ID = MAX(FIRST_ID, AME36_DISH_HISTORY_FIRST_ID)
++	LAST_ID = MIN(LAST_ID, AME36_DISH_HISTORY_LAST_ID)
++	SIF FIRST_ID > LAST_ID
++		RETURNF 0
++	LOCAL = 0
++	FOR DISH_ID, FIRST_ID, LAST_ID + 1
++		SIF GROUPMATCH(DISH_ID, AME36_DISH_DEBUG_ID, AME36_DISH_SPECIAL_OFFSET)
++			CONTINUE
++		OFFSET = DISH_ID - AME36_DISH_HISTORY_FIRST_ID
++		;--------------------------------------------------
++		;动态属性索引：料理历史1252～1259，逐位计数避免跨类别混算
++		;--------------------------------------------------
++		LOCAL += GETBIT(CFLAG:CHARA:(AME36_DISH_HISTORY_BEGIN + OFFSET / AME36_DISH_HISTORY_BITS), OFFSET % AME36_DISH_HISTORY_BITS)
++	NEXT
++	RETURNF LOCAL
++
+ ;==================================================
+ ;获取一个数字所有二进制位值的和
+ ;==================================================
+@@ -1200,19 +1286,27 @@
+ ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+ 
+ ;==================================================
+-;测试用，使所有回忆值达到最大
++;测试用，提高回忆记录并填满当前目录的料理历史
+ ;==================================================
+ @AME36_MAX_RECOLLECTION
+ 	#LOCALSIZE 1
+ 	#LOCALSSIZE 1
+ 	#FUNCTION
+-	FOR LOCAL, 1201, 1254
++	FOR LOCAL, 1201, AME36_DISH_HISTORY_BEGIN
+ 		;--------------------------------------------------
+-		;属性索引：测试工具批量访问CFLAG的1201～1253回忆/经历记录槽，保留原有范围
++		;属性索引：测试工具访问1201～1251，料理历史另按目录记录
+ 		;--------------------------------------------------
+ 		CFLAG:LOCAL = 99999
+ 	NEXT
+ 	CFLAG:AME36_RECOLLECTION_303 = 0
++	;--------------------------------------------------
++	;按现有目录记录料理，不将普通整数当作料理位图写入
++	;--------------------------------------------------
++	FOR LOCAL, AME36_DISH_HISTORY_FIRST_ID, AME36_DISH_HISTORY_LAST_ID + 1
++		SIF !QOL_DISH_HAS_DATA(LOCAL)
++			CONTINUE
++		CALLF AME36_DISH_HISTORY_RECORD, TARGET, LOCAL
++	NEXT
+ 	RETURNF 1
+ 
+ ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※

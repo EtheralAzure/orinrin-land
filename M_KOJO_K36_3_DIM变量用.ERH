@@ -4,10 +4,11 @@
 
 ;快速自查：每个FIRSTTIME数值作用的记录，防止重复
     ;--------------------------------------------------
-    ;0 - 初次UPDATE
-    ;1 - 初次素质修改
+    ;0 - 防止重复UPDATE
     ;2 - 用于相识的取得
     ;3 - 检测是否中途切换口上
+    ;4 - 首次提醒保持口上文本开启
+    ;5 - 开启非就寝时段存档时警告一次
     ;--------------------------------------------------
 
 ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
@@ -17,6 +18,40 @@
 ;==================================================
 ;ABL系
 ;==================================================
+;数组用途：能力等级
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;CSENSE_AMER → ABL:Ｃ感覚（C感觉）；声明未启用
+;VSENSE_AMER → ABL:Ｖ感覚（V感觉）；声明未启用
+;ASENSE_AMER → ABL:Ａ感覚（A感觉）；声明未启用
+;BSENSE_AMER → ABL:Ｂ感覚（B感觉）；声明未启用
+;MSENSE_AMER → ABL:Ｍ感覚（M感觉）；声明未启用
+;INTIMACY_AMER → ABL:親密（亲密）
+;OBEDIENCE_AMER → ABL:従順（顺从）
+;LIBIDO_AMER → ABL:欲望（欲望）
+;EXPERTISE_AMER → ABL:技巧（技巧）
+;SERVITUDE_AMER → ABL:奉仕精神（奉仕精神）
+;EXHIBITIONISM_AMER → ABL:露出癖（露出癖）；声明未启用
+;MASOCHISM_AMER → ABL:受虐属性（受虐属性）；声明未启用
+;SADISM_AMER → ABL:施虐属性（施虐属性）；声明未启用
+;YURISM_AMER → ABL:百合属性（百合属性）；声明未启用
+;MASTURBATION_ADDI_AMER → ABL:自慰中毒（自慰中毒）；声明未启用
+;SEMEN_ADDI_AMER → ABL:精液中毒（精液中毒）；声明未启用
+;YURI_ADDI_AMER → ABL:百合中毒（百合中毒）；声明未启用
+;CREAMPIE_ADDI_AMER → ABL:膣射中毒（膣射中毒）；声明未启用
+;ACREAMPIE_ADDI_AMER → ABL:肛射中毒（肛射中毒）；声明未启用
+;CLEANING_AMER → ABL:清掃技能（清扫技能）
+;DICTION_AMER → ABL:話術技能（话术技能）
+;POWER_AMER → ABL:戦闘能力（战斗能力）
+;SCHOLARSHIP_AMER → ABL:教養（教养）
+;COOKERY_AMER → ABL:料理技能（料理技能）
+;VIRTUOSITY_AMER → ABL:音楽技能（音乐技能）
+;FINGERLV_AMER → ABL:指（手指性技）；声明未启用
+;TONGUELV_AMER → ABL:舌（舌头性技）；声明未启用
+;BLV_AMER → ABL:胸（胸部性技）；声明未启用
+;WAISTLV_AMER → ABL:腰（腰部性技）；声明未启用
+;VLV_AMER → ABL:膣（阴道性技）；声明未启用
+;ALV_AMER → ABL:肛門（肛门性技）；声明未启用
+;--------------------------------------------------
 ;#DIM CONST CSENSE_AMER = 0
 ;#DIM CONST VSENSE_AMER = 1
 ;#DIM CONST ASENSE_AMER = 2
@@ -52,6 +87,15 @@
 ;==================================================
 ;BASE系
 ;==================================================
+;数组用途：基础状态；MAXBASE共用相同属性索引
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;HP_AMER → BASE:体力（体力）
+;SP_AMER → BASE:気力（气力）
+;EMOTION_AMER → BASE:ムード（情绪）
+;RATIONALITY_AMER → BASE:理性（理性）
+;WORK_REMAINING_AMER → BASE:工作量（剩余工作量）
+;DRUNKENNESS_AMER → BASE:酒気（酒气）
+;--------------------------------------------------
 #DIM CONST HP_AMER = 0
 #DIM CONST SP_AMER = 1
 #DIM CONST EMOTION_AMER = 10
@@ -62,12 +106,40 @@
 ;==================================================
 ;CFLAG系
 ;==================================================
+;数组用途：可存档的角色标志与数值
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;FAIT_ACCOMPLI_AMER → CFLAG:既成事実（既成事实位标记）
+;FAVOR_AMER → CFLAG:好感度（好感度）
+;TRUST_AMER → CFLAG:信頼度（信赖度）
+;ATTITUDE_AMER → CFLAG:態度（当前态度）
+;DATE_EVENT_FLAGS_AMER → CFLAG:デート後イベントフラグ（约会后事件标志）
+;HAS_MET_AMER → CFLAG:面識（是否已经见面）
+;CONSENT_AMER → CFLAG:合意判定（合意判定值）
+;BANQUET_PARTICIPATION_AMER → CFLAG:宴会参加（宴会参与状态）
+;LOCATION_AMER → CFLAG:現在位置（当前位置）
+;PREV_LOCATION_AMER → CFLAG:前一次的位置（前一次位置）
+;RESIDENCE_AMER → CFLAG:初期位置（初始位置）
+;ASLEEP_AMER → CFLAG:睡眠（睡眠状态）
+;DOWN_AMER → CFLAG:衰弱（衰弱状态）
+;SEX_AMER → CFLAG:诶嘿嘿（情事状态）
+;ANGRY_AMER → CFLAG:ブチギレ（愤怒状态）
+;ACTION_AMER → CFLAG:行動（当前行动）
+;SNUGGLE_AMER → CFLAG:陪睡中（陪睡状态）
+;HORNINESS_AMER → CFLAG:积攒度（积攒度）
+;JOB_TYPE_AMER → CFLAG:職種（工作种类）
+;VISIT_BLOCKED_AMER → CFLAG:来訪不能（禁止来访）
+;VERSION_AMER → CFLAG:kojo_version（口上版本记录）
+;MENSTRUATION_AMER → CFLAG:生理周期（生理周期）
+;SCRIPT_SELECTOR_AMER → CFLAG:剧本选择（当前剧本选择编号）
+;--------------------------------------------------
 #DIM CONST FAIT_ACCOMPLI_AMER = 1
 #DIM CONST FAVOR_AMER = 2
 #DIM CONST TRUST_AMER = 4
 #DIM CONST ATTITUDE_AMER = 6
+#DIM CONST DATE_EVENT_FLAGS_AMER = 13
 #DIM CONST HAS_MET_AMER = 18
 #DIM CONST CONSENT_AMER = 19
+#DIM CONST BANQUET_PARTICIPATION_AMER = 20
 #DIM CONST LOCATION_AMER = 300
 #DIM CONST PREV_LOCATION_AMER = 301
 #DIM CONST RESIDENCE_AMER = 311
@@ -79,24 +151,67 @@
 #DIM CONST SNUGGLE_AMER = 334
 #DIM CONST HORNINESS_AMER = 340
 #DIM CONST JOB_TYPE_AMER = 350
+#DIM CONST VISIT_BLOCKED_AMER = 379
 #DIM CONST VERSION_AMER = 495
 #DIM CONST MENSTRUATION_AMER = 900
+#DIM CONST SCRIPT_SELECTOR_AMER = 998
 
 ;==================================================
 ;CSTR系
 ;==================================================
+;数组用途：角色字符串记录
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;VIRGIN_HISTORY_AMER → CSTR:処女喪失履歴（处女丧失履历）
+;--------------------------------------------------
 #DIM CONST VIRGIN_HISTORY_AMER = 46
 
 ;==================================================
 ;DAY系
 ;==================================================
+;数组用途：日期与季节
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;DAYS_AMER → DAY:総日数（总天数）
+;SEASON_AMER → DAY:季節（季节）
+;DATE_AMER → DAY:日期（月内日期）
+;--------------------------------------------------
 #DIM CONST DAYS_AMER = 0
 #DIM CONST SEASON_AMER = 2
 #DIM CONST DATE_AMER = 3
 
 ;==================================================
+;EX系
+;==================================================
+;数组用途：事件与经历计数
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;VIRGIN_LOSS_MARK_AMER → EX:処女喪失记号（处女丧失记号）
+;--------------------------------------------------
+#DIM CONST VIRGIN_LOSS_MARK_AMER = 70
+
+;==================================================
 ;EXP系
 ;==================================================
+;数组用途：累计经验
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;CXP_AMER → EXP:Ｃ経験（C经验）；声明未启用
+;VXP_AMER → EXP:Ｖ経験（V经验）
+;AXP_AMER → EXP:Ａ経験（A经验）；声明未启用
+;BXP_AMER → EXP:Ｂ経験（B经验）；声明未启用
+;MXP_AMER → EXP:Ｍ経験（M经验）；声明未启用
+;COXP_AMER → EXP:Ｃ絶頂経験（C绝顶经验）；声明未启用
+;VOXP_AMER → EXP:Ｖ絶頂経験（V绝顶经验）；声明未启用
+;AOXP_AMER → EXP:Ａ絶頂経験（A绝顶经验）；声明未启用
+;BOXP_AMER → EXP:Ｂ絶頂経験（B绝顶经验）；声明未启用
+;MOXP_AMER → EXP:Ｍ絶頂経験（M绝顶经验）；声明未启用
+;OXP_AMER → EXP:絶頂経験（绝顶经验）；声明未启用
+;SEMENXP_AMER → EXP:精液経験（精液经验）
+;MASTURBATIONXP_AMER → EXP:自慰経験（自慰经验）
+;MASOXP_AMER → EXP:苦痛快楽経験（苦痛快乐经验）
+;CONVERSATIONXP_AMER → EXP:会話経験（会话经验）
+;STUDYXP_AMER → EXP:学習経験（学习经验）
+;COOKINGXP_AMER → EXP:料理経験（料理经验）
+;FISHINGXP_AMER → EXP:釣り経験（钓鱼经验）
+;ALCHEMYXP_AMER → EXP:調合経験（调合经验）
+;--------------------------------------------------
 ;#DIM CONST CXP_AMER = 0
 #DIM CONST VXP_AMER = 1
 ;#DIM CONST AXP_AMER = 2
@@ -109,6 +224,7 @@
 ;#DIM CONST MOXP_AMER = 9
 ;#DIM CONST OXP_AMER = 10
 #DIM CONST SEMENXP_AMER = 14
+#DIM CONST MASTURBATIONXP_AMER = 22
 #DIM CONST MASOXP_AMER = 42
 #DIM CONST CONVERSATIONXP_AMER = 71
 #DIM CONST STUDYXP_AMER = 75
@@ -119,12 +235,83 @@
 ;==================================================
 ;FLAG系
 ;==================================================
+;数组用途：游戏全局标志
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;TIMESTOP_AMER → FLAG:時間停止（时间停止开关）
+;SNEAKING_AMER → FLAG:潜伏（潜伏位标记）
+;HYPNOSIS_STRENGTH_AMER → FLAG:催眠強度（催眠强度）
+;--------------------------------------------------
 #DIM CONST TIMESTOP_AMER = 70
 #DIM CONST SNEAKING_AMER = 99
+#DIM CONST HYPNOSIS_STRENGTH_AMER = 9021
+
+;==================================================
+;PALAM系
+;==================================================
+;数组用途：累计参数；与SOURCE同号不一定同义
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;PALAM_OBEDIENCE_AMER → PALAM:恭順（恭顺）
+;PALAM_LUST_AMER → PALAM:欲情（欲情）
+;PALAM_SUBJUGATION_AMER → PALAM:屈服（屈服）
+;PALAM_LEARNING_AMER → PALAM:習得（习得）
+;PALAM_SHAME_AMER → PALAM:恥情（耻情）
+;PALAM_PAIN_AMER → PALAM:苦痛（苦痛）
+;PALAM_FEAR_AMER → PALAM:恐怖（恐怖）
+;PALAM_FAVOR_AMER → PALAM:好意（好意）
+;PALAM_SUPERIORITY_AMER → PALAM:優越（优越）
+;PALAM_RESENTMENT_AMER → PALAM:反感（反感）
+;PALAM_DISCOMFORT_AMER → PALAM:不快（不快）
+;PALAM_DEPRESSION_AMER → PALAM:抑鬱（抑郁）
+;PALAM_SLEEP_ASSAULT_AMER → PALAM:眠姦（眠奸）
+;--------------------------------------------------
+#DIM CONST PALAM_OBEDIENCE_AMER = 10
+#DIM CONST PALAM_LUST_AMER = 11
+#DIM CONST PALAM_SUBJUGATION_AMER = 12
+#DIM CONST PALAM_LEARNING_AMER = 13
+#DIM CONST PALAM_SHAME_AMER = 14
+#DIM CONST PALAM_PAIN_AMER = 15
+#DIM CONST PALAM_FEAR_AMER = 16
+#DIM CONST PALAM_FAVOR_AMER = 20
+#DIM CONST PALAM_SUPERIORITY_AMER = 21
+#DIM CONST PALAM_RESENTMENT_AMER = 30
+#DIM CONST PALAM_DISCOMFORT_AMER = 31
+#DIM CONST PALAM_DEPRESSION_AMER = 32
+#DIM CONST PALAM_SLEEP_ASSAULT_AMER = 33
 
 ;==================================================
 ;SOURCE系
 ;==================================================
+;数组用途：本次行动产生的参数来源
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;SC_AMER → SOURCE:快Ｃ（C快感来源）
+;SV_AMER → SOURCE:快Ｖ（V快感来源）
+;SA_AMER → SOURCE:快Ａ（A快感来源）
+;SB_AMER → SOURCE:快Ｂ（B快感来源）
+;SM_AMER → SOURCE:快Ｍ（M快感来源）
+;SLIQUID_AMER → SOURCE:液体（液体来源）
+;SLOVE_AMER → SOURCE:情愛（情爱来源）
+;SSEXACT_AMER → SOURCE:性行動（性行动来源）
+;SACHIEVEMENT_AMER → SOURCE:達成（达成来源）
+;SPAIN_AMER → SOURCE:苦痛（苦痛来源）
+;SFEAR_AMER → SOURCE:恐怖（恐怖来源）
+;SLUST_AMER → SOURCE:欲情（欲情来源）
+;SRESPECT_AMER → SOURCE:恭順（恭顺来源）
+;SEXPOSURE_AMER → SOURCE:露出（露出来源）
+;SSUBMISSION_AMER → SOURCE:屈従（屈从来源）
+;SJOY_AMER → SOURCE:歓楽（欢乐来源）
+;SCONQUEST_AMER → SOURCE:征服（征服来源）
+;SPASSIVITY_AMER → SOURCE:受動（受动来源）
+;SFILTH_AMER → SOURCE:不潔（不洁来源）
+;SDEPRESSION_AMER → SOURCE:鬱屈（郁屈来源）
+;SDEVIATION_AMER → SOURCE:逸脱（逸脱来源）
+;SHATE_AMER → SOURCE:反感（反感来源）
+;SALLURE_AMER → SOURCE:誘惑（诱惑来源）
+;SINSULT_AMER → SOURCE:侮辱（侮辱来源）
+;SINDUCTION_AMER → SOURCE:挑発（挑衅来源）
+;SSERVE_AMER → SOURCE:奉仕（奉仕来源）
+;SCOMPULSION_AMER → SOURCE:強要（强要来源）
+;SABUSE_AMER → SOURCE:加虐（加虐来源）
+;--------------------------------------------------
 #DIM CONST SC_AMER = 0
 #DIM CONST SV_AMER = 1
 #DIM CONST SA_AMER = 2
@@ -157,10 +344,42 @@
 ;==================================================
 ;TALENT系
 ;==================================================
+;数组用途：人物素质、关系及部分技能等级
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;VIRGIN_AMER → TALENT:処女（处女状态）
+;VIRGIN_PENIS_AMER → TALENT:非童貞（阴茎性交经历位标记）
+;GENDER_AMER → TALENT:性別（性别）
+;AFFECTION_AMER → TALENT:恋慕（恋慕状态）
+;LEWD_AMER → TALENT:淫乱（淫乱状态）
+;NOT_KISSED_AMER → TALENT:キス未経験（无接吻经验）
+;LOVER_AMER → TALENT:恋人（恋人记录）
+;YEARNING_AMER → TALENT:思慕（思慕状态）
+;BRAVE_AMER → TALENT:胆量（胆量（坚强／胆怯））
+;ATTITUDE_TALENT_AMER → TALENT:態度（性格态度（坦率／叛逆））
+;MOOD_AMER → TALENT:心情（心情）
+;SELF_CONTROL_AMER → TALENT:自制心（自制心）
+;BOTTOM_LINE_AMER → TALENT:一線越えない（难以越过的底线）
+;SHOWY_AMER → TALENT:目立ちたがり（喜欢引人注目）
+;CHASTE_AMER → TALENT:貞操（贞操观念）
+;LIBERAL_AMER → TALENT:自己愛（自我解放／压抑）
+;SHAME_AMER → TALENT:羞恥心（羞耻心）
+;PAIN_TOLERANCE_AMER → TALENT:痛覚（痛觉耐性）
+;LOGGING_AMER → TALENT:伐採Lv（伐采等级）
+;FISHING_AMER → TALENT:釣りLv（钓鱼等级）
+;GATHERING_AMER → TALENT:採集Lv（采集等级）
+;ALCHEMY_AMER → TALENT:調合Lv（调合等级）
+;FILTH_TOLERANCE_AMER → TALENT:汚臭耐性（污臭耐性）
+;CUP_SIZE_AMER → TALENT:胸围（胸围等级）
+;ALCOHOL_TOLERANCE_AMER → TALENT:酒耐性（酒量耐性）
+;FLIRTATIOUS_AMER → TALENT:風騷（风骚）
+;HYPNOTISM1_AMER → TALENT:反発抑制（反发抑制）
+;HYPNOTISM2_AMER → TALENT:合意誤認（合意误认）
+;--------------------------------------------------
 #DIM CONST VIRGIN_AMER = 0
 #DIM CONST VIRGIN_PENIS_AMER = 1
 #DIM CONST GENDER_AMER = 2
 #DIM CONST AFFECTION_AMER = 3
+#DIM CONST LEWD_AMER = 4
 #DIM CONST NOT_KISSED_AMER = 6
 #DIM CONST LOVER_AMER = 7
 #DIM CONST YEARNING_AMER = 8
@@ -181,12 +400,27 @@
 #DIM CONST FILTH_TOLERANCE_AMER = 61
 #DIM CONST CUP_SIZE_AMER = 105
 #DIM CONST ALCOHOL_TOLERANCE_AMER = 121
+#DIM CONST FLIRTATIOUS_AMER = 142
 #DIM CONST HYPNOTISM1_AMER = 298
 #DIM CONST HYPNOTISM2_AMER = 299
 
 ;==================================================
 ;TCVAR系
 ;==================================================
+;数组用途：角色临时状态
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;MDMA_AMER → TCVAR:催情薬（催情药状态）
+;APHRODISIAC_AMER → TCVAR:媚薬（媚药状态）
+;DRUNK_AMER → TCVAR:烂醉（烂醉状态）
+;GRAVITY_AMER → TCVAR:引力点（移动引力点）
+;FORCED_AMER → TCVAR:强行（强行状态）
+;DISH_RATING_AMER → TCVAR:料理評価値（料理评价值）
+;HUNGRY_TIME_AMER → TCVAR:空腹時刻（空腹时刻）
+;HUNGRY_TIME_DESSERT_AMER → TCVAR:甜点空腹時刻（甜点空腹时刻）
+;JOB_START_AMER → TCVAR:工作開始（工作开始时刻）
+;JOB_END_AMER → TCVAR:工作結束（工作结束时刻）
+;MUSHI_TRACK_AMER → TCVAR:斗虫参加可否（斗虫参与条件）
+;--------------------------------------------------
 #DIM CONST MDMA_AMER = 139
 #DIM CONST APHRODISIAC_AMER = 140
 #DIM CONST DRUNK_AMER = 145
@@ -200,8 +434,36 @@
 #DIM CONST MUSHI_TRACK_AMER = 334
 
 ;==================================================
+;TFLAG系
+;==================================================
+;数组用途：全局临时状态与指令中间结果
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;TRAIN_COMABLE_AMER → TFLAG:調教中COMABLE管理（调教中指令可用管理）
+;KOJO_COM_RESULT_AMER → TFLAG:口上によるCOM成否判定（口上覆盖的指令成否判定）
+;COM_BRANCH_AMER → TFLAG:SELECTCOM的分岐（指令结果分支）
+;COM_DETAIL_AMER → TFLAG:不影响SOURCE等的SELECTCOM的分岐（不影响SOURCE等的指令分支）
+;PUBLIC_BATH_FLAGS_AMER → TFLAG:大衆浴場FLAG（大众浴场状态标志）
+;OLD_HELL_SPRING_FLAGS_AMER → TFLAG:旧地獄温泉FLAG（旧地狱温泉状态标志）
+;--------------------------------------------------
+#DIM CONST TRAIN_COMABLE_AMER = 100
+#DIM CONST KOJO_COM_RESULT_AMER = 192
+#DIM CONST COM_BRANCH_AMER = 193
+#DIM CONST COM_DETAIL_AMER = 194
+#DIM CONST PUBLIC_BATH_FLAGS_AMER = 209
+#DIM CONST OLD_HELL_SPRING_FLAGS_AMER = 211
+
+;==================================================
 ;TIME系
 ;==================================================
+;数组用途：时刻与天气
+;别名说明：本口上别名 → 游戏内名称（中文／用途）
+;MINUTES_AMER → TIME:時間（当天时刻（分钟））
+;TOTAL_MINUTES_AMER → TIME:時間進行管理（时间推进管理）
+;DAY_SECTION_AMER → TIME:時間帯（时间段）
+;GETUP_TIME_AMER → TIME:MASTERの起床予定時刻（主角预计起床时刻）
+;WEATHER_AMER → TIME:天気（天气）
+;EXTRA_WEATHER_AMER → TIME:虹（虹／额外天候标志）
+;--------------------------------------------------
 #DIM CONST MINUTES_AMER = 0
 #DIM CONST TOTAL_MINUTES_AMER = 1
 #DIM CONST DAY_SECTION_AMER = 2
@@ -389,14 +651,18 @@
 ;--------------------------------------------------
 #DIM CONST AME36_ALCOHOL_TYPE = 1251
 ;--------------------------------------------------
-;1252 ~ 1257 做过料理的记录
+;1252 ~ 1259 - 料理历史，每槽使用bit0～62，按料理编号自动寻址
+;料理编号101～604分别映射到8块，不保存名称、次数或日期
+;299为DEBUG料理，400为固有料理编号的基准，不记录这两个编号
 ;--------------------------------------------------
-#DIM CONST AME36_DISH_TYPE_1 = 1252
-#DIM CONST AME36_DISH_TYPE_2 = 1253
-#DIM CONST AME36_DISH_TYPE_3 = 1254
-#DIM CONST AME36_DISH_TYPE_C1 = 1255
-#DIM CONST AME36_DISH_TYPE_C2 = 1256
-#DIM CONST AME36_DISH_TYPE_C3 = 1257
+#DIM CONST AME36_DISH_HISTORY_BEGIN = 1252
+#DIM CONST AME36_DISH_HISTORY_BLOCKS = 8
+#DIM CONST AME36_DISH_HISTORY_BITS = 63
+#DIM CONST AME36_DISH_HISTORY_FIRST_ID = 101
+#DIM CONST AME36_DISH_HISTORY_LAST_ID = AME36_DISH_HISTORY_FIRST_ID + AME36_DISH_HISTORY_BLOCKS * AME36_DISH_HISTORY_BITS - 1
+#DIM CONST AME36_DISH_SPECIAL_OFFSET = 400
+#DIM CONST AME36_DISH_SELF_ID = AME36_DISH_SPECIAL_OFFSET + 36
+#DIM CONST AME36_DISH_DEBUG_ID = 299
 ;--------------------------------------------------
 ;1298 - 陪伴值，用于在一日结束后决定相守值的增加，每日开始时清零
 ;--------------------------------------------------

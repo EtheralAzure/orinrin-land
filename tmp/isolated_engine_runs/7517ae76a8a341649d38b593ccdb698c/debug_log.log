@@ -1,0 +1,10 @@
+========== ERROR CAUGHT ==========
+[DoScript-catch] Exception: CodeEE: Script execution terminated
+[DoScript-catch] InBeforeError=False SkipBeforeError=False systemProcRunning=True
+[DoScript-catch] ErrorLine=null
+[DoScript-catch] functionList.Count=0
+==================================
+[DoScript-catch] >>> Normal path, checking BEFORE_ERROR
+[DoScript-catch] BEFORE_ERROR found=False (DisableBeforeErrorThrow=False)
+[DoScript-catch] >>> No BEFORE_ERROR, normal error handling
+[DoScript-catch] Normal path: returning (preserve function list for debug)

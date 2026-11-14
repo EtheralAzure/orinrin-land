@@ -1,0 +1,29 @@
+--- before-current-task
++++ after-current-task
+@@ -608,7 +608,7 @@
+ 	RETURN 1
+ 
+ ;==================================================
+-;根据料理名称获取料理的编号
++;取得当前料理编号，并保留自定义料理标记
+ ;一定要把写料理系统的家伙头砍下来挂在地灵殿门口
+ ;==================================================
+ @AME36_DISH_INDEX(ARGS)
+@@ -632,13 +632,10 @@
+ 	TDISH_TIME = DISH_TIME
+ 	TDISH_MAXLIMIT = DISH_MAXLIMIT
+ 
+-	FOR LOCAL, 101, 401 + CHARANUM
+-		CALL DISHDATA(LOCAL)
+-		IF DISH_NAME == ARGS
+-			RESULT_NO = LOCAL
+-			BREAK
+-		ENDIF
+-	NEXT
++	;--------------------------------------------------
++	;属性索引：FLAG:20为当前料理编号，在COM413成功后读取
++	;--------------------------------------------------
++	RESULT_NO = FLAG:20
+ 	VARSET RESULT
+ 	IF RESULT_NO > 400
+ 		TRYCALLFORM SPECIAL_MENU_{RESULT_NO - 400}

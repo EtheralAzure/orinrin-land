@@ -1,0 +1,15 @@
+{
+  "method": "static scoped-diff, encoding and declaration checks; no engine execution",
+  "only_source_file_changed": "M_KOJO_K36_3_工具函数.ERB",
+  "exact_authorized_replacements_only": true,
+  "other_project_source_files_unchanged": true,
+  "utf8_bom_preserved": true,
+  "crlf_only": true,
+  "labels_and_signature_preserved": true,
+  "local_sizes": [
+    1,
+    1
+  ],
+  "before_sha256": "97cc04fff5bc61a356eefbe9552f15de0246ba0e8b6dfe621bdc01893254dca6",
+  "after_sha256": "315ef89423a3a18be07862948772950f7af001b7361d205a1dfdd42912400c35"
+}
