@@ -1,0 +1,177 @@
+--- M_KOJO_K36_3_工具函数.ERB:before
++++ M_KOJO_K36_3_工具函数.ERB:after
+@@ -204,13 +204,13 @@
+ 
+ ;==================================================
+ ;对回忆值的酒经历部分计算的包装
+-;酒共31种
++;按饮酒历史计数，原贡献公式及阶段封顶保持
+ ;==================================================
+ @AME36_ALCOHOL_RECOLLECTION
+ 	#LOCALSIZE 1
+ 	#LOCALSSIZE 1
+ 	#FUNCTION
+-	LOCAL = AME36_BINARY_SUM(CFLAG:AME36_ALCOHOL_TYPE)
++	LOCAL = AME36_ALCOHOL_HISTORY_COUNT(TARGET)
+ 	IF LOCAL <= 4
+ 		LOCAL *= 20
+ 	ELSE
+@@ -226,6 +226,127 @@
+ 		CASE 3, 4
+ 			RETURNF MIN(LOCAL, 1000)
+ 	ENDSELECT
++
++;==================================================
++;将本体酒数据ID对应到可饮用物品，非法或非酒返回-1
++;目录与可饮用判定沿用本体接口，不使用物品持有数作为收集条件
++;==================================================
++@AME36_ALCOHOL_ITEM_INDEX(ALCOHOL_ID)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM ALCOHOL_ID
++	SIF !INRANGE(ALCOHOL_ID, AME36_ALCOHOL_HISTORY_FIRST_ID, AME36_ALCOHOL_HISTORY_LAST_ID)
++		RETURNF -1
++	LOCALS '= ALC_NAME(ALCOHOL_ID)
++	SIF LOCALS == ""
++		RETURNF -1
++	LOCAL = GETNUM(ITEM, LOCALS)
++	SIF LOCAL < 0
++		RETURNF -1
++	SIF ALC_ID(ITEMNAME:LOCAL) != ALCOHOL_ID
++		RETURNF -1
++	SIF !IS_ALC(LOCAL)
++		RETURNF -1
++	RETURNF LOCAL
++
++;==================================================
++;记录已确认实际喝过的酒数据ID，1为新增、0为重复、-1为输入无效
++;可饮用目录与成功饮用前提由入口保证，不把物品编号直接写入
++;==================================================
++@AME36_ALCOHOL_HISTORY_RECORD(CHARA, ALCOHOL_ID)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM CHARA
++	#DIM ALCOHOL_ID
++	SIF CHARA < 0 || CHARA >= CHARANUM
++		RETURNF -1
++	SIF NO:CHARA != 36
++		RETURNF -1
++	SIF !INRANGE(ALCOHOL_ID, AME36_ALCOHOL_HISTORY_FIRST_ID, AME36_ALCOHOL_HISTORY_LAST_ID)
++		RETURNF -1
++	LOCAL = ALCOHOL_ID - AME36_ALCOHOL_HISTORY_FIRST_ID
++	;--------------------------------------------------
++	;动态属性索引：饮酒历史1250～1251，位号始终为0～62
++	;--------------------------------------------------
++	SIF GETBIT(CFLAG:CHARA:(AME36_ALCOHOL_HISTORY_BEGIN + LOCAL / AME36_ALCOHOL_HISTORY_BITS), LOCAL % AME36_ALCOHOL_HISTORY_BITS)
++		RETURNF 0
++	;--------------------------------------------------
++	;动态属性索引：饮酒历史1250～1251，不使用符号位
++	;--------------------------------------------------
++	SETBIT CFLAG:CHARA:(AME36_ALCOHOL_HISTORY_BEGIN + LOCAL / AME36_ALCOHOL_HISTORY_BITS), LOCAL % AME36_ALCOHOL_HISTORY_BITS
++	RETURNF 1
++
++;==================================================
++;按本体酒数据ID读取饮酒历史，不查询目录或改变TARGET
++;==================================================
++@AME36_ALCOHOL_HISTORY_HAS(CHARA, ALCOHOL_ID)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM CHARA
++	#DIM ALCOHOL_ID
++	SIF CHARA < 0 || CHARA >= CHARANUM
++		RETURNF 0
++	SIF NO:CHARA != 36
++		RETURNF 0
++	SIF !INRANGE(ALCOHOL_ID, AME36_ALCOHOL_HISTORY_FIRST_ID, AME36_ALCOHOL_HISTORY_LAST_ID)
++		RETURNF 0
++	LOCAL = ALCOHOL_ID - AME36_ALCOHOL_HISTORY_FIRST_ID
++	;--------------------------------------------------
++	;动态属性索引：饮酒历史1250～1251，位号始终为0～62
++	;--------------------------------------------------
++	RETURNF GETBIT(CFLAG:CHARA:(AME36_ALCOHOL_HISTORY_BEGIN + LOCAL / AME36_ALCOHOL_HISTORY_BITS), LOCAL % AME36_ALCOHOL_HISTORY_BITS)
++
++;==================================================
++;统计指定酒数据ID区间的饮酒历史，不查询数据库或重新判定饮用资格
++;==================================================
++@AME36_ALCOHOL_HISTORY_COUNT(CHARA, FIRST_ID = AME36_ALCOHOL_HISTORY_FIRST_ID, LAST_ID = AME36_ALCOHOL_HISTORY_LAST_ID)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM CHARA
++	#DIM FIRST_ID
++	#DIM LAST_ID
++	#DIM DYNAMIC ALCOHOL_ID
++	SIF CHARA < 0 || CHARA >= CHARANUM
++		RETURNF 0
++	SIF NO:CHARA != 36
++		RETURNF 0
++	FIRST_ID = MAX(FIRST_ID, AME36_ALCOHOL_HISTORY_FIRST_ID)
++	LAST_ID = MIN(LAST_ID, AME36_ALCOHOL_HISTORY_LAST_ID)
++	SIF FIRST_ID > LAST_ID
++		RETURNF 0
++	LOCAL = 0
++	FOR ALCOHOL_ID, FIRST_ID, LAST_ID + 1
++		LOCAL += AME36_ALCOHOL_HISTORY_HAS(CHARA, ALCOHOL_ID)
++	NEXT
++	RETURNF LOCAL
++
++;==================================================
++;在COM332饮用分支登记历史，负分支表示拒绝或中止，不记录
++;ITEM_ID为本体物品编号，转换后才按酒数据ID写入
++;==================================================
++@AME36_ALCOHOL_RECORD_COM332(CHARA, ITEM_ID, BRANCH)
++	#LOCALSIZE 1
++	#LOCALSSIZE 1
++	#FUNCTION
++	#DIM CHARA
++	#DIM ITEM_ID
++	#DIM BRANCH
++	SIF CHARA < 0 || CHARA >= CHARANUM
++		RETURNF -1
++	SIF NO:CHARA != 36
++		RETURNF -1
++	SIF !GROUPMATCH(BRANCH, 0, 1)
++		RETURNF -1
++	SIF ITEM_ID < 0 || ITEM_ID >= VARSIZE("ITEM")
++		RETURNF -1
++	SIF !IS_ALC(ITEM_ID)
++		RETURNF -1
++	LOCAL = ALC_ID(ITEMNAME:ITEM_ID)
++	RETURNF AME36_ALCOHOL_HISTORY_RECORD(CHARA, LOCAL)
+ 
+ ;==================================================
+ ;对回忆值的料理经历部分计算的包装
+@@ -1286,19 +1407,27 @@
+ ;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+ 
+ ;==================================================
+-;测试用，提高回忆记录并填满当前目录的料理历史
++;测试用，提高COM回忆记录并填满当前目录的酒与料理历史
+ ;==================================================
+ @AME36_MAX_RECOLLECTION
+ 	#LOCALSIZE 1
+ 	#LOCALSSIZE 1
+ 	#FUNCTION
+-	FOR LOCAL, 1201, AME36_DISH_HISTORY_BEGIN
++	FOR LOCAL, 1201, AME36_ALCOHOL_HISTORY_BEGIN
+ 		;--------------------------------------------------
+-		;属性索引：测试工具访问1201～1251，料理历史另按目录记录
++		;属性索引：测试工具访问1201～1249，酒与料理历史另按目录记录
+ 		;--------------------------------------------------
+ 		CFLAG:LOCAL = 99999
+ 	NEXT
+ 	CFLAG:AME36_RECOLLECTION_303 = 0
++	;--------------------------------------------------
++	;酒按本体可饮用目录记录，不将普通整数当作历史位图写入
++	;--------------------------------------------------
++	FOR LOCAL, AME36_ALCOHOL_HISTORY_FIRST_ID, AME36_ALCOHOL_HISTORY_LAST_ID + 1
++		SIF AME36_ALCOHOL_ITEM_INDEX(LOCAL) < 0
++			CONTINUE
++		CALLF AME36_ALCOHOL_HISTORY_RECORD, TARGET, LOCAL
++	NEXT
+ 	;--------------------------------------------------
+ 	;按现有目录记录料理，不将普通整数当作料理位图写入
+ 	;--------------------------------------------------

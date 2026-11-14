@@ -322,13 +322,6 @@
     #DIM MAX_PAGE = 3
     #DIMS CURRENT_MODE = "444"
     #DIM START_LINECOUNT
-    {
-    #DIMS ALCOHOL_NAMES = "浊酒", "清酒", "鬼杀酒", "红酒", "神酒", "甜酒", "蒸馏酒", "药酒", "一夜奇稻田", 
-                        "烧酒", "蜂蜜酒", "果酒", "莓子酒", "白朗姆酒", "金朗姆酒", "黑朗姆酒", "强化红酒",
-                        "贵腐红酒", "陈酿红酒", "优质陈酿红酒", "白兰地ＶＳ", "白兰地ＶＳＯＰ", "白兰地ＸＯ", 
-                        "灰持酒", "果渣白兰地", "日本浊酒", "吟酿酒", "熟成酒", "古酒", "酒粕烧酎‌", 
-                        "贵酿日本浊酒", "贵酿酒", "贵酿熟成酒", "贵酿古酒", "三增酒"
-    }
     #DIMS TDISH_NAME
     #DIMS TDISH_TASTE
     #DIMS TDISH_TYPE
@@ -535,16 +528,7 @@
         IF RESULTS == "901"
             DRAWLINE
             PRINTFORML □都一起喝过什么酒呢□
-            FOR LOCAL, 0, 34
-                SIF GETBIT(CFLAG:AME36_ALCOHOL_TYPE, LOCAL)
-                    SETCOLOR C_GREEN
-                STRLENFORM %ALCOHOL_NAMES:LOCAL%
-                PRINTFORM %ALCOHOL_NAMES:LOCAL%%"　" * (8 - RESULT / 2)%
-                RESETCOLOR
-                SIF (LOCAL + 1) % 3 == 0
-                    PRINTL
-            NEXT
-            PRINTL
+            CALL AME36_ALCOHOL_HISTORY_PRINT(TARGET)
             PRINTW
         ELSEIF RESULTS == "902"
             VARSET LOCAL
@@ -594,6 +578,41 @@
 
     CALL M_KOJO_AME_COLOR_K36
     RETURN 1
+
+;==================================================
+;按本体可饮用目录显示酒名，标记按酒数据ID查询
+;沿用本体ITEMNAME_TR翻译，不维护额外赋名表
+;==================================================
+@AME36_ALCOHOL_HISTORY_PRINT(CHARA)
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #DIM CHARA
+    #DIM DYNAMIC ALCOHOL_ID
+    #DIM DYNAMIC ITEM_ID
+    SIF CHARA < 0 || CHARA >= CHARANUM
+        RETURN 0
+    SIF NO:CHARA != 36
+        RETURN 0
+    LOCAL = 0
+    FOR ALCOHOL_ID, AME36_ALCOHOL_HISTORY_FIRST_ID, AME36_ALCOHOL_HISTORY_LAST_ID + 1
+        ITEM_ID = AME36_ALCOHOL_ITEM_INDEX(ALCOHOL_ID)
+        SIF ITEM_ID < 0
+            CONTINUE
+        LOCALS '= ITEMNAME_TR(ITEM_ID)
+        SIF LOCALS == ""
+            CONTINUE
+        SIF AME36_ALCOHOL_HISTORY_HAS(CHARA, ALCOHOL_ID)
+            SETCOLOR C_GREEN
+        STRLENFORM %LOCALS%
+        PRINTFORM %LOCALS%%"　" * MAX(8 - RESULT / 2, 1)%
+        RESETCOLOR
+        LOCAL += 1
+        SIF LOCAL % 3 == 0
+            PRINTL
+    NEXT
+    SIF LOCAL % 3
+        PRINTL
+    RETURN LOCAL
 
 ;==================================================
 ;按本体目录显示料理，完成标记始终按料理编号查询

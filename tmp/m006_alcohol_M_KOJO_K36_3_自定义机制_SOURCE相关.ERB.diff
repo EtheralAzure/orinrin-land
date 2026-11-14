@@ -1,0 +1,26 @@
+--- M_KOJO_K36_3_自定义机制_SOURCE相关.ERB:before
++++ M_KOJO_K36_3_自定义机制_SOURCE相关.ERB:after
+@@ -261,20 +261,9 @@
+             SOURCE:SPASSIVITY_AMER = 150
+             IRREGULAR_TFLAG = 1
+             ;--------------------------------------------------
+-            ;喝过酒种类的记录
+-            ;--------------------------------------------------
+-            SELECTCASE TFLAG:COM_DETAIL_AMER
+-                CASE 51 TO 56
+-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 51
+-                CASE 58 TO 59
+-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 52
+-                CASE 513
+-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, 8
+-                CASE 560 TO 575
+-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 551
+-                CASE 577 TO 586
+-                    SETBIT CFLAG:AME36_ALCOHOL_TYPE, TFLAG:COM_DETAIL_AMER - 552
+-            ENDSELECT
++            ;只登记实际饮用的分支，物品编号在接口内转换为酒数据ID
++            ;--------------------------------------------------
++            CALLF AME36_ALCOHOL_RECORD_COM332, TARGET, TFLAG:COM_DETAIL_AMER, TFLAG:COM_BRANCH_AMER
+         ;--------------------------------------------------
+         ;333 - 听牢骚 (20min)
+         ;--------------------------------------------------

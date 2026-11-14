@@ -1,0 +1,828 @@
+{
+  "definitions": [
+    {
+      "id": 1,
+      "name": "普通的水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 2,
+      "name": "雾之湖的水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 3,
+      "name": "地狱温泉的水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 4,
+      "name": "葡萄汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 5,
+      "name": "奇迹之水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 6,
+      "name": "大米酒曲",
+      "alcohol": "",
+      "item": 671
+    },
+    {
+      "id": 10,
+      "name": "薯类酒曲",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 11,
+      "name": "蜂蜜水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 12,
+      "name": "树莓汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 13,
+      "name": "糖水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 14,
+      "name": "陈酿前的莓子酒",
+      "alcohol": "",
+      "item": 661
+    },
+    {
+      "id": 15,
+      "name": "陈酿前的朗姆酒",
+      "alcohol": "",
+      "item": 663
+    },
+    {
+      "id": 16,
+      "name": "葡萄汁(含酒精)",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 17,
+      "name": "贵腐葡萄汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 18,
+      "name": "陈酿前的白兰地",
+      "alcohol": "",
+      "item": 664
+    },
+    {
+      "id": 19,
+      "name": "发酵糖浆",
+      "alcohol": "",
+      "item": 662
+    },
+    {
+      "id": 49,
+      "name": "烧酒",
+      "alcohol": "LOCAL = 700 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 560
+    },
+    {
+      "id": 50,
+      "name": "一夜奇稻田",
+      "alcohol": "LOCAL = 500 + RAND:200\n\t;一夜奇稻田は酒耐性が高いほど酔いが回りやすい\n\tIF ARG != MASTER\n\t\tIF TALENT:ARG:酒耐性 == -1\n\t\t\tTIMES LOCAL, 1.1\n\t\tELSEIF TALENT:ARG:酒耐性 == 1\n\t\t\tTIMES LOCAL, 1.2\n\t\tELSEIF TALENT:ARG:酒耐性 == 2\n\t\t\tTIMES LOCAL, 1.7\n\t\tELSEIF TALENT:ARG:酒耐性 == 3\n\t\t\tTIMES LOCAL, 2.5\n\t\tELSEIF TALENT:ARG:酒耐性 == -2\n\t\t\tIF CFLAG:ARG:不會喝酒 >= 5\n\t\t\t\tTIMES LOCAL, 2.0\n\t\t\tELSEIF CFLAG:ARG:不會喝酒 >= 2\n\t\t\t\tTIMES LOCAL, 1.5\n\t\t\tELSE\n\t\t\t\tTIMES LOCAL, 1.0\n\t\t\tENDIF\n\t\tENDIF\n\tENDIF\n\tRETURNF @\"{LOCAL}\"",
+      "item": 513
+    },
+    {
+      "id": 51,
+      "name": "浊酒",
+      "alcohol": "LOCAL = 300 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 51
+    },
+    {
+      "id": 52,
+      "name": "清酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 52
+    },
+    {
+      "id": 53,
+      "name": "鬼杀酒",
+      "alcohol": "LOCAL = 300 + RAND:100\n\tSIF CHECK_CHARA(ARG, \"鬼\")\n\t\tLOCAL *= 3\n\tRETURNF @\"{LOCAL}\"",
+      "item": 53
+    },
+    {
+      "id": 54,
+      "name": "红酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 54
+    },
+    {
+      "id": 55,
+      "name": "神酒",
+      "alcohol": "LOCAL = 300 + RAND:600\n\tRETURNF @\"{LOCAL}\"",
+      "item": 55
+    },
+    {
+      "id": 56,
+      "name": "甜酒",
+      "alcohol": "LOCAL = 1\n\tSIF TALENT:ARG:酒耐性 <= -1\n\t\tLOCAL = 20 + RAND:30\n\tRETURNF @\"{LOCAL}\"",
+      "item": 56
+    },
+    {
+      "id": 57,
+      "name": "梅子加井水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 58,
+      "name": "蒸馏酒",
+      "alcohol": "LOCAL = 700 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 58
+    },
+    {
+      "id": 59,
+      "name": "药酒",
+      "alcohol": "LOCAL =  200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 59
+    },
+    {
+      "id": 60,
+      "name": "薯类酒醅",
+      "alcohol": "",
+      "item": 660
+    },
+    {
+      "id": 61,
+      "name": "蜂蜜酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 561
+    },
+    {
+      "id": 62,
+      "name": "果酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 562
+    },
+    {
+      "id": 63,
+      "name": "莓子酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 563
+    },
+    {
+      "id": 64,
+      "name": "白朗姆酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 564
+    },
+    {
+      "id": 65,
+      "name": "金朗姆酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 565
+    },
+    {
+      "id": 66,
+      "name": "黑朗姆酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 566
+    },
+    {
+      "id": 67,
+      "name": "强化红酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 567
+    },
+    {
+      "id": 68,
+      "name": "贵腐红酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 568
+    },
+    {
+      "id": 69,
+      "name": "陈酿红酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 569
+    },
+    {
+      "id": 70,
+      "name": "优质陈酿红酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 570
+    },
+    {
+      "id": 71,
+      "name": "白兰地VS",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 571
+    },
+    {
+      "id": 72,
+      "name": "白兰地VSOP",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 572
+    },
+    {
+      "id": 73,
+      "name": "白兰地XO",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 573
+    },
+    {
+      "id": 74,
+      "name": "灰持酒",
+      "alcohol": "LOCAL = 300 + RAND:400\n\tRETURNF @\"{LOCAL}\"",
+      "item": 574
+    },
+    {
+      "id": 75,
+      "name": "果渣白兰地",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 575
+    },
+    {
+      "id": 76,
+      "name": "大米酒醅",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 77,
+      "name": "云浊酒",
+      "alcohol": "LOCAL = 400 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 577
+    },
+    {
+      "id": 78,
+      "name": "吟酿酒",
+      "alcohol": "LOCAL = 500 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 578
+    },
+    {
+      "id": 79,
+      "name": "熟成酒",
+      "alcohol": "LOCAL = 450 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 579
+    },
+    {
+      "id": 80,
+      "name": "古酒",
+      "alcohol": "LOCAL = 400 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 580
+    },
+    {
+      "id": 81,
+      "name": "复酿酒醅",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 82,
+      "name": "贵酿云浊酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 582
+    },
+    {
+      "id": 83,
+      "name": "贵酿酒",
+      "alcohol": "LOCAL = 500 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 583
+    },
+    {
+      "id": 84,
+      "name": "贵酿熟成酒",
+      "alcohol": "LOCAL = 450 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 584
+    },
+    {
+      "id": 85,
+      "name": "贵酿古酒",
+      "alcohol": "LOCAL = 400 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 585
+    },
+    {
+      "id": 86,
+      "name": "酒粕烧酒",
+      "alcohol": "LOCAL = 700 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 581
+    },
+    {
+      "id": 87,
+      "name": "三增酒",
+      "alcohol": "LOCAL = 300 + RAND:500\n\tRETURNF @\"{LOCAL}\"",
+      "item": 586
+    },
+    {
+      "id": 88,
+      "name": "南瓜水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 89,
+      "name": "南瓜酒醅",
+      "alcohol": "",
+      "item": 673
+    },
+    {
+      "id": 90,
+      "name": "南瓜烧酒",
+      "alcohol": "LOCAL = 600 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 591
+    },
+    {
+      "id": 91,
+      "name": "草莓汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 92,
+      "name": "草莓酒",
+      "alcohol": "LOCAL = 200 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 587
+    },
+    {
+      "id": 93,
+      "name": "陈酿前的草莓白兰地",
+      "alcohol": "",
+      "item": 674
+    },
+    {
+      "id": 94,
+      "name": "草莓白兰地",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 588
+    },
+    {
+      "id": 95,
+      "name": "木通果汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 96,
+      "name": "木通果酒",
+      "alcohol": "LOCAL = 200 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 589
+    },
+    {
+      "id": 97,
+      "name": "西瓜汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 98,
+      "name": "西瓜家酿酒",
+      "alcohol": "LOCAL = 100 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 590
+    },
+    {
+      "id": 99,
+      "name": "草药汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 100,
+      "name": "苦艾酒",
+      "alcohol": "LOCAL = 1100 + RAND:200; This stuff may very well kill you\n\tRETURNF @\"{LOCAL}\"",
+      "item": 592
+    },
+    {
+      "id": 101,
+      "name": "麦芽汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 102,
+      "name": "啤酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 593
+    },
+    {
+      "id": 103,
+      "name": "梅酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 57
+    },
+    {
+      "id": 104,
+      "name": "苹果汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 105,
+      "name": "苹果西打",
+      "alcohol": "LOCAL = 200 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 594
+    },
+    {
+      "id": 106,
+      "name": "杏仁水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 107,
+      "name": "苦杏酒",
+      "alcohol": "LOCAL = 600 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 595
+    },
+    {
+      "id": 108,
+      "name": "人参水",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 109,
+      "name": "人参酒",
+      "alcohol": "LOCAL = 500 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 598
+    },
+    {
+      "id": 110,
+      "name": "蛋黄酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 599
+    },
+    {
+      "id": 111,
+      "name": "开菲尔种菌",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 112,
+      "name": "母乳开菲尔",
+      "alcohol": "LOCAL = 100 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 596
+    },
+    {
+      "id": 113,
+      "name": "仙桃汁",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 114,
+      "name": "仙桃酒",
+      "alcohol": "LOCAL = 700 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 597
+    },
+    {
+      "id": 115,
+      "name": "液化跳蛋",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 116,
+      "name": "跳蛋酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 987
+    },
+    {
+      "id": 117,
+      "name": "酒醅(精米)",
+      "alcohol": "",
+      "item": -1
+    },
+    {
+      "id": 118,
+      "name": "纯米大吟酿",
+      "alcohol": "LOCAL = 300 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 986
+    }
+  ],
+  "valid": [
+    {
+      "id": 49,
+      "name": "烧酒",
+      "alcohol": "LOCAL = 700 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 560
+    },
+    {
+      "id": 50,
+      "name": "一夜奇稻田",
+      "alcohol": "LOCAL = 500 + RAND:200\n\t;一夜奇稻田は酒耐性が高いほど酔いが回りやすい\n\tIF ARG != MASTER\n\t\tIF TALENT:ARG:酒耐性 == -1\n\t\t\tTIMES LOCAL, 1.1\n\t\tELSEIF TALENT:ARG:酒耐性 == 1\n\t\t\tTIMES LOCAL, 1.2\n\t\tELSEIF TALENT:ARG:酒耐性 == 2\n\t\t\tTIMES LOCAL, 1.7\n\t\tELSEIF TALENT:ARG:酒耐性 == 3\n\t\t\tTIMES LOCAL, 2.5\n\t\tELSEIF TALENT:ARG:酒耐性 == -2\n\t\t\tIF CFLAG:ARG:不會喝酒 >= 5\n\t\t\t\tTIMES LOCAL, 2.0\n\t\t\tELSEIF CFLAG:ARG:不會喝酒 >= 2\n\t\t\t\tTIMES LOCAL, 1.5\n\t\t\tELSE\n\t\t\t\tTIMES LOCAL, 1.0\n\t\t\tENDIF\n\t\tENDIF\n\tENDIF\n\tRETURNF @\"{LOCAL}\"",
+      "item": 513
+    },
+    {
+      "id": 51,
+      "name": "浊酒",
+      "alcohol": "LOCAL = 300 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 51
+    },
+    {
+      "id": 52,
+      "name": "清酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 52
+    },
+    {
+      "id": 53,
+      "name": "鬼杀酒",
+      "alcohol": "LOCAL = 300 + RAND:100\n\tSIF CHECK_CHARA(ARG, \"鬼\")\n\t\tLOCAL *= 3\n\tRETURNF @\"{LOCAL}\"",
+      "item": 53
+    },
+    {
+      "id": 54,
+      "name": "红酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 54
+    },
+    {
+      "id": 55,
+      "name": "神酒",
+      "alcohol": "LOCAL = 300 + RAND:600\n\tRETURNF @\"{LOCAL}\"",
+      "item": 55
+    },
+    {
+      "id": 56,
+      "name": "甜酒",
+      "alcohol": "LOCAL = 1\n\tSIF TALENT:ARG:酒耐性 <= -1\n\t\tLOCAL = 20 + RAND:30\n\tRETURNF @\"{LOCAL}\"",
+      "item": 56
+    },
+    {
+      "id": 58,
+      "name": "蒸馏酒",
+      "alcohol": "LOCAL = 700 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 58
+    },
+    {
+      "id": 59,
+      "name": "药酒",
+      "alcohol": "LOCAL =  200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 59
+    },
+    {
+      "id": 61,
+      "name": "蜂蜜酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 561
+    },
+    {
+      "id": 62,
+      "name": "果酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 562
+    },
+    {
+      "id": 63,
+      "name": "莓子酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 563
+    },
+    {
+      "id": 64,
+      "name": "白朗姆酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 564
+    },
+    {
+      "id": 65,
+      "name": "金朗姆酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 565
+    },
+    {
+      "id": 66,
+      "name": "黑朗姆酒",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 566
+    },
+    {
+      "id": 67,
+      "name": "强化红酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 567
+    },
+    {
+      "id": 68,
+      "name": "贵腐红酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 568
+    },
+    {
+      "id": 69,
+      "name": "陈酿红酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 569
+    },
+    {
+      "id": 70,
+      "name": "优质陈酿红酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 570
+    },
+    {
+      "id": 71,
+      "name": "白兰地VS",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 571
+    },
+    {
+      "id": 72,
+      "name": "白兰地VSOP",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 572
+    },
+    {
+      "id": 73,
+      "name": "白兰地XO",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 573
+    },
+    {
+      "id": 74,
+      "name": "灰持酒",
+      "alcohol": "LOCAL = 300 + RAND:400\n\tRETURNF @\"{LOCAL}\"",
+      "item": 574
+    },
+    {
+      "id": 75,
+      "name": "果渣白兰地",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 575
+    },
+    {
+      "id": 77,
+      "name": "云浊酒",
+      "alcohol": "LOCAL = 400 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 577
+    },
+    {
+      "id": 78,
+      "name": "吟酿酒",
+      "alcohol": "LOCAL = 500 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 578
+    },
+    {
+      "id": 79,
+      "name": "熟成酒",
+      "alcohol": "LOCAL = 450 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 579
+    },
+    {
+      "id": 80,
+      "name": "古酒",
+      "alcohol": "LOCAL = 400 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 580
+    },
+    {
+      "id": 82,
+      "name": "贵酿云浊酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 582
+    },
+    {
+      "id": 83,
+      "name": "贵酿酒",
+      "alcohol": "LOCAL = 500 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 583
+    },
+    {
+      "id": 84,
+      "name": "贵酿熟成酒",
+      "alcohol": "LOCAL = 450 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 584
+    },
+    {
+      "id": 85,
+      "name": "贵酿古酒",
+      "alcohol": "LOCAL = 400 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 585
+    },
+    {
+      "id": 86,
+      "name": "酒粕烧酒",
+      "alcohol": "LOCAL = 700 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 581
+    },
+    {
+      "id": 87,
+      "name": "三增酒",
+      "alcohol": "LOCAL = 300 + RAND:500\n\tRETURNF @\"{LOCAL}\"",
+      "item": 586
+    },
+    {
+      "id": 90,
+      "name": "南瓜烧酒",
+      "alcohol": "LOCAL = 600 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 591
+    },
+    {
+      "id": 92,
+      "name": "草莓酒",
+      "alcohol": "LOCAL = 200 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 587
+    },
+    {
+      "id": 94,
+      "name": "草莓白兰地",
+      "alcohol": "LOCAL = 900 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 588
+    },
+    {
+      "id": 96,
+      "name": "木通果酒",
+      "alcohol": "LOCAL = 200 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 589
+    },
+    {
+      "id": 98,
+      "name": "西瓜家酿酒",
+      "alcohol": "LOCAL = 100 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 590
+    },
+    {
+      "id": 100,
+      "name": "苦艾酒",
+      "alcohol": "LOCAL = 1100 + RAND:200; This stuff may very well kill you\n\tRETURNF @\"{LOCAL}\"",
+      "item": 592
+    },
+    {
+      "id": 102,
+      "name": "啤酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 593
+    },
+    {
+      "id": 103,
+      "name": "梅酒",
+      "alcohol": "LOCAL = 200 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 57
+    },
+    {
+      "id": 105,
+      "name": "苹果西打",
+      "alcohol": "LOCAL = 200 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 594
+    },
+    {
+      "id": 107,
+      "name": "苦杏酒",
+      "alcohol": "LOCAL = 600 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 595
+    },
+    {
+      "id": 109,
+      "name": "人参酒",
+      "alcohol": "LOCAL = 500 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 598
+    },
+    {
+      "id": 110,
+      "name": "蛋黄酒",
+      "alcohol": "LOCAL = 400 + RAND:300\n\tRETURNF @\"{LOCAL}\"",
+      "item": 599
+    },
+    {
+      "id": 112,
+      "name": "母乳开菲尔",
+      "alcohol": "LOCAL = 100 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 596
+    },
+    {
+      "id": 114,
+      "name": "仙桃酒",
+      "alcohol": "LOCAL = 700 + RAND:100\n\tRETURNF @\"{LOCAL}\"",
+      "item": 597
+    },
+    {
+      "id": 116,
+      "name": "跳蛋酒",
+      "alcohol": "LOCAL = 200 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 987
+    },
+    {
+      "id": 118,
+      "name": "纯米大吟酿",
+      "alcohol": "LOCAL = 300 + RAND:200\n\tRETURNF @\"{LOCAL}\"",
+      "item": 986
+    }
+  ]
+}

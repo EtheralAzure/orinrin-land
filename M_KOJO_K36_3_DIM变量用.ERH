@@ -598,7 +598,7 @@
 ;--------------------------------------------------
 #DIM CONST AME36_BREAKTHROUGH = 1200
 ;--------------------------------------------------
-;1201 ~ 1250 日常系COM（非涩涩都算）
+;1201 ~ 1246 日常系COM（非涩涩都算）；1247～1249保留
 ;--------------------------------------------------
 #DIM CONST AME36_RECOLLECTION_300 = 1201
 #DIM CONST AME36_RECOLLECTION_301 = 1202
@@ -647,9 +647,14 @@
 #DIM CONST AME36_RECOLLECTION_621 = 1245
 #DIM CONST AME36_RECOLLECTION_626 = 1246
 ;--------------------------------------------------
-;1251 - 喝过酒的种类的记录
+;1250 ~ 1251 - 饮酒历史，每槽使用bit0～62，按本体酒数据ID自动寻址
+;酒数据ID1～126分别映射到两块；物品编号须先转换，不保存名称或次数
 ;--------------------------------------------------
-#DIM CONST AME36_ALCOHOL_TYPE = 1251
+#DIM CONST AME36_ALCOHOL_HISTORY_BEGIN = 1250
+#DIM CONST AME36_ALCOHOL_HISTORY_BLOCKS = 2
+#DIM CONST AME36_ALCOHOL_HISTORY_BITS = 63
+#DIM CONST AME36_ALCOHOL_HISTORY_FIRST_ID = 1
+#DIM CONST AME36_ALCOHOL_HISTORY_LAST_ID = AME36_ALCOHOL_HISTORY_FIRST_ID + AME36_ALCOHOL_HISTORY_BLOCKS * AME36_ALCOHOL_HISTORY_BITS - 1
 ;--------------------------------------------------
 ;1252 ~ 1259 - 料理历史，每槽使用bit0～62，按料理编号自动寻址
 ;料理编号101～604分别映射到8块，不保存名称、次数或日期

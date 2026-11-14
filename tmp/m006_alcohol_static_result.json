@@ -1,0 +1,329 @@
+{
+  "files": [
+    {
+      "file": "M_KOJO_K36_3_DIM变量用.ERH",
+      "before_sha256": "6d247c754cd8740ec44c173ac6ea0f3df3b068be01de3a70a23cee4bc1c091ae",
+      "sha256": "f21504966fa8e7610e0a5230fe3f456d5e93c9d408af8fcabe960d49bdf12b18",
+      "bom": false,
+      "crlf_only": true
+    },
+    {
+      "file": "M_KOJO_K36_3_工具函数.ERB",
+      "before_sha256": "8b387ea0d88f68faf0ed6a1bd72133739146bf3be0adbb247930d5da43e88f34",
+      "sha256": "469e3a8672e912d6d954738f99e14563334ee9c251c8431f4bffb883f06218a8",
+      "bom": true,
+      "crlf_only": true
+    },
+    {
+      "file": "M_KOJO_K36_3_自定义机制_SOURCE相关.ERB",
+      "before_sha256": "2ed3566e9234713acf025e079cea93d70eee6beb4bc399422d68caeff4002769",
+      "sha256": "bc000fa45755dc27bfe0c2ea00d90db63ffbee5edb4e5c894a87f7ff06fc3402",
+      "bom": true,
+      "crlf_only": true
+    },
+    {
+      "file": "M_KOJO_K36_3_自定义机制_指令.ERB",
+      "before_sha256": "71010cfef3cb8a7eb8ee0f9db4cd602f17578c1b911731c5c527b0eafe969e48",
+      "sha256": "e8f99251c2ba4515dd8ffe82ffa0c5c9bb41b7e10b3cbc7484118680f10cf12b",
+      "bom": true,
+      "crlf_only": true
+    }
+  ],
+  "new_functions": [
+    {
+      "file": "M_KOJO_K36_3_工具函数.ERB",
+      "label": "AME36_ALCOHOL_ITEM_INDEX(ALCOHOL_ID)",
+      "line": 234
+    },
+    {
+      "file": "M_KOJO_K36_3_工具函数.ERB",
+      "label": "AME36_ALCOHOL_HISTORY_RECORD(CHARA, ALCOHOL_ID)",
+      "line": 257
+    },
+    {
+      "file": "M_KOJO_K36_3_工具函数.ERB",
+      "label": "AME36_ALCOHOL_HISTORY_HAS(CHARA, ALCOHOL_ID)",
+      "line": 284
+    },
+    {
+      "file": "M_KOJO_K36_3_工具函数.ERB",
+      "label": "AME36_ALCOHOL_HISTORY_COUNT(CHARA, FIRST_ID = AME36_ALCOHOL_HISTORY_FIRST_ID, LAST_ID = AME36_ALCOHOL_HISTORY_LAST_ID)",
+      "line": 305
+    },
+    {
+      "file": "M_KOJO_K36_3_工具函数.ERB",
+      "label": "AME36_ALCOHOL_RECORD_COM332(CHARA, ITEM_ID, BRANCH)",
+      "line": 331
+    },
+    {
+      "file": "M_KOJO_K36_3_自定义机制_指令.ERB",
+      "label": "AME36_ALCOHOL_HISTORY_PRINT(CHARA)",
+      "line": 586
+    }
+  ],
+  "unchanged": [
+    "R/E, COM formula, persistence, dish history/contribution, BINARY_SUM"
+  ],
+  "wine_run": "cf117086b13949d19a2614be2c15b0a7",
+  "wine_assertions": 711,
+  "dish_run": "ae2d7b86fe444884ab9fdd88d88d0997",
+  "dish_assertions": 2093,
+  "all_passed": true,
+  "catalog": [
+    {
+      "alcohol_id": 49,
+      "item_id": 560,
+      "name": "烧酒"
+    },
+    {
+      "alcohol_id": 50,
+      "item_id": 513,
+      "name": "一夜奇稻田"
+    },
+    {
+      "alcohol_id": 51,
+      "item_id": 51,
+      "name": "浊酒"
+    },
+    {
+      "alcohol_id": 52,
+      "item_id": 52,
+      "name": "清酒"
+    },
+    {
+      "alcohol_id": 53,
+      "item_id": 53,
+      "name": "鬼杀酒"
+    },
+    {
+      "alcohol_id": 54,
+      "item_id": 54,
+      "name": "红酒"
+    },
+    {
+      "alcohol_id": 55,
+      "item_id": 55,
+      "name": "神酒"
+    },
+    {
+      "alcohol_id": 56,
+      "item_id": 56,
+      "name": "甜酒"
+    },
+    {
+      "alcohol_id": 58,
+      "item_id": 58,
+      "name": "蒸馏酒"
+    },
+    {
+      "alcohol_id": 59,
+      "item_id": 59,
+      "name": "药酒"
+    },
+    {
+      "alcohol_id": 61,
+      "item_id": 561,
+      "name": "蜂蜜酒"
+    },
+    {
+      "alcohol_id": 62,
+      "item_id": 562,
+      "name": "果酒"
+    },
+    {
+      "alcohol_id": 63,
+      "item_id": 563,
+      "name": "莓子酒"
+    },
+    {
+      "alcohol_id": 64,
+      "item_id": 564,
+      "name": "白朗姆酒"
+    },
+    {
+      "alcohol_id": 65,
+      "item_id": 565,
+      "name": "金朗姆酒"
+    },
+    {
+      "alcohol_id": 66,
+      "item_id": 566,
+      "name": "黑朗姆酒"
+    },
+    {
+      "alcohol_id": 67,
+      "item_id": 567,
+      "name": "强化红酒"
+    },
+    {
+      "alcohol_id": 68,
+      "item_id": 568,
+      "name": "贵腐红酒"
+    },
+    {
+      "alcohol_id": 69,
+      "item_id": 569,
+      "name": "陈酿红酒"
+    },
+    {
+      "alcohol_id": 70,
+      "item_id": 570,
+      "name": "优质陈酿红酒"
+    },
+    {
+      "alcohol_id": 71,
+      "item_id": 571,
+      "name": "白兰地VS"
+    },
+    {
+      "alcohol_id": 72,
+      "item_id": 572,
+      "name": "白兰地VSOP"
+    },
+    {
+      "alcohol_id": 73,
+      "item_id": 573,
+      "name": "白兰地XO"
+    },
+    {
+      "alcohol_id": 74,
+      "item_id": 574,
+      "name": "灰持酒"
+    },
+    {
+      "alcohol_id": 75,
+      "item_id": 575,
+      "name": "果渣白兰地"
+    },
+    {
+      "alcohol_id": 77,
+      "item_id": 577,
+      "name": "云浊酒"
+    },
+    {
+      "alcohol_id": 78,
+      "item_id": 578,
+      "name": "吟酿酒"
+    },
+    {
+      "alcohol_id": 79,
+      "item_id": 579,
+      "name": "熟成酒"
+    },
+    {
+      "alcohol_id": 80,
+      "item_id": 580,
+      "name": "古酒"
+    },
+    {
+      "alcohol_id": 82,
+      "item_id": 582,
+      "name": "贵酿云浊酒"
+    },
+    {
+      "alcohol_id": 83,
+      "item_id": 583,
+      "name": "贵酿酒"
+    },
+    {
+      "alcohol_id": 84,
+      "item_id": 584,
+      "name": "贵酿熟成酒"
+    },
+    {
+      "alcohol_id": 85,
+      "item_id": 585,
+      "name": "贵酿古酒"
+    },
+    {
+      "alcohol_id": 86,
+      "item_id": 581,
+      "name": "酒粕烧酒"
+    },
+    {
+      "alcohol_id": 87,
+      "item_id": 586,
+      "name": "三增酒"
+    },
+    {
+      "alcohol_id": 90,
+      "item_id": 591,
+      "name": "南瓜烧酒"
+    },
+    {
+      "alcohol_id": 92,
+      "item_id": 587,
+      "name": "草莓酒"
+    },
+    {
+      "alcohol_id": 94,
+      "item_id": 588,
+      "name": "草莓白兰地"
+    },
+    {
+      "alcohol_id": 96,
+      "item_id": 589,
+      "name": "木通果酒"
+    },
+    {
+      "alcohol_id": 98,
+      "item_id": 590,
+      "name": "西瓜家酿酒"
+    },
+    {
+      "alcohol_id": 100,
+      "item_id": 592,
+      "name": "苦艾酒"
+    },
+    {
+      "alcohol_id": 102,
+      "item_id": 593,
+      "name": "啤酒"
+    },
+    {
+      "alcohol_id": 103,
+      "item_id": 57,
+      "name": "梅酒"
+    },
+    {
+      "alcohol_id": 105,
+      "item_id": 594,
+      "name": "苹果西打"
+    },
+    {
+      "alcohol_id": 107,
+      "item_id": 595,
+      "name": "苦杏酒"
+    },
+    {
+      "alcohol_id": 109,
+      "item_id": 598,
+      "name": "人参酒"
+    },
+    {
+      "alcohol_id": 110,
+      "item_id": 599,
+      "name": "蛋黄酒"
+    },
+    {
+      "alcohol_id": 112,
+      "item_id": 596,
+      "name": "母乳开菲尔"
+    },
+    {
+      "alcohol_id": 114,
+      "item_id": 597,
+      "name": "仙桃酒"
+    },
+    {
+      "alcohol_id": 116,
+      "item_id": 987,
+      "name": "跳蛋酒"
+    },
+    {
+      "alcohol_id": 118,
+      "item_id": 986,
+      "name": "纯米大吟酿"
+    }
+  ]
+}
