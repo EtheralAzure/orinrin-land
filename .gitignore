@@ -1,0 +1,16 @@
+# Local isolated-engine tests: future suites, inputs and outputs belong here.
+/tmp/isolated_engine/
+
+# Existing isolated-engine suites and generated artifacts (keep their paths).
+/tmp/isolated_*
+/tmp/*_engine_*
+/tmp/audio_guard_checks/
+/tmp/engine_audio_inspect/
+/tmp/m006_history_regression_alcohol_stdout.json
+
+# Existing runner, reliability checks and system-sound guards.
+/tools/isolated_*.py
+/tools/check_isolated_*.py
+/tools/engine_system_sound_guard.*
+/tools/check_audio_guard_prior_mute.ps1
+/tools/__pycache__/
