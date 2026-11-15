@@ -13,12 +13,21 @@
 ;RETURN 2：思慕
 ;RETURN 3：恋慕
 ;RETURN 4：恋人
+;RETURN 5：恋人加爱恋
 ;==================================================
 @AME36_FALL_STATE
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
 	#FUNCTION
+	;--------------------------------------------------
+	;可移除的调试覆盖，缺失或关闭时返回-1并继续正常计算
+	;--------------------------------------------------
+	LOCAL = GETMETH("AME36_DEBUG_FALL_STATE", -1)
+	SIF LOCAL >= 0
+		RETURNF LOCAL
 	IF TALENT:LOVER_AMER
+		SIF TALENT:AFFECTION_AMER == 2
+			RETURNF 5
 		RETURNF 4
 	ELSEIF TALENT:AFFECTION_AMER
 		RETURNF 3
@@ -47,6 +56,12 @@
 	#LOCALSSIZE 1
 	#FUNCTION
 	#DIM DYNAMIC RECOLLECTION
+	;--------------------------------------------------
+	;可移除的调试覆盖，缺失或关闭时返回-1并继续正常计算
+	;--------------------------------------------------
+	LOCAL = GETMETH("AME36_DEBUG_RECOLLECTION", -1)
+	SIF LOCAL >= 0
+		RETURNF LOCAL
 	;--------------------------------------------------
 	;相守值的贡献
 	;--------------------------------------------------
@@ -158,7 +173,7 @@
 	#FUNCTION
 	LOCAL = AME36_RECOLLECTION()
 	SELECTCASE AME36_FALL_STATE()
-		CASE 4
+		CASE 4, 5
 			RETURNF LOCAL
 		CASE 3
 			RETURNF MIN(LOCAL, AME36_RECOLLECTION4)
@@ -189,7 +204,7 @@
 			LOCAL = (125 * LOCAL - 5000) / 4
 	ENDSELECT
 	SELECTCASE AME36_FALL_STATE()
-		CASE 4
+		CASE 4, 5
 			LOCAL = MIN(LOCAL, 10000)
 		CASE 3
 			LOCAL = MIN(LOCAL, 5000)
@@ -223,7 +238,7 @@
 			RETURNF MIN(LOCAL, 200)
 		CASE 2
 			RETURNF MIN(LOCAL, 500)
-		CASE 3, 4
+		CASE 3, 4, 5
 			RETURNF MIN(LOCAL, 1000)
 	ENDSELECT
 
@@ -371,7 +386,7 @@
 			RETURNF MIN(LOCAL, 400)
 		CASE 2
 			RETURNF MIN(LOCAL, 1000)
-		CASE 3, 4
+		CASE 3, 4, 5
 			RETURNF MIN(LOCAL, 2000)
 	ENDSELECT
 	
@@ -486,7 +501,7 @@
 	#LOCALSSIZE 1
 	#FUNCTION
 	SELECTCASE AME36_FALL_STATE()
-		CASE 4
+		CASE 4, 5
 			ARG = MIN(ARG, ARG:5)
 		CASE 3
 			ARG = MIN(ARG, ARG:4)

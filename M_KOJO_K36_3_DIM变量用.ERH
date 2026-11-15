@@ -7,7 +7,7 @@
     ;0 - 防止重复UPDATE
     ;2 - 用于相识的取得
     ;3 - 检测是否中途切换口上
-    ;4 - 首次提醒保持口上文本开启
+    ;4 - 首次检测到口上文本关闭时提醒
     ;5 - 开启非就寝时段存档时警告一次
     ;--------------------------------------------------
 
@@ -45,12 +45,13 @@
 ;SCHOLARSHIP_AMER → ABL:教養（教养）
 ;COOKERY_AMER → ABL:料理技能（料理技能）
 ;VIRTUOSITY_AMER → ABL:音楽技能（音乐技能）
-;FINGERLV_AMER → ABL:指（手指性技）；声明未启用
-;TONGUELV_AMER → ABL:舌（舌头性技）；声明未启用
-;BLV_AMER → ABL:胸（胸部性技）；声明未启用
-;WAISTLV_AMER → ABL:腰（腰部性技）；声明未启用
-;VLV_AMER → ABL:膣（阴道性技）；声明未启用
-;ALV_AMER → ABL:肛門（肛门性技）；声明未启用
+;FINGERLV_AMER → ABL:指（手指性技）
+;TONGUELV_AMER → ABL:舌（舌头性技）
+;BLV_AMER → ABL:胸（胸部性技）
+;WAISTLV_AMER → ABL:腰（腰部性技）
+;VLV_AMER → ABL:膣（阴道性技）
+;ALV_AMER → ABL:肛門（肛门性技）
+;FOOTLV_AMER → ABL:足（足部性技）
 ;--------------------------------------------------
 ;#DIM CONST CSENSE_AMER = 0
 ;#DIM CONST VSENSE_AMER = 1
@@ -77,12 +78,13 @@
 #DIM CONST SCHOLARSHIP_AMER = 43
 #DIM CONST COOKERY_AMER = 44
 #DIM CONST VIRTUOSITY_AMER = 45
-;#DIM CONST FINGERLV_AMER = 50
-;#DIM CONST TONGUELV_AMER = 51
-;#DIM CONST BLV_AMER = 52
-;#DIM CONST WAISTLV_AMER = 53
-;#DIM CONST VLV_AMER = 54
-;#DIM CONST ALV_AMER = 55
+#DIM CONST FINGERLV_AMER = 50
+#DIM CONST TONGUELV_AMER = 51
+#DIM CONST BLV_AMER = 52
+#DIM CONST WAISTLV_AMER = 53
+#DIM CONST VLV_AMER = 54
+#DIM CONST ALV_AMER = 55
+#DIM CONST FOOTLV_AMER = 56
 
 ;==================================================
 ;BASE系
@@ -91,6 +93,7 @@
 ;别名说明：本口上别名 → 游戏内名称（中文／用途）
 ;HP_AMER → BASE:体力（体力）
 ;SP_AMER → BASE:気力（气力）
+;TSP_AMER → BASE:TSP（时停能量，MAXBASE同索引）
 ;EMOTION_AMER → BASE:ムード（情绪）
 ;RATIONALITY_AMER → BASE:理性（理性）
 ;WORK_REMAINING_AMER → BASE:工作量（剩余工作量）
@@ -98,6 +101,7 @@
 ;--------------------------------------------------
 #DIM CONST HP_AMER = 0
 #DIM CONST SP_AMER = 1
+#DIM CONST TSP_AMER = 8
 #DIM CONST EMOTION_AMER = 10
 #DIM CONST RATIONALITY_AMER = 11
 #DIM CONST WORK_REMAINING_AMER = 13
@@ -365,6 +369,7 @@
 ;SHAME_AMER → TALENT:羞恥心（羞耻心）
 ;PAIN_TOLERANCE_AMER → TALENT:痛覚（痛觉耐性）
 ;LOGGING_AMER → TALENT:伐採Lv（伐采等级）
+;LUMBERING_AMER → TALENT:伐採Lv（采伐等级）
 ;FISHING_AMER → TALENT:釣りLv（钓鱼等级）
 ;GATHERING_AMER → TALENT:採集Lv（采集等级）
 ;ALCHEMY_AMER → TALENT:調合Lv（调合等级）
@@ -394,6 +399,7 @@
 #DIM CONST SHAME_AMER = 33
 #DIM CONST PAIN_TOLERANCE_AMER = 40
 #DIM CONST LOGGING_AMER = 46
+#DIM CONST LUMBERING_AMER = 46
 #DIM CONST FISHING_AMER = 47
 #DIM CONST GATHERING_AMER = 48
 #DIM CONST ALCHEMY_AMER = 49
@@ -705,6 +711,10 @@
 ;==================================================
 ;1901 ~ 1999 - 
 ;==================================================
+;1991 - 调试陷落阶段覆盖，0关闭，1～6对应无陷落至爱恋阶段5
+;DEBUG文件缺失时忽略此值，随燐CFLAG存档和角色重置
+;--------------------------------------------------
+#DIM CONST AME36_DEBUG_FALL_OVERRIDE = 1991
 
 ;==================================================
 ;DQ系相关
@@ -724,13 +734,14 @@
 ;==================================================
 ;乱七八糟的不知道分在哪里的东西
 ;==================================================
-;相识、思慕、恋慕、恋人的回忆值要求
+;相识、思慕、恋慕、恋人、爱恋（待施工）的回忆值要求
 ;做成常量是为了方便改
 ;--------------------------------------------------
 #DIM CONST AME36_RECOLLECTION1 = 200
 #DIM CONST AME36_RECOLLECTION2 = 1500
 #DIM CONST AME36_RECOLLECTION3 = 10000
 #DIM CONST AME36_RECOLLECTION4 = 25000
+#DIM CONST AME36_RECOLLECTION5 = 25001
 ;--------------------------------------------------
 ;每日执行的COM次数，用于效应递减
 ;按照COM编号一一对应，因为跳过了涩涩系所以要加上300，从300到799

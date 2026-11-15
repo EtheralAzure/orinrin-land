@@ -1,0 +1,385 @@
+﻿;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+;COM297 - 可移除的游戏内调试框架
+;调试实现集中在本文件，CFLAG1991通过共用ERH中的别名分配
+;删除本文件后297隐藏，阶段与回忆值的可选接口回退正常计算
+;扩展要求与待办见docs/机制/COM297-调试功能待办.md
+;※※※※※※※※※※※※※※※※※※※※※※※※※※※※
+
+;==================================================
+;调试指令名称，槽位27对应COM297
+;==================================================
+@KOJO_AME_COM_NAME_K36_27
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    RESULTS = 调试
+    RETURN 0
+
+;==================================================
+;调试指令的执行条件，沿用COM299的会话条件
+;==================================================
+@KOJO_AME_COM_ABLE_K36_27
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    SIF TARGET < 0 || TARGET >= CHARANUM
+        RETURN 0
+    SIF NO:TARGET != 36
+        RETURN 0
+    SIF !TFLAG:TRAIN_COMABLE_AMER
+        RETURN 0
+    SIF GLOBAL_COMABLE(300)
+        RETURN RESULT
+    SIF CFLAG:ASLEEP_AMER && !CFLAG:SNUGGLE_AMER
+        RETURN 0
+    SIF FLAG:TIMESTOP_AMER
+        RETURN 0
+    RETURN 1
+
+;==================================================
+;执行调试指令，沿用零耗时指令的情绪与理性恢复机制
+;抑制标记由现有FLAGSETTING读取并清除，不另增SUCCESS依赖
+;==================================================
+@KOJO_AME_COM_K36_27
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    CFLAG:AME36_SUPPRESSION_TRIGGER = 1
+    RETURN 1
+
+;==================================================
+;打开调试菜单时不触发本体指令前的Counter
+;==================================================
+@KOJO_AME_COM_Counter不发_K36_27
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    RETURN 1
+
+;==================================================
+;调试指令的文本入口，与COM299相同受口上文本分发控制
+;==================================================
+@M_KOJO_AME_MESSAGE_COM_K36_297
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    CALL AME36_DEBUG_MENU
+    RETURN 1
+
+;==================================================
+;调试主菜单，操作结果保留到下一次刷新
+;补给按现有持有量增加，阶段切换同步写真实素质，不修改回忆经历
+;==================================================
+@AME36_DEBUG_MENU
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #DIM DYNAMIC START_LINECOUNT
+    #DIMS DYNAMIC FEEDBACK
+    RESETCOLOR
+    START_LINECOUNT = LINECOUNT
+    $DEBUG_MENU_LOOP
+    PRINTL 【阿燐口上调试】
+    DRAWLINE
+    PRINTL 切换阶段会改写真实素质；关闭覆盖保留素质，回忆值恢复正常计算。
+    SIF FEEDBACK != ""
+        PRINTFORML %FEEDBACK%
+    DRAWLINE
+    PRINTBUTTON "[1] 获得所有材料", "1"
+    PRINTL
+    PRINTBUTTON "[2] 获得所有酒", "2"
+    PRINTL
+    PRINTBUTTON "[3] 丢弃当前持有料理", "3"
+    PRINTL
+    HTML_PRINT @"<button value='4'>[4] 切换陷落阶段覆盖：%AME36_DEBUG_FALL_STATE_HTML()%</button>"
+    PRINTL
+    PRINTBUTTON "[6] 所有能力满级", "6"
+    PRINTL
+    PRINTBUTTON "[7] 变得更亲密", "7"
+    PRINTL
+    PRINTBUTTON "[5] 刷新", "5"
+    PRINTL
+    PRINTBUTTON "[0] 返回", "0"
+    PRINTL
+    INPUTS
+    SELECTCASE RESULTS
+        CASE "0"
+            RESETCOLOR
+            RETURN 1
+        CASE "1"
+            CALL AME36_DEBUG_GIVE_MATERIALS
+            FEEDBACK = 已为{RESULT}种食材与调和材料各增加100个。
+        CASE "2"
+            CALL AME36_DEBUG_GIVE_ALCOHOL
+            FEEDBACK = 已为{RESULT}种酒各增加100个。
+        CASE "3"
+            CALL AME36_DEBUG_DISCARD_DISH
+            FEEDBACK = 已清除当前持有料理及附属状态。
+        CASE "4"
+            CALLF AME36_DEBUG_CYCLE_FALL_STATE()
+            FEEDBACK = 陷落阶段覆盖已切换为：%AME36_DEBUG_FALL_STATE_NAME()%。
+        CASE "6"
+            CALL AME36_DEBUG_MAX_SKILLS
+            FEEDBACK = 已将主人的生活技能和性技设为6级，TSP提升至普通最高档并补满（膣技术按性别判定）。
+        CASE "7"
+            CALL AME36_DEBUG_ADD_INTIMACY
+            FEEDBACK = 阿燐的亲密、欲望、顺从各增加5，好感度增加1500，信赖度增加800。
+        CASE "5"
+            FEEDBACK =
+        CASEELSE
+            FEEDBACK = 请输入菜单中的编号。
+    ENDSELECT
+    CLEARLINE LINECOUNT - START_LINECOUNT
+    GOTO DEBUG_MENU_LOOP
+
+;==================================================
+;从物品分类、料理配方和调和配方合并材料清单，每种只加100个
+;动态ITEM索引遍历当前物品容量，只写有名称的有效物品
+;==================================================
+@AME36_DEBUG_GIVE_MATERIALS
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #DIM DYNAMIC SELECTED, VARSIZE("ITEM")
+    #DIMS DYNAMIC INGREDIENTS, VARSIZE("ITEM")
+    #DIM DYNAMIC READER
+    #DIM DYNAMIC ITEM_ID
+    #DIM DYNAMIC ING_COUNT
+    #DIM DYNAMIC ING_INDEX
+    #DIM DYNAMIC MODE
+    #DIM DYNAMIC ITEM_COUNT
+    FOR ITEM_ID, 0, VARSIZE("ITEM")
+        SIF ITEMNAME:ITEM_ID == ""
+            CONTINUE
+        SIF QOL_ITEM_HAS_TAG(ITEM_ID, "食材") || QOL_ITEM_HAS_TAG(ITEM_ID, "野菜") || QOL_ITEM_HAS_TAG(ITEM_ID, "お肉") || QOL_ITEM_HAS_TAG(ITEM_ID, "素材") || QOL_ITEM_HAS_TAG(ITEM_ID, "巧克力")
+            SELECTED:ITEM_ID = 1
+    NEXT
+    FOR MODE, 0, 2
+        IF MODE == 0
+            READER = SQL_EXECUTE_READER("QOL_DISH_DB", "SELECT dish_ing FROM QOL_DISH_DB")
+        ELSE
+            READER = SQL_EXECUTE_READER("QOL_DISH_DB", "SELECT ingredients FROM QOL_CRAFT_RECIPE")
+        ENDIF
+        WHILE SQL_READER_READ(READER)
+            LOCALS '= SQL_READER_GET_STRING(READER, 0)
+            SPLIT LOCALS, "/", INGREDIENTS, ING_COUNT
+            FOR ING_INDEX, 0, ING_COUNT
+                IF MODE == 0
+                    ITEM_ID = GETNUM(ITEM, INGREDIENTS:ING_INDEX)
+                ELSE
+                    SIF !ISNUMERIC(INGREDIENTS:ING_INDEX)
+                        CONTINUE
+                    ITEM_ID = TOINT(INGREDIENTS:ING_INDEX)
+                ENDIF
+                SIF ITEM_ID < 0 || ITEM_ID >= VARSIZE("ITEM")
+                    CONTINUE
+                SIF ITEMNAME:ITEM_ID == ""
+                    CONTINUE
+                SELECTED:ITEM_ID = 1
+            NEXT
+        WEND
+        SQL_READER_CLOSE READER
+    NEXT
+    FOR ITEM_ID, 0, VARSIZE("ITEM")
+        IF SELECTED:ITEM_ID
+            ITEM:ITEM_ID += 100
+            ITEM_COUNT += 1
+        ENDIF
+    NEXT
+    RETURN ITEM_COUNT
+
+;==================================================
+;按本体可饮用酒判定遍历物品，每种酒增加100个
+;动态ITEM索引不受商店库存、售价或口上饮酒记录范围限制
+;==================================================
+@AME36_DEBUG_GIVE_ALCOHOL
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #DIM DYNAMIC ITEM_ID
+    #DIM DYNAMIC ITEM_COUNT
+    FOR ITEM_ID, 0, VARSIZE("ITEM")
+        SIF ITEMNAME:ITEM_ID == ""
+            CONTINUE
+        IF IS_ALC(ITEM_ID)
+            ITEM:ITEM_ID += 100
+            ITEM_COUNT += 1
+        ENDIF
+    NEXT
+    RETURN ITEM_COUNT
+
+;==================================================
+;复用本体完整料理清理，包括名称、药物、制作者和相关角色临时标志
+;不修改食材库存或口上已记录的料理历史
+;==================================================
+@AME36_DEBUG_DISCARD_DISH
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    CALL RESET_DISH
+    RETURN 1
+
+;==================================================
+;阶段覆盖循环：关闭、无陷落、相识、思慕、恋慕、恋人、爱恋
+;1991保存0为关闭、1～6为阶段0～5，同步写入真实相识和陷落素质
+;思慕与恋慕互斥，恋人保留恋慕，爱恋为恋慕值2加恋人
+;==================================================
+@AME36_DEBUG_CYCLE_FALL_STATE
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #FUNCTION
+    SIF TARGET < 0 || TARGET >= CHARANUM
+        RETURNF -1
+    SIF NO:TARGET != 36
+        RETURNF -1
+    IF !INRANGE(CFLAG:AME36_DEBUG_FALL_OVERRIDE, 0, 6)
+        CFLAG:AME36_DEBUG_FALL_OVERRIDE = 0
+    ELSE
+        CFLAG:AME36_DEBUG_FALL_OVERRIDE = (CFLAG:AME36_DEBUG_FALL_OVERRIDE + 1) % 7
+    ENDIF
+    LOCAL = AME36_DEBUG_FALL_STATE()
+    IF LOCAL >= 0
+        CFLAG:AME36_ACQUAINTANCE = LOCAL >= 1
+        TALENT:YEARNING_AMER = LOCAL == 2
+        TALENT:AFFECTION_AMER = LOCAL >= 3
+        TALENT:LOVER_AMER = LOCAL >= 4
+        SIF LOCAL == 5
+            TALENT:AFFECTION_AMER = 2
+    ENDIF
+    RETURNF LOCAL
+
+;==================================================
+;供正式阶段计算通过GETMETH可选调用，关闭或数据无效时返回-1
+;移除本文件后正式函数同样取得-1并继续原计算
+;==================================================
+@AME36_DEBUG_FALL_STATE
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #FUNCTION
+    SIF TARGET < 0 || TARGET >= CHARANUM
+        RETURNF -1
+    SIF NO:TARGET != 36
+        RETURNF -1
+    SIF !INRANGE(CFLAG:AME36_DEBUG_FALL_OVERRIDE, 1, 6)
+        RETURNF -1
+    RETURNF CFLAG:AME36_DEBUG_FALL_OVERRIDE - 1
+
+;==================================================
+;返回覆盖阶段的最低回忆值，不改真实经历和正常阈值缓存
+;无陷落为0，其余复用现有阶段1～5的回忆要求
+;==================================================
+@AME36_DEBUG_RECOLLECTION
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #FUNCTION
+    SELECTCASE AME36_DEBUG_FALL_STATE()
+        CASE 0
+            RETURNF 0
+        CASE 1
+            RETURNF AME36_RECOLLECTION1
+        CASE 2
+            RETURNF AME36_RECOLLECTION2
+        CASE 3
+            RETURNF AME36_RECOLLECTION3
+        CASE 4
+            RETURNF AME36_RECOLLECTION4
+        CASE 5
+            RETURNF AME36_RECOLLECTION5
+    ENDSELECT
+    RETURNF -1
+
+;==================================================
+;调试选项内显示当前档位，只列出实际存在的素质组合
+;==================================================
+@AME36_DEBUG_FALL_STATE_NAME
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #FUNCTIONS
+    SELECTCASE AME36_DEBUG_FALL_STATE()
+        CASE 0
+            RETURNF "无"
+        CASE 1
+            RETURNF "相识"
+        CASE 2
+            RETURNF "[思慕]"
+        CASE 3
+            RETURNF "[恋慕]"
+        CASE 4
+            RETURNF "[恋人]+[恋慕]"
+        CASE 5
+            RETURNF "[爱恋]+[恋人]"
+    ENDSELECT
+    RETURNF "关闭"
+
+;==================================================
+;为总回忆值追加同一行的黄色调试覆盖提示
+;关闭、无效或其他角色不显示，输出后恢复原文字颜色
+;==================================================
+@AME36_DEBUG_RECOLLECTION_NOTICE
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    SIF AME36_DEBUG_FALL_STATE() < 0
+        RETURN 0
+    LOCAL = GETCOLOR()
+    SETCOLOR C_YELLOW
+    PRINT 　※DEBUG覆盖中※
+    SETCOLOR LOCAL
+    RETURN 1
+
+;==================================================
+;阶段按钮的彩色文字，沿用PRINT_STATE的素质显示颜色
+;思慕使用C_PINK，恋人、恋慕与爱恋使用RGB(255,120,200)
+;==================================================
+@AME36_DEBUG_FALL_STATE_HTML
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    #FUNCTIONS
+    SELECTCASE AME36_DEBUG_FALL_STATE()
+        CASE 2
+            RETURNF @"<font color='%HEX_TO_HTML_COLOR(C_PINK)%'>[思慕]</font>"
+        CASE 3
+            RETURNF "<font color='#FF78C8'>[恋慕]</font>"
+        CASE 4
+            RETURNF "<font color='#FF78C8'>[恋人]</font>+<font color='#FF78C8'>[恋慕]</font>"
+        CASE 5
+            RETURNF "<font color='#FF78C8'>[爱恋]</font>+<font color='#FF78C8'>[恋人]</font>"
+    ENDSELECT
+    RETURNF AME36_DEBUG_FALL_STATE_NAME()
+
+;==================================================
+;将MASTER的生活技能和所有性技直接设为6，不读取魔法DLC
+;膣技术仅在MASTER具有女性器时设置，不修改其他能力或经验
+;普通TSP最高档为容量至少6666，保留已有更高容量并补满
+;==================================================
+@AME36_DEBUG_MAX_SKILLS
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    ABL:MASTER:SCHOLARSHIP_AMER = 6
+    ABL:MASTER:DICTION_AMER = 6
+    ABL:MASTER:POWER_AMER = 6
+    ABL:MASTER:CLEANING_AMER = 6
+    ABL:MASTER:COOKERY_AMER = 6
+    ABL:MASTER:VIRTUOSITY_AMER = 6
+    ABL:MASTER:FINGERLV_AMER = 6
+    ABL:MASTER:TONGUELV_AMER = 6
+    ABL:MASTER:BLV_AMER = 6
+    ABL:MASTER:WAISTLV_AMER = 6
+    ABL:MASTER:ALV_AMER = 6
+    ABL:MASTER:FOOTLV_AMER = 6
+    TALENT:MASTER:LUMBERING_AMER = 6
+    TALENT:MASTER:FISHING_AMER = 6
+    TALENT:MASTER:GATHERING_AMER = 6
+    TALENT:MASTER:ALCHEMY_AMER = 6
+    MAXBASE:MASTER:TSP_AMER = MAX(MAXBASE:MASTER:TSP_AMER, 6666)
+    BASE:MASTER:TSP_AMER = MAXBASE:MASTER:TSP_AMER
+    SIF GETBIT(TALENT:MASTER:GENDER_AMER, 0)
+        ABL:MASTER:VLV_AMER = 6
+    RETURN 1
+
+;==================================================
+;增加当前阿燐的关系数值，不调整陷落覆盖或补发经历
+;==================================================
+@AME36_DEBUG_ADD_INTIMACY
+    #LOCALSIZE 1
+    #LOCALSSIZE 1
+    SIF TARGET < 0 || TARGET >= CHARANUM
+        RETURN 0
+    SIF NO:TARGET != 36
+        RETURN 0
+    ABL:INTIMACY_AMER += 5
+    ABL:LIBIDO_AMER += 5
+    ABL:OBEDIENCE_AMER += 5
+    CFLAG:FAVOR_AMER += 1500
+    CFLAG:TRUST_AMER += 800
+    RETURN 1

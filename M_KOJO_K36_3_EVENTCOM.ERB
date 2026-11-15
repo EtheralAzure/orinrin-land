@@ -80,33 +80,46 @@
 ;--------------------------------------------------
 
 ;==================================================
-;原生事件：首次进入TRAIN时提醒口上文本设置，不经KOJO消息分发
+;原生事件：进入TRAIN时检查使用提醒，不经KOJO消息分发
 ;==================================================
 @EVENTTRAIN
 #PRI
+#DIM AME36_TRAIN_PRI_ORIN_INDEX
+#DIM AME36_TRAIN_PRI_PREV_TARGET
+	AME36_TRAIN_PRI_ORIN_INDEX = GETCHARA(36)
+	SIF AME36_TRAIN_PRI_ORIN_INDEX < 0
+		RETURN 0
+	;--------------------------------------------------
+	;按当前选中口上的标识符判断归属，不依赖口上编号
+	;--------------------------------------------------
+	AME36_TRAIN_PRI_PREV_TARGET = TARGET
+	CALL KOJO_ACTIVE_INFO(AME36_TRAIN_PRI_ORIN_INDEX)
+	IF !RESULT || RESULTS != "_AME"
+		TARGET = AME36_TRAIN_PRI_PREV_TARGET
+		RETURN 0
+	ENDIF
+	;--------------------------------------------------
+	;统一为本组后续处理设置TARGET，结束后恢复
+	;--------------------------------------------------
+	TARGET = AME36_TRAIN_PRI_ORIN_INDEX
 	CALL AME36_WARN_TEXT_SETTING
 	CALL AME36_WARN_REAL_TIME_SAVE
+	TARGET = AME36_TRAIN_PRI_PREV_TARGET
 	RETURN 0
 
 ;==================================================
-;占位提醒：仅本剧本启用时使用FIRSTTIME(4)提示一次
-;不检测文本开关；标记随燐的CFLAG存档
+;占位提醒：仅本剧本启用且口上文本关闭时提示一次
+;调用前由原生EVENTTRAIN确认本口上并将TARGET设为燐
+;先检查文本开关，再使用FIRSTTIME(4)；标记随燐的CFLAG存档
 ;==================================================
 @AME36_WARN_TEXT_SETTING
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	#DIM ORIN_INDEX
-	#DIM PREV_TARGET
-	ORIN_INDEX = GETCHARA(36)
-	SIF ORIN_INDEX < 0
-		RETURN 0
-	SIF CFLAG:ORIN_INDEX:SCRIPT_SELECTOR_AMER != 3
-		RETURN 0
 	;--------------------------------------------------
-	;FIRSTTIME读写当前TARGET，临时指定为燐并在结束后恢复
+	;属性索引：FLAG索引7：口上文本设置；开启时不消耗提示标记
 	;--------------------------------------------------
-	PREV_TARGET = TARGET
-	TARGET = ORIN_INDEX
+	SIF FLAG:7 > 0
+		RETURN 0
 	IF AME36_FIRSTTIME(4)
 		;--------------------------------------------------
 		;占位文本，后续由作者调整
@@ -114,7 +127,6 @@
 		CALL COLORMESSAGE("注意：本口上的部分自定义机制依赖口上文本开启。游玩期间请勿关闭口上文本，否则可能导致计数、重置及行为限制异常。", C_RED, 2, 1)
 		FORCEWAIT
 	ENDIF
-	TARGET = PREV_TARGET
 	RETURN 0
 
 ;==================================================
@@ -122,47 +134,51 @@
 ;==================================================
 @EVENTTRAIN
 #LATER
+#DIM AME36_TRAIN_LATER_ORIN_INDEX
+#DIM AME36_TRAIN_LATER_PREV_TARGET
+	AME36_TRAIN_LATER_ORIN_INDEX = GETCHARA(36)
+	SIF AME36_TRAIN_LATER_ORIN_INDEX < 0
+		RETURN 0
+	;--------------------------------------------------
+	;按当前选中口上的标识符判断归属，不依赖剧本编号
+	;--------------------------------------------------
+	AME36_TRAIN_LATER_PREV_TARGET = TARGET
+	CALL KOJO_ACTIVE_INFO(AME36_TRAIN_LATER_ORIN_INDEX)
+	IF !RESULT || RESULTS != "_AME"
+		TARGET = AME36_TRAIN_LATER_PREV_TARGET
+		RETURN 0
+	ENDIF
+	;--------------------------------------------------
+	;统一为本组后续处理设置TARGET，结束后恢复
+	;--------------------------------------------------
+	TARGET = AME36_TRAIN_LATER_ORIN_INDEX
 	CALL AME36_WARN_MIDGAME_SWITCH
+	TARGET = AME36_TRAIN_LATER_PREV_TARGET
 	RETURN 0
 
 ;==================================================
 ;中途切换警告沿用FIRSTTIME(3)，首次正常开局也消费标记
+;调用前由原生EVENTTRAIN确认本口上并将TARGET设为燐
 ;==================================================
 @AME36_WARN_MIDGAME_SWITCH
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	#DIM ORIN_INDEX
-	#DIM PREV_TARGET
-	ORIN_INDEX = GETCHARA(36)
-	SIF ORIN_INDEX < 0
-		RETURN 0
-	SIF CFLAG:ORIN_INDEX:SCRIPT_SELECTOR_AMER != 3
-		RETURN 0
-	PREV_TARGET = TARGET
-	TARGET = ORIN_INDEX
 	IF AME36_FIRSTTIME(3) && DAY > 1
 		CALL COLORMESSAGE("警告：本口上仅支持在游戏开始前的选择界面启用，在任何时间切换均会导致大量机制发生错误", C_RED, 2, 1)
 		FORCEWAIT
 	ENDIF
-	TARGET = PREV_TARGET
 	RETURN 0
 
 ;==================================================
 ;开启非就寝时段存档时，用FIRSTTIME(5)警告一次
 ;关闭插件时不消费标记；不自动修改玩家设置
+;调用前由原生EVENTTRAIN确认本口上并将TARGET设为燐
 ;==================================================
 @AME36_WARN_REAL_TIME_SAVE
 	#LOCALSIZE 1
 	#LOCALSSIZE 1
-	#DIM ORIN_INDEX
-	#DIM PREV_TARGET
-	ORIN_INDEX = GETCHARA(36)
-	SIF ORIN_INDEX < 0
+	SIF !Real_Time_Save
 		RETURN 0
-	SIF CFLAG:ORIN_INDEX:SCRIPT_SELECTOR_AMER != 3 || !Real_Time_Save
-		RETURN 0
-	PREV_TARGET = TARGET
-	TARGET = ORIN_INDEX
 	IF AME36_FIRSTTIME(5)
 		;--------------------------------------------------
 		;占位文本，后续由作者调整
@@ -170,5 +186,4 @@
 		CALL COLORMESSAGE("警告：当前已开启“非就寝时段存档”。本口上不支持该功能，日间存读档可能导致计数及其他自定义机制异常。请关闭该功能，使用起床前主界面的普通存读档。", C_RED, 2, 1)
 		FORCEWAIT
 	ENDIF
-	TARGET = PREV_TARGET
 	RETURN 0
